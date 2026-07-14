@@ -25,7 +25,7 @@ _Include before/after screenshots of any user-facing changes._
 
 ### Pre PR Posting Checklist
 
-- [ ] Linting passes and formatting applied
+- [ ] Linting passes locally (run npm run lint before posting)
 - [ ] UI changes include screenshots/recordings (if applicable)
 - [ ] Tests are added or updated when relevant (especially if a bug fix).
 - [ ] All tests have passed locally (`npm test` if applicable).
