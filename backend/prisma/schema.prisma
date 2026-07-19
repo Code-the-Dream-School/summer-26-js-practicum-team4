@@ -15,7 +15,7 @@ model User {
   name           String   @db.VarChar(30)
   hashedPassword String   @map("hashed_password") @db.VarChar(255)
   createdAt      DateTime @default(now()) @db.Timestamp(6) @map("created_at")
-  
+
   patterns     Pattern[]
   @@map ("users")
 }
@@ -25,10 +25,10 @@ model Pattern {
   title              String   @db.VarChar(255)
   originalImgUrl     String   @map("original_img_url")
   patternImgUrl      String   @map("pattern_img_url")
-  createdAt          DateTime @default(now())
+  createdAt          DateTime @default(now()) @db.Timestamp(6) @map("created_at")
   
   userId             Int      @map("user_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  @@unique([userId, id])
+  
   @@map ("patterns")
 }
