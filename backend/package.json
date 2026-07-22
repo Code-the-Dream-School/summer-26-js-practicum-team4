@@ -8,16 +8,23 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.19.2",
+    "@prisma/client": "^6.19.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "helmet": "^7.1.0",
-    "morgan": "^1.10.0",
+    "express": "^4.19.2",
     "express-rate-limit": "^7.3.0",
+    "helmet": "^7.1.0",
     "mongoose": "^8.4.0",
-    "pg": "^8.11.5"
+    "morgan": "^1.10.0",
+    "pg": "^8.11.5",
+    "prisma": "^6.19.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"
+  },
+  "allowScripts": {
+    "@prisma/engines@6.19.3": true,
+    "prisma@6.19.3": true,
+    "@prisma/client@6.19.3": true
   }
 }
