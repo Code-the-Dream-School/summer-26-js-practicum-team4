@@ -5,7 +5,12 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
+    "dev:test": "dotenv -e .env.test -- nodemon server.js",
     "start": "node server.js",
+    "db:push": "prisma db push",
+    "db:push:test": "dotenv -e .env.test -- prisma db push",
+    "studio": "prisma studio",
+    "studio:test": "dotenv -e .env.test -- prisma studio",
     "test": "jest --testPathPatterns test/ --verbose"
   },
   "dependencies": {
@@ -21,6 +26,7 @@
     "prisma": "^6.19.3"
   },
   "devDependencies": {
+    "dotenv-cli": "^11.0.0",
     "jest": "^30.4.2",
     "nodemon": "^3.0.3"
   },
