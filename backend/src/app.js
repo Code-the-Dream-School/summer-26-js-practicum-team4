@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 
-const helloRoutes = require('./routes/hello.routes');
+
 
 const app = express();
 
@@ -21,7 +21,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use('/api/hello', helloRoutes);
+
 
 // Root route
 app.get('/', (req, res) => {
