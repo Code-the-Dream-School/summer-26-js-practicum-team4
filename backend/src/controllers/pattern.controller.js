@@ -42,6 +42,13 @@ async function generatePattern(req, res) {
   }
 }
 
+function getAllUserPatterns(req, res) {
+  return res.send({
+    message: "Behold all of your patterns... yeah we can't do that yet",
+  });
+}
+
 module.exports = {
   generatePattern,
+  getAllUserPatterns,
 };

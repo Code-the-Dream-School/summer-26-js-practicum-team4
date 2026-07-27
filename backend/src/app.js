@@ -1,10 +1,13 @@
+// Security Package Imports
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
+// Route Imports
 const helloRoutes = require("./routes/hello.routes");
+const userRoutes = require("./routes/user.routes");
 const patternRoutes = require("./routes/pattern.routes");
 
 const app = express();
@@ -23,6 +26,7 @@ app.use(limiter);
 
 // Routes
 app.use("/api/hello", helloRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/patterns", patternRoutes);
 
 // Root route
@@ -48,6 +52,5 @@ app.use((error, req, res, next) => {
   return res.status(500).json({
     message: "An unexpected server error occurred.",
   });
-});
 
 module.exports = app;
