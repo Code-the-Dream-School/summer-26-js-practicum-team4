@@ -1,5 +1,5 @@
 
-function loginForm() { 
+function LoginForm() { 
     return (
         <div className="login-form">
             <h2>Login</h2>
@@ -19,4 +19,4 @@ function loginForm() {
     );
 }
 
-export default loginForm;
+export default LoginForm;

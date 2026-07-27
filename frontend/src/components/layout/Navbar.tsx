@@ -1,16 +1,18 @@
+import { Link } from "react-router-dom";
+
 function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <a href="/">X-Stich</a>
+        <Link to="/">X-Stich</Link>
       </div>
-      
+
       <ul className="navbar-menu">
-        <li><a href="/generate">Generate</a></li>
-        <li><a href="/mypatterns">My Patterns</a></li>
-        <li><a href="/gallery">Gallery</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/signup">Signup</a></li>
+        <li><Link to="/generate">Generate</Link></li>
+        <li><Link to="/mypatterns">My Patterns</Link></li>
+        <li><Link to="/gallery">Gallery</Link></li>
+        <li><Link to="/login">Login</Link></li>
+        <li><Link to="/signup">Signup</Link></li>
       </ul>
     </nav>
   );
