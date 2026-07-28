@@ -4,11 +4,15 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const cookieParser = require('cookie-parser');
 
 // Route Imports
-const helloRoutes = require("./routes/hello.routes");
+const authRoutes = require('./routes/auth.routes');
 const userRoutes = require("./routes/user.routes");
 const patternRoutes = require("./routes/pattern.routes");
+
+// Error Middleware Import
+const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const app = express();
 
@@ -26,7 +30,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth',authRoutes);
 
 // Root route
 app.get("/", (req, res) => {
