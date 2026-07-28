@@ -2,6 +2,22 @@
 const { StatusCodes } = require("http-status-codes");
 const prisma = require("../config/prismaClient");
 
+async function createPattern(req, res) {
+  return;
+}
+
+async function getPattern(req, res) {
+  return;
+}
+
+async function deletePattern(req, res) {
+  return;
+}
+
+async function updatePattern(req, res) {
+  return;
+}
+
 async function getAllUserPatterns(req, res) {
   // Assumes userId is stored in req.user
   const userPatterns = await prisma.pattern.findMany({
@@ -22,4 +38,8 @@ async function getAllUserPatterns(req, res) {
 
 module.exports = {
   getAllUserPatterns,
+  createPattern,
+  getPattern,
+  deletePattern,
+  updatePattern,
 };
