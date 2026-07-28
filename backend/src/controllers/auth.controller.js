@@ -16,11 +16,15 @@ const registerUser = async (req, res, next) => {
   try {
     const { userName, email, password } = req.body;
 
-    if (!userName || !email || !password) {
+    const userNameNormalized =
+      typeof userName === 'string' ? userName.trim() : '';
+
+    const emailNormalized =
+      typeof email === 'string' ? email.toLowerCase().trim() : '';
+
+    if (!userNameNormalized || !emailNormalized || !password) {
       throw new BadRequestError('userName, email and password are required');
     }
-
-    const emailNormalized = String(email).toLowerCase().trim();
 
     // Check if the email is already registered
     const emailTaken = await prisma.user.findUnique({
@@ -37,7 +41,7 @@ const registerUser = async (req, res, next) => {
     // Create the user and return only safe fields
     const user = await prisma.user.create({
       data: {
-        userName: String(userName).trim(),
+        userName: userNameNormalized,
         email: emailNormalized,
         hashedPassword,
       },
