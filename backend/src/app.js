@@ -6,7 +6,7 @@ const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
 
 // Route Imports
-const helloRoutes = require("./routes/hello.routes");
+const authRoutes = require('./routes/auth.routes');
 const userRoutes = require("./routes/user.routes");
 const patternRoutes = require("./routes/pattern.routes");
 
