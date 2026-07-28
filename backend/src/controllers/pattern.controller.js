@@ -7,12 +7,50 @@ const {
   generatePatternImage,
 } = require("../services/pattern-generator.service");
 
+const {
+  patternSchema,
+  patternUpdateSchema,
+} = require("../validation/patternSchema");
+
 async function createPattern(req, res) {
   // Assumptions:
   //  - User id is stored in req.user.id
   //  - All relevant parameters are named accordingly in req.body
 
-  return;
+  if (!req.body) {
+    req.body = {};
+  }
+
+  // Use Joi Validation schema to ensure properly formed input
+  const { error, value } = patternSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+  }
+
+  try {
+    // Add patternName, originalImgUrl, and patternImgUrl into patterns table under appropriate userId (times are auto-generated)
+    const createdPattern = await prisma.pattern.create({
+      data: {
+        ...value,
+        userId: req.user.id,
+      },
+      select: {
+        id: true,
+        patternName: true,
+        originalImgUrl: true,
+        patternImgUrl: true,
+        createdAt: true,
+      },
+    });
+
+    return res.status(StatusCodes.OK).json({ userPattern: createdPattern });
+  } catch (error) {
+    // Send to global error handler
+    next(err);
+  }
 }
 
 async function getPattern(req, res, next) {
