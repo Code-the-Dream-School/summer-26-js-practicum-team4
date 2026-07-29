@@ -46,7 +46,7 @@ async function createPattern(req, res) {
       },
     });
 
-    return res.status(StatusCodes.OK).json({ userPattern: createdPattern });
+    return res.status(StatusCodes.OK).json({ pattern: createdPattern });
   } catch (error) {
     // Send to global error handler
     next(err);
@@ -57,7 +57,7 @@ async function getPattern(req, res, next) {
   // Assumptions:
   //  - User id is stored in req.user.id
 
-  const patternId = req.params?.id;
+  const patternId = Number(req.params?.id);
 
   // Bad request if patternId is null
   if (!patternId) {
@@ -90,7 +90,7 @@ async function getPattern(req, res, next) {
     }
 
     // Send successful response to server
-    return res.status(StatusCodes.OK).json({ userPattern: pattern });
+    return res.status(StatusCodes.OK).json({ pattern: pattern });
   } catch (error) {
     // Prisma error code for record not found
     if (error.code === "P2025") {
@@ -104,13 +104,52 @@ async function getPattern(req, res, next) {
   }
 }
 
-async function deletePattern(req, res) {
+async function deletePattern(req, res, next) {
   // Assumptions:
   //  - User id is stored in req.user.id
-  return;
+
+  const patternId = Number(req.params?.id);
+
+  // Bad request if patternId is null
+  if (!patternId) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "This is an invalid pattern ID" });
+  }
+
+  // Attempt deleting pattern
+  try {
+    const deletedPattern = await prisma.pattern.delete({
+      where: {
+        id: patternId,
+        userId: req.user.id,
+      },
+      select: {
+        id: true,
+        patternName: true,
+        patternImgUrl: true,
+      },
+    });
+
+    // Return deleted pattern to server
+    return res.status(StatusCodes.OK).json({ pattern: deletedPattern });
+  } catch (error) {
+    // Prisma not found error
+    if (error.code === "P2025") {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Pattern not found" });
+    }
+
+    // Call global error handler
+    next(error);
+  }
 }
 
 async function updatePattern(req, res) {
+  // Assumptions:
+  //  - User id is stored in req.user.id
+
   return;
 }
 

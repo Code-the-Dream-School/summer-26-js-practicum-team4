@@ -28,7 +28,6 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use("/api/hello", helloRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/patterns", patternRoutes);
 app.use("/api/auth", authRoutes);
