@@ -30,7 +30,8 @@ async function createPattern(req, res, next) {
   });
 
   if (error) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    throw new BadRequestError("The input Pattern information is malformed.");
+    return;
   }
 
   try {
@@ -64,9 +65,8 @@ async function getPattern(req, res, next) {
 
   // Bad request if patternId is null
   if (!patternId) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "This is an invalid pattern ID" });
+    throw new BadRequestError("An invalid pattern ID was provided.");
+    return;
   }
 
   try {
@@ -97,9 +97,7 @@ async function getPattern(req, res, next) {
   } catch (error) {
     // Prisma error code for record not found
     if (error.code === "P2025") {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "This pattern was not found." });
+      throw new NotFoundError("This pattern was not found.");
     }
 
     // Global error handler
@@ -115,9 +113,7 @@ async function deletePattern(req, res, next) {
 
   // Bad request if patternId is null
   if (!patternId) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "This is an invalid pattern ID" });
+    throw new BadRequestError("An invalid pattern ID was provided.");
   }
 
   // Attempt deleting pattern
@@ -139,9 +135,8 @@ async function deletePattern(req, res, next) {
   } catch (error) {
     // Prisma not found error
     if (error.code === "P2025") {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Pattern not found" });
+      throw new NotFoundError("Pattern was not found.");
+      return;
     }
 
     // Call global error handler
@@ -156,9 +151,8 @@ async function updatePattern(req, res, next) {
 
   // Bad request if patternId is null
   if (!patternId) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ message: "This is an invalid pattern ID" });
+    throw new BadRequestError("This is an invalid pattern ID.");
+    return;
   }
 
   // Use Joi Validation schema to ensure patch request is properly formed
@@ -167,7 +161,8 @@ async function updatePattern(req, res, next) {
   });
 
   if (error) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    throw new BadRequestError("The input pattern data is malformed.");
+    return;
   }
 
   // Update pattern in database
@@ -191,9 +186,8 @@ async function updatePattern(req, res, next) {
   } catch (error) {
     // Record not found error
     if (error.code === "P2025") {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Pattern was not found." });
+      throw new NotFoundError("Pattern was not found.");
+      return;
     }
 
     // Send error to global handler otherwise
