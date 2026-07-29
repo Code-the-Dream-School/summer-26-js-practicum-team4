@@ -1,31 +1,32 @@
 // App.tsx
 import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
+import Navbar from "./components/layout/Navbar/Navbar";
+import Footer from "./components/layout/Footer/Footer";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
+import RegisterPage from "./pages/RegisterPage";
 import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
 import GalleryPage from "./pages/GalleryPage";
 
 function App() {
   return (
-    <>
+    <div className="app">
       <Navbar />
 
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-         <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/generate" element={<GeneratePage />} />
-        <Route path="/mypatterns" element={<MyPatternsPage />} />
-        <Route path="/gallery" element={<GalleryPage />} />
-       
-      </Routes>
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/generate" element={<GeneratePage />} />
+          <Route path="/mypatterns" element={<MyPatternsPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+        </Routes>
+      </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
 
