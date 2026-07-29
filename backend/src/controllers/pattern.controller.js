@@ -198,20 +198,25 @@ async function updatePattern(req, res, next) {
 async function getAllUserPatterns(req, res) {
   // Assumptions:
   //  - User id is stored in req.user.id
-  const userPatterns = await prisma.pattern.findMany({
-    where: { userId: req.user.id },
-    select: {
-      id: true,
-      patternName: true,
-      patternImgUrl: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
+  try {
+    const userPatterns = await prisma.pattern.findMany({
+      where: { userId: req.user.id },
+      select: {
+        id: true,
+        patternName: true,
+        patternImgUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
-  return res.status(StatusCodes.OK).json({
-    patterns: userPatterns,
-  });
+    return res.status(StatusCodes.OK).json({
+      patterns: userPatterns,
+    });
+  } catch (error) {
+    // Send to global error handler
+    next(err);
+  }
 }
 
 async function generatePattern(req, res) {
