@@ -22,7 +22,7 @@ router.route("/").get(getAllUserPatterns);
 // CRUD operations for individual patterns
 router.route("").post(createPattern);
 router.route("/:id").get(getPattern);
-router.route("/:id").post(deletePattern);
+router.route("/:id").delete(deletePattern);
 router.route("/:id").patch(updatePattern);
 
 // Generate image

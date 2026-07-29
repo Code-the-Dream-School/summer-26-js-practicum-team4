@@ -187,7 +187,7 @@ async function updatePattern(req, res, next) {
     return res.status(StatusCodes.OK).json({ pattern: updatedPattern });
   } catch (error) {
     // Record not found error
-    if (error === "P2025") {
+    if (error.code === "P2025") {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ message: "Pattern was not found." });
