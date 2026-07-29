@@ -4,11 +4,15 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const cookieParser = require('cookie-parser');
 
 // Route Imports
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require("./routes/user.routes");
 const patternRoutes = require("./routes/pattern.routes");
+
+// Error Middleware Import
+const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const app = express();
 
@@ -26,10 +30,9 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use("/api/hello", helloRoutes);
-app.use("/api/user", userRoutes);
-app.use("/api/patterns", patternRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/patterns', patternRoutes);
 
 // Root route
 app.get("/", (req, res) => {
@@ -49,12 +52,9 @@ app.use((error, req, res, next) => {
     });
   }
 
-  console.error(error);
-
-  return res.status(500).json({
-    message: "An unexpected server error occurred.",
-  });
+  return next(error);
 });
+
 // Handle controller errors
 app.use(errorHandlerMiddleware);
 
