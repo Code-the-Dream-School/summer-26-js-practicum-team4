@@ -36,7 +36,8 @@
     "dotenv-cli": "^11.0.0",
     "jest": "^30.4.2",
     "node-mocks-http": "^1.18.1",
-    "nodemon": "^3.0.3"
+    "nodemon": "^3.0.3",
+    "pg-cursor": "^2.21.0"
   },
   "allowScripts": {
     "@prisma/engines@6.19.3": true,

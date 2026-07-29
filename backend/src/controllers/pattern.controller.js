@@ -50,10 +50,10 @@ async function createPattern(req, res, next) {
       },
     });
 
-    return res.status(StatusCodes.OK).json({ pattern: createdPattern });
+    return res.status(StatusCodes.CREATED).json({ pattern: createdPattern });
   } catch (error) {
     // Send to global error handler
-    next(err);
+    next(error);
   }
 }
 
