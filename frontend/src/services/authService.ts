@@ -1,12 +1,11 @@
 async function register(username: string, email: string, password: string) {
-    console.log({ username, email, password });
   return fetch("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ username, email, password }),
+    body: JSON.stringify({ userName: username, email, password }),
   })
     .then((response) => {
       if (!response.ok) {
@@ -18,7 +17,6 @@ async function register(username: string, email: string, password: string) {
 
 
 async function login(email: string, password: string) {
-    console.log({ email, password });
   return fetch("/api/auth/login", {
     method: "POST",
     headers: {
