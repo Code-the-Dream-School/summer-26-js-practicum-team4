@@ -7,6 +7,9 @@ const {
   generatePatternImage,
 } = require("../services/pattern-generator.service");
 
+// Error handler Imports
+const { BadRequestError, NotFoundError } = require("../errors");
+
 const {
   patternSchema,
   patternUpdateSchema,
