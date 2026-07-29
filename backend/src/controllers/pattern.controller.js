@@ -12,7 +12,7 @@ const {
   patternUpdateSchema,
 } = require("../validation/patternSchema");
 
-async function createPattern(req, res) {
+async function createPattern(req, res, next) {
   // Assumptions:
   //  - User id is stored in req.user.id
   //  - All relevant parameters are named accordingly in req.body
@@ -146,11 +146,56 @@ async function deletePattern(req, res, next) {
   }
 }
 
-async function updatePattern(req, res) {
+async function updatePattern(req, res, next) {
   // Assumptions:
   //  - User id is stored in req.user.id
+  const patternId = Number(req.params?.id);
 
-  return;
+  // Bad request if patternId is null
+  if (!patternId) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "This is an invalid pattern ID" });
+  }
+
+  // Use Joi Validation schema to ensure patch request is properly formed
+  const { error, value } = patternUpdateSchema.validate(req.body, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+  }
+
+  // Update pattern in database
+  try {
+    const updatedPattern = await prisma.pattern.update({
+      data: value,
+      where: {
+        id: patternId,
+        userId: req.user.id,
+      },
+      select: {
+        id: true,
+        patternName: true,
+        patternImgUrl: true,
+        updatedAt: true,
+      },
+    });
+
+    // Return updated pattern to user
+    return res.status(StatusCodes.OK).json({ pattern: updatedPattern });
+  } catch (error) {
+    // Record not found error
+    if (error === "P2025") {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Pattern was not found." });
+    }
+
+    // Send error to global handler otherwise
+    next(error);
+  }
 }
 
 async function getAllUserPatterns(req, res) {
