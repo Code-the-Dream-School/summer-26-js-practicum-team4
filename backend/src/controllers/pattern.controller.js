@@ -8,7 +8,6 @@ const {
 } = require("../services/pattern-generator.service");
 
 // Error handler Imports
-const {} = require("../errors/custom-api-error");
 const { BadRequestError, NotFoundError, CustomAPIError } = require("../errors");
 
 const {
