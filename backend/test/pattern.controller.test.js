@@ -1,7 +1,7 @@
 // ======== Imports ======== //
 
 // dotenv to get db url from .env.test and other variables from .env
-require("dotenv").config({ path: [".env"] });
+require("dotenv").config({ path: [".env.test", ".env"] });
 
 // imports to facilitate db interaction
 const prisma = require("../src/config/prismaClient");
@@ -22,13 +22,16 @@ const {
   updatePattern,
 } = require("../src/controllers/pattern.controller");
 
+// Global Variables
+let user1 = null;
+
 beforeAll(async () => {
   // Clear test db of all users and patterns
   await prisma.user.deleteMany();
   await prisma.pattern.deleteMany();
 
   // Create dummy user
-  let user = await prisma.user.create({
+  user1 = await prisma.user.create({
     data: {
       email: "janedoe@gmail.com",
       userName: "janeKey",
@@ -43,9 +46,10 @@ afterAll(() => {
 });
 
 // Begin testing
-describe("pattern creation", () => {
+describe("Creating patterns in the database.", () => {
   test("1. pattern successfully created", async () => {
     const req = httpMocks.createRequest({
+      user: { id: user1.id },
       method: "POST",
       body: {
         patternName: "Cat Image to Dog Pattern",
@@ -56,6 +60,8 @@ describe("pattern creation", () => {
       },
     });
 
+    // Give req object an id attribute
+
     // Create instance of save response
     const res = httpMocks.createResponse({
       eventEmitter: EventEmitter,
@@ -63,6 +69,30 @@ describe("pattern creation", () => {
 
     expect.assertions(1);
     await waitForRouteHandler(createPattern, req, res);
-    expect(req.statusCode).toBe(201);
+    expect(res.statusCode).toBe(201);
+  });
+});
+
+describe("Reading patterns from the database.", () => {
+  test("1. user1 successfully retrieves pattern from table.", async () => {
+    expect.assertions(1);
+  });
+});
+
+describe("Updating pattern names in the database.", () => {
+  test("1. user1 can read the name of their first pattern.", async () => {
+    expect.assertions(1);
+  });
+});
+
+describe("Deleting pattern names in the database.", () => {
+  test("1. user1 can delete their pattern.", async () => {
+    expect.assertions(1);
+  });
+});
+
+describe("Reading all patterns from a given user", () => {
+  test("1. user1 can read all of their retrieved patterns.", async () => {
+    expect.assertions(1);
   });
 });
