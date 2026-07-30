@@ -47,7 +47,7 @@ afterAll(() => {
 });
 
 // Begin testing
-describe("1. Creating patterns in the database.", () => {
+describe("1) Creating patterns in the database.", () => {
   test("1.1) Pattern successfully created", async () => {
     const req = httpMocks.createRequest({
       user: { userId: user1.id },
@@ -94,9 +94,27 @@ describe("1. Creating patterns in the database.", () => {
   });
 });
 
-describe("2. Reading patterns from the database.", () => {
+describe("2) Reading patterns from the database.", () => {
   test("2.1) user1 successfully retrieves pattern from table.", async () => {
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "GET",
+      body: {
+        patternName: "Cat Image to Dog Pattern",
+        originalImgUrl:
+          "https://www.reddit.com/r/catpictures/comments/1v91sns/mommy_is_tired/#lightbox",
+      },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
     expect.assertions(1);
+
+    await waitForRouteHandler(createPattern, req, respObj);
+    expect(respObj.statusCode).toBe(400);
   });
 });
 

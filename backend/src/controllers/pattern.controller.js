@@ -68,10 +68,10 @@ async function getPattern(req, res, next) {
     const pattern = await prisma.pattern.findUnique({
       where: {
         id: patternId,
-        userId: req.user.userId,
       },
       select: {
         id: true,
+        userId: true,
         patternName: true,
         patternImgUrl: true,
         createdAt: true,
@@ -79,8 +79,8 @@ async function getPattern(req, res, next) {
       },
     });
 
-    // If no pattern found, findUnique will return null
-    if (pattern === null) {
+    // If no pattern found is null or there is a mismatch in userIds, report notFound to user
+    if (pattern === null || pattern.userId !== req.user.userId) {
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ message: "This pattern was not found." });
