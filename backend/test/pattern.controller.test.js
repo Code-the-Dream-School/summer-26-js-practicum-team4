@@ -1,7 +1,7 @@
 // ======== Imports ======== //
 
 // dotenv to get db url from .env.test and other variables from .env
-require("dotenv").config({ path: [".env.test", ".env"] });
+require("dotenv").config({ path: [".env"] });
 
 // imports to facilitate db interaction
 const prisma = require("../src/config/prismaClient");
