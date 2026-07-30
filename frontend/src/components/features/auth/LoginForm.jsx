@@ -1,5 +1,4 @@
-import { useState } from "react";
-import type { FormEvent } from "react";
+import React, { useState } from "react";
 import { login } from "../../../services/authService";
 import { Link } from "react-router-dom";
 
@@ -7,13 +6,13 @@ function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e) {
         e.preventDefault();
  
         try {
             const user = await login(email, password);
             console.log("Logged in:", user);
-        } catch(error: unknown) {
+        } catch(error) {
             console.error(error);
         }
     }

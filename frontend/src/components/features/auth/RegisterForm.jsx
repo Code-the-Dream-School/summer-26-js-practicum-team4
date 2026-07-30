@@ -1,5 +1,4 @@
-import { useState } from "react";
-import type { FormEvent } from "react";
+import React, { useState } from "react";
 import { register } from "../../../services/authService";
 import { Link } from "react-router-dom";
 
@@ -8,13 +7,13 @@ function RegisterForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e) {
         e.preventDefault();
  
         try {
             const user = await register(username, email, password);
             console.log("Registered:", user);
-        } catch(error: unknown) {
+        } catch(error) {
             console.error(error);
         }
     }

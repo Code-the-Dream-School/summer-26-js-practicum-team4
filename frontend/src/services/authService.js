@@ -1,4 +1,4 @@
-async function register(username: string, email: string, password: string) {
+async function register(username, email, password) {
   return fetch("/api/auth/register", {
     method: "POST",
     headers: {
@@ -15,8 +15,7 @@ async function register(username: string, email: string, password: string) {
     });
 }
 
-
-async function login(email: string, password: string) {
+async function login(email, password) {
   return fetch("/api/auth/login", {
     method: "POST",
     headers: {
