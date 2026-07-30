@@ -12,6 +12,9 @@ const userRoutes = require("./routes/user.routes");
 const patternRoutes = require("./routes/pattern.routes");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
+// Error Middleware Import
+const errorHandlerMiddleware = require("./middleware/error-handler");
+
 const app = express();
 
 // Security & best‑practice middleware
@@ -28,9 +31,9 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/patterns", patternRoutes);
-app.use("/api/auth", authRoutes);
 
 // Root route
 app.get("/", (req, res) => {
@@ -50,12 +53,9 @@ app.use((error, req, res, next) => {
     });
   }
 
-  console.error(error);
-
-  return res.status(500).json({
-    message: "An unexpected server error occurred.",
-  });
+  return next(error);
 });
+
 // Handle controller errors
 app.use(errorHandlerMiddleware);
 

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 const prisma = require('../config/prismaClient');
-const { BadRequestError, ConflictError } = require('../errors');
+const { BadRequestError, ConflictError, UnauthenticatedError } = require('../errors');
 
 const generateToken = (userId, userName) => {
   const secret = process.env.JWT_SECRET;
@@ -68,4 +68,55 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser };
+/*Login user */
+
+const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const emailNormalized =
+      typeof email === 'string' ? email.toLowerCase().trim() : '';
+
+    if (!emailNormalized || !password) {
+      throw new BadRequestError('Email and password are required');
+    }
+
+    /* Find the user by email */
+    const user = await prisma.user.findUnique({
+      where: { email: emailNormalized },
+    });
+
+    if (!user) {
+      throw new UnauthenticatedError('Invalid credentials');
+    }
+
+    /* Compare the password with the saved hash */
+    const passwordMatches = await bcrypt.compare(password, user.hashedPassword);
+
+    if (!passwordMatches) {
+      throw new UnauthenticatedError('Invalid credentials');
+    }
+
+    const token = generateToken(user.id, user.userName);
+
+    // Log the user in
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(StatusCodes.OK).json({
+      user: {
+        id: user.id,
+        userName: user.userName,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { registerUser, loginUser };

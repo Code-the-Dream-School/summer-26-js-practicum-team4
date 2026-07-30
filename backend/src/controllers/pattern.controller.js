@@ -16,10 +16,6 @@ const {
 } = require("../validation/patternSchema");
 
 async function createPattern(req, res, next) {
-  // Assumptions:
-  //  - User id is stored in req.user.id
-  //  - All relevant parameters are named accordingly in req.body
-
   if (!req.body) {
     req.body = {};
   }
@@ -39,7 +35,7 @@ async function createPattern(req, res, next) {
     const createdPattern = await prisma.pattern.create({
       data: {
         ...value,
-        userId: req.user.id,
+        userId: req.user.userId,
       },
       select: {
         id: true,
@@ -59,9 +55,6 @@ async function createPattern(req, res, next) {
 }
 
 async function getPattern(req, res, next) {
-  // Assumptions:
-  //  - User id is stored in req.user.id
-
   const patternId = Number(req.params?.id);
 
   // Bad request if patternId is null
@@ -75,7 +68,7 @@ async function getPattern(req, res, next) {
     const pattern = await prisma.pattern.findUnique({
       where: {
         id: patternId,
-        userId: req.user.id,
+        userId: req.user.userId,
       },
       select: {
         id: true,
@@ -107,9 +100,6 @@ async function getPattern(req, res, next) {
 }
 
 async function deletePattern(req, res, next) {
-  // Assumptions:
-  //  - User id is stored in req.user.id
-
   const patternId = Number(req.params?.id);
 
   // Bad request if patternId is null
@@ -122,7 +112,7 @@ async function deletePattern(req, res, next) {
     const deletedPattern = await prisma.pattern.delete({
       where: {
         id: patternId,
-        userId: req.user.id,
+        userId: req.user.userId,
       },
       select: {
         id: true,
@@ -147,7 +137,7 @@ async function deletePattern(req, res, next) {
 
 async function updatePattern(req, res, next) {
   // Assumptions:
-  //  - User id is stored in req.user.id
+  //  - User id is stored in req.user.userId
   const patternId = Number(req.params?.id);
 
   // Bad request if patternId is null
@@ -172,7 +162,7 @@ async function updatePattern(req, res, next) {
       data: value,
       where: {
         id: patternId,
-        userId: req.user.id,
+        userId: req.user.userId,
       },
       select: {
         id: true,
@@ -197,11 +187,9 @@ async function updatePattern(req, res, next) {
 }
 
 async function getAllUserPatterns(req, res, next) {
-  // Assumptions:
-  //  - User id is stored in req.user.id
   try {
     const userPatterns = await prisma.pattern.findMany({
-      where: { userId: req.user.id },
+      where: { userId: req.user.userId },
       select: {
         id: true,
         patternName: true,
