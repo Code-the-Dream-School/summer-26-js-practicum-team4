@@ -10,7 +10,6 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
 const patternRoutes = require("./routes/pattern.routes");
-const errorHandlerMiddleware = require("./middleware/error-handler");
 
 // Error Middleware Import
 const errorHandlerMiddleware = require("./middleware/error-handler");
