@@ -80,7 +80,7 @@ describe("1) Creating patterns in the database.", () => {
     await waitForRouteHandler(createPattern, req, respObj);
 
     // Save patternId for future test use
-    patternId = respObj._getJSONData().pattern.id;
+    patternId = respObj._getJSONData().data.pattern.id;
     expect(respObj.statusCode).toBe(201);
   });
   test("1.2) Patterns missing any required fields results in a BadRequestError.", async () => {
@@ -149,7 +149,7 @@ describe("3) Updating pattern names in the database.", () => {
     const respData = respObj._getJSONData();
 
     expect(respObj.statusCode).toBe(200);
-    expect(respData.pattern.patternName).toBe(newPatName);
+    expect(respData.data.pattern.patternName).toBe(newPatName);
   });
   // test("3.2) Incorrect body results in BadRequestError", async () => {});
   // test("3.3) If a pattern is not found in the db, a NotFoundError is returned.", async () => {});
@@ -234,12 +234,11 @@ describe("Reading all patterns from a given user", () => {
     });
 
     // Make request and verify output
-    expect.assertions(2);
     await waitForRouteHandler(getAllUserPatterns, req, respObj);
     respData = respObj._getJSONData();
 
     // Ensure OK response and that the length of patterns array is 2.
     expect(respObj.statusCode).toBe(200);
-    expect(length(respData.patterns)).toBe(2);
+    expect(length(respData.data.patterns)).toBe(2);
   });
 });

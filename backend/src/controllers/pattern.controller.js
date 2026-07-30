@@ -27,7 +27,6 @@ async function createPattern(req, res, next) {
 
   if (error) {
     throw new BadRequestError("The input Pattern information is malformed.");
-    return;
   }
 
   try {
@@ -46,7 +45,9 @@ async function createPattern(req, res, next) {
       },
     });
 
-    return res.status(StatusCodes.CREATED).json({ pattern: createdPattern });
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ data: { pattern: createdPattern } });
   } catch (error) {
     // Send to global error handler
     console.log(error.message);
@@ -60,12 +61,11 @@ async function getPattern(req, res, next) {
   // Bad request if patternId is null
   if (!patternId) {
     throw new BadRequestError("An invalid pattern ID was provided.");
-    return;
   }
 
   try {
     // Query for pattern using patternId and userId
-    const pattern = await prisma.pattern.findUnique({
+    const obtainedPattern = await prisma.pattern.findUnique({
       where: {
         id: patternId,
       },
@@ -80,14 +80,17 @@ async function getPattern(req, res, next) {
     });
 
     // If no pattern found is null or there is a mismatch in userIds, report notFound to user
-    if (pattern === null || pattern.userId !== req.user.userId) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "This pattern was not found." });
+    if (
+      obtainedPattern === null ||
+      obtainedPattern.userId !== req.user.userId
+    ) {
+      throw new NotFoundError("This pattern was not found.");
     }
 
     // Send successful response to server
-    return res.status(StatusCodes.OK).json({ pattern: pattern });
+    return res
+      .status(StatusCodes.OK)
+      .json({ data: { pattern: obtainedPattern } });
   } catch (error) {
     // Prisma error code for record not found
     if (error.code === "P2025") {
@@ -122,12 +125,13 @@ async function deletePattern(req, res, next) {
     });
 
     // Return deleted pattern to server
-    return res.status(StatusCodes.OK).json({ pattern: deletedPattern });
+    return res
+      .status(StatusCodes.OK)
+      .json({ data: { pattern: deletedPattern } });
   } catch (error) {
     // Prisma not found error
     if (error.code === "P2025") {
       throw new NotFoundError("Pattern was not found.");
-      return;
     }
 
     // Call global error handler
@@ -143,7 +147,6 @@ async function updatePattern(req, res, next) {
   // Bad request if patternId is null
   if (!patternId) {
     throw new BadRequestError("This is an invalid pattern ID.");
-    return;
   }
 
   // Use Joi Validation schema to ensure patch request is properly formed
@@ -153,7 +156,6 @@ async function updatePattern(req, res, next) {
 
   if (error) {
     throw new BadRequestError("The input pattern data is malformed.");
-    return;
   }
 
   // Update pattern in database
@@ -173,12 +175,13 @@ async function updatePattern(req, res, next) {
     });
 
     // Return updated pattern to user
-    return res.status(StatusCodes.OK).json({ pattern: updatedPattern });
+    return res
+      .status(StatusCodes.OK)
+      .json({ data: { pattern: updatedPattern } });
   } catch (error) {
     // Record not found error
     if (error.code === "P2025") {
       throw new NotFoundError("Pattern was not found.");
-      return;
     }
 
     // Send error to global handler otherwise
@@ -200,7 +203,9 @@ async function getAllUserPatterns(req, res, next) {
     });
 
     return res.status(StatusCodes.OK).json({
-      patterns: userPatterns,
+      data: {
+        patterns: userPatterns,
+      },
     });
   } catch (error) {
     // Send to global error handler
