@@ -238,7 +238,9 @@ describe("Reading all patterns from a given user", () => {
     respData = respObj._getJSONData();
 
     // Ensure OK response and that the length of patterns array is 2.
+    expect.assertions(2);
+
     expect(respObj.statusCode).toBe(200);
-    expect(length(respData.data.patterns)).toBe(2);
+    expect(respData.data.patterns.length).toBe(2);
   });
 });
