@@ -49,7 +49,7 @@ afterAll(() => {
 describe("Creating patterns in the database.", () => {
   test("1. pattern successfully created", async () => {
     const req = httpMocks.createRequest({
-      user: { id: user1.id },
+      user: { userId: user1.id },
       method: "POST",
       body: {
         patternName: "Cat Image to Dog Pattern",
