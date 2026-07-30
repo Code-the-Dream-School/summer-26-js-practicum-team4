@@ -11,7 +11,7 @@ const httpMocks = require("node-mocks-http");
 const waitForRouteHandler = require("./waitForRouteHandler");
 
 // EventEmitter class for response objects to emit signals (e.g. finish)
-const { EventEmitter } = require("pg-cursor");
+const { EventEmitter } = require("events");
 
 // Controller function imports
 const {
