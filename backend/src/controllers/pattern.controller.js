@@ -195,7 +195,7 @@ async function updatePattern(req, res, next) {
   }
 }
 
-async function getAllUserPatterns(req, res) {
+async function getAllUserPatterns(req, res, next) {
   // Assumptions:
   //  - User id is stored in req.user.id
   try {
@@ -215,7 +215,7 @@ async function getAllUserPatterns(req, res) {
     });
   } catch (error) {
     // Send to global error handler
-    next(err);
+    next(error);
   }
 }
 
