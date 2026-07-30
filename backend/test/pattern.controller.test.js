@@ -58,7 +58,7 @@ afterAll(() => {
 
 // Begin testing
 describe("1) Creating patterns in the database.", () => {
-  test("1.1) Pattern successfully created", async () => {
+  test("1.1) User1 can successfully create a pattern.", async () => {
     const req = httpMocks.createRequest({
       user: { userId: user1.id },
       method: "POST",
@@ -111,7 +111,7 @@ describe("1) Creating patterns in the database.", () => {
 });
 
 describe("2) Reading patterns from the database.", () => {
-  test("2.1) user1 successfully retrieves pattern from table.", async () => {
+  test("2.1) User1 can retrieve their created pattern from db.", async () => {
     const req = httpMocks.createRequest({
       user: { userId: user1.id },
       method: "GET",
@@ -128,8 +128,45 @@ describe("2) Reading patterns from the database.", () => {
     await waitForRouteHandler(getPattern, req, respObj);
     expect(respObj.statusCode).toBe(200);
   });
-  // test("2.2) Finding no pattern yields a NotFoundError", async () => {});
-  // test("2.3) A user searching for a pattern that doesn't belong to them results in a NotFoundError", async () => {});
+  test("2.2) Finding no pattern yields a NotFoundError", async () => {
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "GET",
+      params: { id: patternId + 1 },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+    try {
+      await waitForRouteHandler(getPattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(404);
+    }
+  });
+  test("2.3) User2 searching for a User1 pattern will result in a NotFoundError", async () => {
+    const req = httpMocks.createRequest({
+      user: { userId: user2.id },
+      method: "GET",
+      params: { id: patternId },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+
+    try {
+      await waitForRouteHandler(getPattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(404);
+    }
+  });
 });
 
 describe("3) Updating pattern names in the database.", () => {
@@ -155,12 +192,93 @@ describe("3) Updating pattern names in the database.", () => {
     expect(respObj.statusCode).toBe(200);
     expect(respData.data.pattern.patternName).toBe(newPatName);
   });
-  // test("3.2) Incorrect body results in BadRequestError", async () => {});
-  // test("3.3) If a pattern is not found in the db, a NotFoundError is returned.", async () => {});
+  test("3.2) Incorrect body results in BadRequestError", async () => {
+    const newPatName = "PatUpdate";
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "PATCH",
+      params: { id: patternId },
+      body: { incorrectKey: newPatName },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+
+    try {
+      await waitForRouteHandler(updatePattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(400);
+    }
+  });
+  test("3.3) If a pattern is not found in the db, a NotFoundError is returned.", async () => {
+    const newPatName = "PatUpdate";
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "PATCH",
+      params: { id: patternId + 1 },
+      body: { patternName: newPatName },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+    try {
+      await waitForRouteHandler(updatePattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(404);
+    }
+  });
+  test("3.4) User2 attempting to update a user1 pattern results in a NotFoundError", async () => {
+    const newPatName = "PatUpdate";
+    const req = httpMocks.createRequest({
+      user: { userId: user2.id },
+      method: "PATCH",
+      params: { id: patternId },
+      body: { patternName: newPatName },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+    try {
+      await waitForRouteHandler(updatePattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(404);
+    }
+  });
 });
 
 describe("4) Deleting pattern names in the database.", () => {
-  test("4.1) user1 can delete their pattern.", async () => {
+  test("4.1) A NotFoundError is returned if pattern is not found in table.", async () => {
+    const req = httpMocks.createRequest({
+      user: { userId: user2.id },
+      method: "DELETE",
+      params: { id: patternId },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+    try {
+      await waitForRouteHandler(deletePattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(404);
+    }
+  });
+  test("4.2) user1 can delete their pattern.", async () => {
     const req = httpMocks.createRequest({
       user: { userId: user1.id },
       method: "DELETE",
@@ -177,11 +295,47 @@ describe("4) Deleting pattern names in the database.", () => {
     await waitForRouteHandler(deletePattern, req, respObj);
     expect(respObj.statusCode).toBe(200);
   });
-  // test("4.2) A NotFoundError is returned if pattern is not found in table.", async () => {});
+  test("4.3) A NotFoundError is returned if pattern is not found in table.", async () => {
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "DELETE",
+      params: { id: patternId },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+    try {
+      await waitForRouteHandler(deletePattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(404);
+    }
+  });
 });
 
-describe("Reading all patterns from a given user", () => {
-  test("1. user1 can read all of their retrieved patterns.", async () => {
+describe("5) Reading all patterns from a given user", () => {
+  test("5.1) user1 receives NotFoundError if user1 has no patterns.", async () => {
+    // Create req and res for retrieving user1 patterns
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "GET",
+    });
+
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    // Make request and verify output
+    try {
+      await waitForRouteHandler(getAllUserPatterns, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(404);
+    }
+  });
+  test("5.2) user1 can read all of their retrieved patterns.", async () => {
     // Create request and responses for creating database entries
     const req1 = httpMocks.createRequest({
       user: { userId: user1.id },

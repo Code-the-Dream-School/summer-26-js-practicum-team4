@@ -201,6 +201,10 @@ async function getAllUserPatterns(req, res, next) {
       },
     });
 
+    // If no patterns found for user, throw NotFoundError
+    if (userPatterns.length === 0) {
+      throw new NotFoundError();
+    }
     return res.status(StatusCodes.OK).json({
       data: {
         patterns: userPatterns,
@@ -244,8 +248,6 @@ async function generatePattern(req, res) {
 
     return res.status(200).send(pattern.buffer);
   } catch (error) {
-    console.error("Pattern generation error:", error);
-
     return res.status(500).json({
       message: "Unable to generate the pattern.",
     });
