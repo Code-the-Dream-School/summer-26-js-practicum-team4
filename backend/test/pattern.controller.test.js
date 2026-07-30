@@ -24,6 +24,7 @@ const {
 
 // Global Variables
 let user1 = null;
+let respObj = null;
 
 beforeAll(async () => {
   // Clear test db of all users and patterns
@@ -46,8 +47,8 @@ afterAll(() => {
 });
 
 // Begin testing
-describe("Creating patterns in the database.", () => {
-  test("1. pattern successfully created", async () => {
+describe("1. Creating patterns in the database.", () => {
+  test("1.1) Pattern successfully created", async () => {
     const req = httpMocks.createRequest({
       user: { userId: user1.id },
       method: "POST",
@@ -60,21 +61,41 @@ describe("Creating patterns in the database.", () => {
       },
     });
 
-    // Give req object an id attribute
-
     // Create instance of save response
-    const res = httpMocks.createResponse({
+    respObj = httpMocks.createResponse({
       eventEmitter: EventEmitter,
     });
 
     expect.assertions(1);
-    await waitForRouteHandler(createPattern, req, res);
-    expect(res.statusCode).toBe(201);
+    await waitForRouteHandler(createPattern, req, respObj);
+    console.log(respObj._getJSONData());
+    expect(respObj.statusCode).toBe(201);
+  });
+  test("1.2) Patterns missing any required fields results in a BadRequestError.", async () => {
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "POST",
+      body: {
+        patternName: "Cat Image to Dog Pattern",
+        originalImgUrl:
+          "https://www.reddit.com/r/catpictures/comments/1v91sns/mommy_is_tired/#lightbox",
+      },
+    });
+
+    // Create instance of save response
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    expect.assertions(1);
+
+    await waitForRouteHandler(createPattern, req, respObj);
+    expect(respObj.statusCode).toBe(400);
   });
 });
 
-describe("Reading patterns from the database.", () => {
-  test("1. user1 successfully retrieves pattern from table.", async () => {
+describe("2. Reading patterns from the database.", () => {
+  test("2.1) user1 successfully retrieves pattern from table.", async () => {
     expect.assertions(1);
   });
 });
