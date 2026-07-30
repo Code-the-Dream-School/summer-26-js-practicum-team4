@@ -99,10 +99,14 @@ describe("1) Creating patterns in the database.", () => {
       eventEmitter: EventEmitter,
     });
 
-    // expect.assertions(1);
+    expect.assertions(1);
 
-    // await waitForRouteHandler(createPattern, req, respObj);
-    // expect(respObj.statusCode).toBe(400);
+    // Use try/catch block to catch thrown error
+    try {
+      await waitForRouteHandler(createPattern, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(400);
+    }
   });
 });
 
