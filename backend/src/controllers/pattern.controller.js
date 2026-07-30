@@ -8,7 +8,7 @@ const {
 } = require("../services/pattern-generator.service");
 
 // Error handler Imports
-const { BadRequestError, NotFoundError } = require("../errors");
+const { BadRequestError, NotFoundError, CustomAPIError } = require("../errors");
 
 const {
   patternSchema,
@@ -16,20 +16,20 @@ const {
 } = require("../validation/patternSchema");
 
 async function createPattern(req, res, next) {
-  if (!req.body) {
-    req.body = {};
-  }
-
-  // Use Joi Validation schema to ensure properly formed input
-  const { error, value } = patternSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    throw new BadRequestError("The input Pattern information is malformed.");
-  }
-
   try {
+    if (!req.body) {
+      req.body = {};
+    }
+
+    // Use Joi Validation schema to ensure properly formed input
+    const { error, value } = patternSchema.validate(req.body, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      throw new BadRequestError("The input Pattern information is malformed.");
+    }
+
     // Add patternName, originalImgUrl, and patternImgUrl into patterns table under appropriate userId (times are auto-generated)
     const createdPattern = await prisma.pattern.create({
       data: {
@@ -58,12 +58,12 @@ async function createPattern(req, res, next) {
 async function getPattern(req, res, next) {
   const patternId = Number(req.params?.id);
 
-  // Bad request if patternId is null
-  if (!patternId) {
-    throw new BadRequestError("An invalid pattern ID was provided.");
-  }
-
   try {
+    // Bad request if patternId is null
+    if (!patternId) {
+      throw new BadRequestError("An invalid pattern ID was provided.");
+    }
+
     // Query for pattern using patternId and userId
     const obtainedPattern = await prisma.pattern.findUnique({
       where: {
@@ -92,26 +92,21 @@ async function getPattern(req, res, next) {
       .status(StatusCodes.OK)
       .json({ data: { pattern: obtainedPattern } });
   } catch (error) {
-    // Prisma error code for record not found
-    if (error.code === "P2025") {
-      throw new NotFoundError("This pattern was not found.");
-    }
-
     // Global error handler
     next(error);
   }
 }
 
 async function deletePattern(req, res, next) {
-  const patternId = Number(req.params?.id);
-
-  // Bad request if patternId is null
-  if (!patternId) {
-    throw new BadRequestError("An invalid pattern ID was provided.");
-  }
-
-  // Attempt deleting pattern
   try {
+    const patternId = Number(req.params?.id);
+
+    // Bad request if patternId is null
+    if (!patternId) {
+      throw new BadRequestError("An invalid pattern ID was provided.");
+    }
+
+    // Attempt deleting pattern
     const deletedPattern = await prisma.pattern.delete({
       where: {
         id: patternId,
@@ -131,7 +126,9 @@ async function deletePattern(req, res, next) {
   } catch (error) {
     // Prisma not found error
     if (error.code === "P2025") {
-      throw new NotFoundError("Pattern was not found.");
+      const prismaError = new NotFoundError("Pattern was not found.");
+      next(prismaError);
+      return;
     }
 
     // Call global error handler
@@ -140,26 +137,26 @@ async function deletePattern(req, res, next) {
 }
 
 async function updatePattern(req, res, next) {
-  // Assumptions:
-  //  - User id is stored in req.user.userId
-  const patternId = Number(req.params?.id);
-
-  // Bad request if patternId is null
-  if (!patternId) {
-    throw new BadRequestError("This is an invalid pattern ID.");
-  }
-
-  // Use Joi Validation schema to ensure patch request is properly formed
-  const { error, value } = patternUpdateSchema.validate(req.body, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    throw new BadRequestError("The input pattern data is malformed.");
-  }
-
-  // Update pattern in database
   try {
+    // Assumptions:
+    //  - User id is stored in req.user.userId
+    const patternId = Number(req.params?.id);
+
+    // Bad request if patternId is null
+    if (!patternId) {
+      throw new BadRequestError("This is an invalid pattern ID.");
+    }
+
+    // Use Joi Validation schema to ensure patch request is properly formed
+    const { error, value } = patternUpdateSchema.validate(req.body, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      throw new BadRequestError("The input pattern data is malformed.");
+    }
+
+    // Update pattern in database
     const updatedPattern = await prisma.pattern.update({
       data: value,
       where: {
@@ -181,7 +178,9 @@ async function updatePattern(req, res, next) {
   } catch (error) {
     // Record not found error
     if (error.code === "P2025") {
-      throw new NotFoundError("Pattern was not found.");
+      const prismaError = new NotFoundError("Pattern was not found.");
+      next(prismaError);
+      return;
     }
 
     // Send error to global handler otherwise
