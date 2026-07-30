@@ -1,11 +1,16 @@
-export const initialState = {
+import type { AuthState, AuthAction } from "./authTypes";
+
+export const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   loading: true,
   error: null,
 };
 
-export const authReducer = (state, action) => {
+export const authReducer = (
+  state: AuthState,
+  action: AuthAction
+) =>{
   switch (action.type) {
     case "AUTH_CHECKED":
       return {
