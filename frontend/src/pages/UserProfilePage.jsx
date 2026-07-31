@@ -1,26 +1,19 @@
-import { useRef, useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
+import React, { useRef, useState } from "react";
 import "./UserProfilePage.css";
-type UserProfile = {
-  fullName: string;
-  email: string;
-  memberSince: string;
-  profilePhoto: string;
-};
 
 function UserProfilePage() {
-  const [user, setUser] = useState<UserProfile>({
+  const [user, setUser] = useState({
     fullName: "Millicent Traylor",
     email: "millicent@email.com",
     memberSince: "July 2026",
     profilePhoto: "",
   });
 
-  const [formData, setFormData] = useState<UserProfile>(user);
+  const [formData, setFormData] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef(null);
 
   const handleEditProfile = () => {
     setFormData(user);
@@ -28,7 +21,7 @@ function UserProfilePage() {
     setMessage("");
   };
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (event) => {
     const { name, value } = event.target;
 
     setFormData((previousData) => ({
@@ -37,7 +30,7 @@ function UserProfilePage() {
     }));
   };
 
-  const handleSaveProfile = (event: FormEvent<HTMLFormElement>) => {
+  const handleSaveProfile = (event) => {
     event.preventDefault();
 
     if (!formData.fullName.trim() || !formData.email.trim()) {
@@ -60,7 +53,7 @@ function UserProfilePage() {
     fileInputRef.current?.click();
   };
 
-  const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = (event) => {
     const selectedFile = event.target.files?.[0];
 
     if (!selectedFile) {
@@ -133,7 +126,7 @@ function UserProfilePage() {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/png, image/jpeg, image/webp"
+            accept="image/png,image/jpeg,image/webp"
             className="hidden-file-input"
             onChange={handlePhotoChange}
           />

@@ -1,10 +1,12 @@
+import React from "react";
 import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">X-Stich</Link>
+        <Link to="/">X-Stitch</Link>
       </div>
 
       <ul className="navbar-menu">
@@ -18,15 +20,16 @@ function Navbar() {
           <Link to="/gallery">Gallery</Link>
         </li>
         <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/signup">Signup</Link>
-        </li>
-        <li>
           <Link to="/profile">Profile</Link>
         </li>
       </ul>
+
+      <div className="navbar-user">
+        <span className="username">username</span>
+        <Link to="/login" className="login-btn">
+          Login
+        </Link>
+      </div>
     </nav>
   );
 }
