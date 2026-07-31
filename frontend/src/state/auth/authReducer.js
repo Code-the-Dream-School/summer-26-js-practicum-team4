@@ -1,16 +1,11 @@
-import type { AuthState, AuthAction } from "./authTypes";
-
-export const initialState: AuthState = {
+export const initialState = {
   user: null,
   isAuthenticated: false,
   loading: true,
   error: null,
 };
 
-export const authReducer = (
-  state: AuthState,
-  action: AuthAction
-) =>{
+export const authReducer = (state, action) => {
   switch (action.type) {
     case "AUTH_CHECKED":
       return {
@@ -24,7 +19,7 @@ export const authReducer = (
         user: action.payload,
         isAuthenticated: true,
         loading: false,
-        error: null
+        error: null,
       };
 
     case "LOGOUT":
@@ -33,7 +28,7 @@ export const authReducer = (
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: null
+        error: null,
       };
 
     case "SET_ERROR":
