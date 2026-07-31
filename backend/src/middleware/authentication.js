@@ -5,7 +5,9 @@ const authenticationMiddleware = (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
-    throw new UnauthenticatedError('Authentication invalid');
+    return next(
+     new UnauthenticatedError('Authentication invalid')
+    );
   }
 
   try {
@@ -17,7 +19,9 @@ const authenticationMiddleware = (req, res, next) => {
 
     next();
   } catch (error) {
-    throw new UnauthenticatedError('Authentication invalid');
+    return next(
+     new UnauthenticatedError('Authentication invalid')
+    );
   }
 };
 
