@@ -85,6 +85,9 @@ function UserProfilePage() {
     }));
 
     setMessage("Profile photo selected.");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleChangePassword = () => {
