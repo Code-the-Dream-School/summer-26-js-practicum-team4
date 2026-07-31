@@ -1,4 +1,5 @@
-import LoginForm from "../components/features/LoginForm";
+import React from "react";
+import LoginForm from "../components/features/auth/LoginForm";
 
 function LoginPage() {
     return (
