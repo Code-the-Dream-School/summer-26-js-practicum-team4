@@ -30,7 +30,7 @@ async function createPattern(req, res, next) {
       throw new BadRequestError("The input Pattern information is malformed.");
     }
 
-    // Add patternName, originalImgUrl, and patternImgUrl into patterns table under appropriate userId (times are auto-generated)
+    // value contains: patternName, originalImgUrl, and patternImgUrl
     const createdPattern = await prisma.pattern.create({
       data: {
         ...value,
@@ -59,12 +59,10 @@ async function getPattern(req, res, next) {
   const patternId = Number(req.params?.id);
 
   try {
-    // Bad request if patternId is null
     if (!patternId) {
       throw new BadRequestError("An invalid pattern ID was provided.");
     }
 
-    // Query for pattern using patternId and userId
     const obtainedPattern = await prisma.pattern.findUnique({
       where: {
         id: patternId,
@@ -87,7 +85,6 @@ async function getPattern(req, res, next) {
       throw new NotFoundError("This pattern was not found.");
     }
 
-    // Send successful response to server
     return res
       .status(StatusCodes.OK)
       .json({ data: { pattern: obtainedPattern } });
@@ -101,25 +98,23 @@ async function deletePattern(req, res, next) {
   try {
     const patternId = Number(req.params?.id);
 
-    // Bad request if patternId is null
     if (!patternId) {
       throw new BadRequestError("An invalid pattern ID was provided.");
     }
 
-    // Attempt deleting pattern
     const deletedPattern = await prisma.pattern.delete({
       where: {
         id: patternId,
-        userId: req.user.userId,
+        userId: req.user.userId
       },
       select: {
         id: true,
+        userId: true,
         patternName: true,
         patternImgUrl: true,
       },
     });
 
-    // Return deleted pattern to server
     return res
       .status(StatusCodes.OK)
       .json({ data: { pattern: deletedPattern } });
@@ -138,11 +133,8 @@ async function deletePattern(req, res, next) {
 
 async function updatePattern(req, res, next) {
   try {
-    // Assumptions:
-    //  - User id is stored in req.user.userId
     const patternId = Number(req.params?.id);
 
-    // Bad request if patternId is null
     if (!patternId) {
       throw new BadRequestError("This is an invalid pattern ID.");
     }
@@ -156,34 +148,32 @@ async function updatePattern(req, res, next) {
       throw new BadRequestError("The input pattern data is malformed.");
     }
 
-    // Update pattern in database
     const updatedPattern = await prisma.pattern.update({
       data: value,
       where: {
         id: patternId,
-        userId: req.user.userId,
+        userId: req.user.userId
       },
       select: {
         id: true,
+        userId: true,
         patternName: true,
         patternImgUrl: true,
         updatedAt: true,
       },
     });
 
-    // Return updated pattern to user
     return res
       .status(StatusCodes.OK)
       .json({ data: { pattern: updatedPattern } });
   } catch (error) {
-    // Record not found error
+    // Prisma record not found error
     if (error.code === "P2025") {
       const prismaError = new NotFoundError("Pattern was not found.");
       next(prismaError);
       return;
     }
 
-    // Send error to global handler otherwise
     next(error);
   }
 }
@@ -201,7 +191,7 @@ async function getAllUserPatterns(req, res, next) {
       },
     });
 
-    // If no patterns found for user, throw NotFoundError
+    // NotFoundError for no patterns
     if (userPatterns.length === 0) {
       throw new NotFoundError();
     }
