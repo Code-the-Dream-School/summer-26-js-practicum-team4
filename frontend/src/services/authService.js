@@ -34,4 +34,17 @@ async function login(email, password) {
   return response.json();
 }
 
-export { register, login };
+async function getCurrentUser() {
+  const response = await fetch("/api/auth/me", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to fetch current user");
+  }
+  return response.json();
+}
+
+export { register, login, getCurrentUser };
