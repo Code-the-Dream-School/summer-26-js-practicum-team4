@@ -25,7 +25,6 @@ async function login(email, password) {
     credentials: "include",
     body: JSON.stringify({ email, password }),
   });
-
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || "Login failed");
@@ -39,10 +38,11 @@ async function getCurrentUser() {
     method: "GET",
     credentials: "include",
   });
-
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to fetch current user");
+    const error = new Error(errorData.message || "Failed to get current user");
+    error.status = response.status;
+    throw error;
   }
   return response.json();
 }
