@@ -6,14 +6,14 @@ import PrevNextView from "../components/features/PatternDisplay/PrevNextView";
 import AllPatternView from "../components/features/PatternDisplay/AllPatternView";
 
 function MyPatternsPage() {
-  const [view, setView] = useState("scroll");
+  const [view, setView] = useState("");
 
   // Function that processes user's view choice into rendered component
-  function userChosenView(view) {
+  function userChosenView() {
     if (view === "scroll") {
-      return <PrevNextView imagesEndpoint={"1"} />;
+      return <PrevNextView imagesEndpoint="1" />;
     } else if (view === "all") {
-      return <AllPatternView imagesEndpoint={"2"} />;
+      return <AllPatternView imagesEndpoint="2" />;
     }
   }
 
@@ -22,7 +22,7 @@ function MyPatternsPage() {
       <h1>My Patterns Page</h1>
       <PatternDisplayToggle name="Scroll" onClick={() => setView("scroll")} />
       <PatternDisplayToggle name="Show All" onClick={() => setView("all")} />
-      {userChosenView(view)}
+      {userChosenView()}
     </div>
   );
 }
