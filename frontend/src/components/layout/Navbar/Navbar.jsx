@@ -1,8 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import LogoutBtn from "../../features/auth/LogoutBtn";
+import { useAuth } from "../../../state/auth/useAuth";
 
 function Navbar() {
+  const {
+    state: { isAuthenticated },
+  } = useAuth();
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -10,17 +15,27 @@ function Navbar() {
       </div>
 
       <ul className="navbar-menu">
-        <li><Link to="/generate">Generate</Link></li>
-        <li><Link to="/mypatterns">My Patterns</Link></li>
-        <li><Link to="/gallery">Gallery</Link></li>
+        <li>
+          <Link to="/generate">Generate</Link>
+        </li>
+        <li>
+          <Link to="/mypatterns">My Patterns</Link>
+        </li>
+        <li>
+          <Link to="/gallery">Gallery</Link>
+        </li>
       </ul>
 
-      <div className="navbar-user">
-        <span className="username">username</span>
+      {isAuthenticated ? (
+        <div className="navbar-user">
+          <span className="username">username</span>
+          <LogoutBtn />
+        </div>
+      ) : (
         <Link to="/login" className="login-btn">
           Login
         </Link>
-      </div>
+      )}
     </nav>
   );
 }
