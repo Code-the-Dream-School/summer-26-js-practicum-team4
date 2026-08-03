@@ -9,17 +9,19 @@ import RegisterPage from "./pages/RegisterPage";
 import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
 import GalleryPage from "./pages/GalleryPage";
+import PublicRoutes from "./components/routes/PublicRoutes";
 
 function App() {
   return (
     <div className="app">
       <Navbar />
-
       <main className="main-content">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route element={<PublicRoutes />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
           <Route path="/generate" element={<GeneratePage />} />
           <Route path="/mypatterns" element={<MyPatternsPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
