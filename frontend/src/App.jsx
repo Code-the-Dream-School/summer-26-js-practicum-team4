@@ -10,11 +10,13 @@ import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
 import GalleryPage from "./pages/GalleryPage";
 import PublicRoutes from "./components/routes/PublicRoutes";
+import ProtectedRoutes from "./components/routes/ProtectedRoutes";
 
 function App() {
   return (
     <div className="app">
       <Navbar />
+
       <main className="main-content">
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -22,9 +24,11 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Route>
-          <Route path="/generate" element={<GeneratePage />} />
-          <Route path="/mypatterns" element={<MyPatternsPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/generate" element={<GeneratePage />} />
+            <Route path="/mypatterns" element={<MyPatternsPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+          </Route>
         </Routes>
       </main>
 
