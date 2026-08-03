@@ -9,8 +9,8 @@ import RegisterPage from "./pages/RegisterPage";
 import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
 import GalleryPage from "./pages/GalleryPage";
-import PublicRoutes from "./components/routes/PublicRoutes";
-import ProtectedRoutes from "./components/routes/ProtectedRoutes";
+import PublicRoutes from "./routes/PublicRoutes";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
 
 function App() {
   return (
