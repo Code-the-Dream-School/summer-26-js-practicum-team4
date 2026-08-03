@@ -1,6 +1,6 @@
 import React from "react";
 
-function PrevNextView({ imagesEndpoint }) {
+function PrevNextView({ patterns }) {
   console.log("2");
   return (
     <div>

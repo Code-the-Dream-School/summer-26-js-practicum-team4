@@ -1,6 +1,6 @@
 import React from "react";
 
-function AllPatternView({ imagesEndpoint }) {
+function AllPatternView({ patterns }) {
   console.log("1");
   return (
     <div>

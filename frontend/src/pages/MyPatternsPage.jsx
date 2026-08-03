@@ -5,17 +5,23 @@ import PatternDisplayToggle from "../components/features/PatternDisplay/PatternD
 import PrevNextView from "../components/features/PatternDisplay/PrevNextView";
 import AllPatternView from "../components/features/PatternDisplay/AllPatternView";
 
+// Service Imports
+import { getCurrentUserPatterns } from "../services/patternRetrieval";
+
 function MyPatternsPage() {
   const [view, setView] = useState("");
 
   // Function that processes user's view choice into rendered component
   function userChosenView() {
     if (view === "scroll") {
-      return <PrevNextView imagesEndpoint="1" />;
+      return <PrevNextView patterns="1" />;
     } else if (view === "all") {
-      return <AllPatternView imagesEndpoint="2" />;
+      return <AllPatternView patterns="2" />;
     }
   }
+
+  // Import all patterns to display
+  const allCurrentUserPatterns = 5;
 
   return (
     <div>
