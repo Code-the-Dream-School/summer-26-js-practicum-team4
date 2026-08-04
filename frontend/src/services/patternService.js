@@ -7,6 +7,7 @@ export async function generatePattern({ image, width = 50, height = 50 }) {
 
   const response = await fetch("/api/patterns/generate", {
     method: "POST",
+    credentials: "include",
     body: formData,
   });
 
