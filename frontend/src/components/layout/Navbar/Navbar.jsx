@@ -6,7 +6,7 @@ import { useAuth } from "../../../state/auth/useAuth";
 
 function Navbar() {
   const {
-    state: { isAuthenticated },
+    state: { isAuthenticated , user },
   } = useAuth();
   return (
     <nav className="navbar">
@@ -28,7 +28,7 @@ function Navbar() {
 
       {isAuthenticated ? (
         <div className="navbar-user">
-          <span className="username">username</span>
+          {user && <span className="username">{user.userName}</span>}
           <LogoutBtn />
         </div>
       ) : (
