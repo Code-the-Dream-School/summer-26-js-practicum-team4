@@ -46,7 +46,8 @@ async function getCurrentUser() {
     error.status = response.status;
     throw error;
   }
-  return data;
+
+  return data.user;
 }
 
 export { register, login, getCurrentUser };
