@@ -4,6 +4,7 @@ import { AuthContext } from "./authContext";
 import PropTypes from "prop-types";
 import { getCurrentUser } from "../../services/authService";
 
+
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   useEffect(() => {
