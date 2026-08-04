@@ -10,37 +10,36 @@ import { fetchCurrentUserPatterns } from "../services/patternRetrieval";
 
 function MyPatternsPage() {
   const [view, setView] = useState("scroll");
+  const [patterns, setPatterns] = useState([]);
 
   // Retrieve user patterns when page loads
   useEffect(() => {
     async function getPatterns() {
-      const patterns = await fetchCurrentUserPatterns();
-      console.log(patterns);
-      return patterns;
+      const userPatterns = await fetchCurrentUserPatterns();
+
+      // xxxxx Comment will be removed when functionality is achieved xxxxx
+      // patterns is an array of objects with keys id, patternName, createdAt, updatedAt
+      setPatterns(userPatterns);
     }
 
     getPatterns();
-    return;
   }, []);
 
   // Function that processes user's view choice into rendered component
-  function userChosenView() {
+  function userChosenView(patterns) {
     if (view === "scroll") {
-      return <PrevNextView patterns="1" />;
+      return <PrevNextView patterns={patterns} />;
     } else if (view === "all") {
-      return <AllPatternView patterns="2" />;
+      return <AllPatternView patterns={patterns} />;
     }
   }
-
-  // Import all patterns to display
-  const allCurrentUserPatterns = 5;
 
   return (
     <div>
       <h1>My Patterns Page</h1>
       <PatternDisplayToggle name="Scroll" onClick={() => setView("scroll")} />
       <PatternDisplayToggle name="Show All" onClick={() => setView("all")} />
-      {userChosenView()}
+      {userChosenView(patterns)}
     </div>
   );
 }
