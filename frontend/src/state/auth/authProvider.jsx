@@ -3,8 +3,6 @@ import { authReducer, initialState } from "./authReducer";
 import { AuthContext } from "./authContext";
 import PropTypes from "prop-types";
 
-
-
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
