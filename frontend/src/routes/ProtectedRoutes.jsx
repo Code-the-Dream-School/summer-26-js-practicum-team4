@@ -8,6 +8,6 @@ function ProtectedRoutes() {
   if (state.loading) {
     return <div>Loading...</div>;
   }
-  return state.isAuthenticated ? <Outlet /> : <Navigate to="/login" />;}
-  export default ProtectedRoutes;
-
+  return state.isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+}
+export default ProtectedRoutes;
