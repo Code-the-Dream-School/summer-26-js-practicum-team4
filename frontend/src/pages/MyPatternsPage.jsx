@@ -19,7 +19,7 @@ function MyPatternsPage() {
       const userPatterns = await fetchCurrentUserPatterns();
 
       // xxxxx Comment will be removed when functionality is achieved xxxxx
-      // patterns is an array of objects with keys id, patternName, createdAt, updatedAt
+      // patterns is an array of objects with keys id, patternName, patternImgUrl, createdAt, updatedAt
       setPatterns(userPatterns);
     }
 
