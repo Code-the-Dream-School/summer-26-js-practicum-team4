@@ -1,6 +1,6 @@
 async function fetchCurrentUserPatterns() {
   try {
-    const resp = await fetch("http://localhost:8080/api/patterns/", {
+    const resp = await fetch("/api/patterns/", {
       // temporarily specifying localhost url until relative url access is implemented
       method: "GET",
       headers: {

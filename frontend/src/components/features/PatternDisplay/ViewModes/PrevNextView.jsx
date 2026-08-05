@@ -11,7 +11,7 @@ function PrevNextView({ patterns }) {
     if (direction === "+") {
       const nextPatternIx = patternIx + 1;
 
-      if (nextPatternIx <= patternsLength) {
+      if (nextPatternIx < patternsLength) {
         setPatternIx(nextPatternIx);
       } else {
         console.log("No next pattern!"); // placeholder action
@@ -35,18 +35,17 @@ function PrevNextView({ patterns }) {
     <div className="scroll-view">
       <button
         className="scroll-controller"
-        onClick={(e) => handleButtonClick(e, "+")}
-      ></button>
-      {patternsLength === 0 ? (
-        <h1>You have no patterns</h1>
-      ) : (
-        <PatternViewer pattern={patterns[patternIx]} />
-      )}
+        onClick={(e) => handleButtonClick(e, "-")}
+      >
+        Previous
+      </button>
+      <PatternViewer pattern={patterns[patternIx]} />
       <button
         className="scroll-controller"
-        onClick={(e) => handleButtonClick(e, "-")}
-      ></button>
-      <h1>Prev/Next View triggered!</h1>
+        onClick={(e) => handleButtonClick(e, "+")}
+      >
+        Next
+      </button>
     </div>
   );
 }
