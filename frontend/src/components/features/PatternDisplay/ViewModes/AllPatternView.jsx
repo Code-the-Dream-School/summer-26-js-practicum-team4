@@ -1,5 +1,7 @@
 import React from "react";
 
+import PatternViewer from "../PatternViewer";
+
 function AllPatternView({ patterns }) {
   console.log("1");
   return (

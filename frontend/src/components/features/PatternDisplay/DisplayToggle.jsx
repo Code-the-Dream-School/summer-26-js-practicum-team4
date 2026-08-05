@@ -1,6 +1,6 @@
 import React from "react";
 
-function PatternDisplayToggle({ name, onClick }) {
+function DisplayToggle({ name, onClick }) {
   // view determines pattern layout (i.e. full dashboard vs. scroll), iconImgUrl determines the image for icon
   return (
     <div>
@@ -9,4 +9,4 @@ function PatternDisplayToggle({ name, onClick }) {
   );
 }
 
-export default PatternDisplayToggle;
+export default DisplayToggle;

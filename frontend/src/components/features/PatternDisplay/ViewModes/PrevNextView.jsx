@@ -1,5 +1,7 @@
 import React from "react";
 
+import PatternViewer from "../PatternViewer";
+
 function PrevNextView({ patterns }) {
   console.log("2");
   return (

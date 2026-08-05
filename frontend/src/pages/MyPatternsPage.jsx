@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 // Component Imports
-import PatternDisplayToggle from "../components/features/PatternDisplay/PatternDisplayToggle";
-import PrevNextView from "../components/features/PatternDisplay/PrevNextView";
-import AllPatternView from "../components/features/PatternDisplay/AllPatternView";
+import DisplayToggle from "../components/features/PatternDisplay/DisplayToggle";
+
+import PrevNextView from "../components/features/PatternDisplay/ViewModes/PrevNextView";
+import AllPatternView from "../components/features/PatternDisplay/ViewModes/AllPatternView";
 
 // Service Imports
 import { fetchCurrentUserPatterns } from "../services/patternRetrieval";
@@ -37,8 +38,8 @@ function MyPatternsPage() {
   return (
     <div>
       <h1>My Patterns Page</h1>
-      <PatternDisplayToggle name="Scroll" onClick={() => setView("scroll")} />
-      <PatternDisplayToggle name="Show All" onClick={() => setView("all")} />
+      <DisplayToggle name="Scroll" onClick={() => setView("scroll")} />
+      <DisplayToggle name="Show All" onClick={() => setView("all")} />
       {userChosenView(patterns)}
     </div>
   );
