@@ -3,11 +3,14 @@ import React from "react";
 import PatternViewer from "../PatternViewer";
 
 function AllPatternView({ patterns }) {
-  console.log("1");
   return (
-    <div>
-      <h1>All view triggered!</h1>
-    </div>
+    <>
+      <div className="all-pattern-view">
+        {patterns.map((pattern) => (
+          <PatternViewer key={pattern.id} pattern={pattern} />
+        ))}
+      </div>
+    </>
   );
 }
 
