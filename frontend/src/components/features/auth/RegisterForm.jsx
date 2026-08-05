@@ -22,6 +22,7 @@ function RegisterForm() {
       console.error(error);
     }
   }
+
   return (
     <div className="register-form">
       <h2>Register</h2>
@@ -58,21 +59,7 @@ function RegisterForm() {
             required
           />
         </div>
-        <button type="submit">Create Account</button>
-        <Link to="/login"> Already have an account? Login</Link>
-      </form>
-    </div>
-  );
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
+
         <button type="submit">Create Account</button>
         <Link to="/login"> Already have an account? Login</Link>
       </form>
@@ -81,4 +68,3 @@ function RegisterForm() {
 }
 
 export default RegisterForm;
-
