@@ -7,5 +7,8 @@ const {} = require("../controllers/user.controller");
 const router = express.Router();
 
 // Routes
+router.get("/profile", getUser);
+router.patch("/profile", updateUser);
+router.delete("/profile", deleteUser);
 
 module.exports = router;
