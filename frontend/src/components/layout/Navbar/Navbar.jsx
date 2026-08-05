@@ -6,7 +6,7 @@ import { useAuth } from "../../../state/auth/useAuth";
 
 function Navbar() {
   const {
-    state: { isAuthenticated , user },
+    state: { isAuthenticated, user },
   } = useAuth();
   return (
     <nav className="navbar">
