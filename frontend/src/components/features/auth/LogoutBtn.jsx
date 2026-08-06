@@ -3,9 +3,13 @@ import { logout } from "../../../services/authService";
 import { useAuth } from "../../../state/auth/useAuth";
 
 function LogoutBtn() {
-  const { dispatch } = useAuth();
+  const {
+    dispatch,
+    state: { loading },
+  } = useAuth();
 
   async function handleLogout() {
+    dispatch({ type: "SET_LOADING" });
     try {
       await logout();
       dispatch({ type: "LOGOUT" });
@@ -15,7 +19,11 @@ function LogoutBtn() {
     }
   }
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <button onClick={handleLogout} disabled={loading}>
+      Logout
+    </button>
+  );
 }
 
 export default LogoutBtn;
