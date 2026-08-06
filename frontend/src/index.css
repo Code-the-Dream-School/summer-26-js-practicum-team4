@@ -1,9 +1,32 @@
 @import "tailwindcss";
 
+@theme {
+  --font-heading: "Judson", serif;
+  --font-body: "Ibarra Real Nova", sans-serif;
+  --color-primary: #96472D;
+  --color-secondary: #05152A;
+  --color-accent: #B38C5E;
+  --color-background: #F6F3EF;
+  --color-footer-background: #E4E2DD;
+  --color-surface: #FFFFFF;
+  --color-border: #D9D1C7;
+  --color-text: #000000;
+  --color-text-secondary: #858484;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
 html,
 body,
 #root {
   min-height: 100%;
+  font-family: var(--font-body);
   margin: 0;
 }
 
