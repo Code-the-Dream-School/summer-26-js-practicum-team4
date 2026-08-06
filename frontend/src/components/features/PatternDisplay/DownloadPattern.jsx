@@ -1,6 +1,6 @@
 import React from "react";
 
-function DownloadBtn({ pattern }) {
+function DownloadPattern({ pattern }) {
   return (
     <a href={pattern.patternImgUrl} target="_blank" rel="noreferrer" download>
       <p>Download</p>
@@ -8,4 +8,4 @@ function DownloadBtn({ pattern }) {
   );
 }
 
-export default DownloadBtn;
+export default DownloadPattern;
