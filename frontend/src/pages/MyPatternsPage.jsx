@@ -7,7 +7,7 @@ import PrevNextView from "../components/features/DashboardDisplay/ViewModes/Prev
 import AllPatternView from "../components/features/DashboardDisplay/ViewModes/AllPatternView";
 
 // Service Imports
-import { fetchCurrentUserPatterns } from "../services/patternRetrieval";
+import { fetchCurrentUserPatterns } from "../services/patternService";
 
 function MyPatternsPage() {
   const [view, setView] = useState("scroll");
