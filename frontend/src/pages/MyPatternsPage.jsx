@@ -68,7 +68,14 @@ function MyPatternsPage() {
       return <h1>You have no patterns. </h1>;
     }
     if (dashState.view === "scroll") {
-      return <PrevNextView patterns={patterns} />;
+      return (
+        <PrevNextView
+          patterns={patterns}
+          dashState={dashState}
+          dashActions={dashActions}
+          dispatch={dispatch}
+        />
+      );
     } else if (dashState.view === "all") {
       return <AllPatternView patterns={patterns} />;
     }

@@ -2,47 +2,31 @@ import React, { useState } from "react";
 
 import PatternViewer from "../PatternViewer";
 
-function PrevNextView({ patterns }) {
+function PrevNextView({ patterns, dispatch, dashActions, dashState }) {
   const patternsLength = patterns.length;
-  const [patternIx, setPatternIx] = useState(0);
+  const [scrollPatternIx, setScrollPatternIx] = useState(0);
 
   function handleButtonClick(e, direction) {
     // right arrow
-    if (direction === "+") {
-      const nextPatternIx = patternIx + 1;
-
-      if (nextPatternIx < patternsLength) {
-        setPatternIx(nextPatternIx);
-      } else {
-        console.log("No next pattern!"); // placeholder action
-      }
-    }
-
-    // left arrow
-    else if (direction === "-") {
-      const prevPatternIx = patternIx - 1;
-
-      if (prevPatternIx >= 0) {
-        setPatternIx(prevPatternIx);
-      } else {
-        console.log("No previous pattern!"); // placeholder action
-      }
-    }
-    return;
+    dispatch({ direction, type: dashActions.setScrollPatternIx });
   }
 
   return (
     <div className="scroll-view">
       <button
         className="scroll-controller"
-        onClick={(e) => handleButtonClick(e, "-")}
+        onClick={() =>
+          dispatch({ direction: "-", type: dashActions.setScrollPatternIx })
+        }
       >
         Previous
       </button>
-      <PatternViewer pattern={patterns[patternIx]} />
+      <PatternViewer pattern={patterns[dashState.scrollPatternIx]} />
       <button
         className="scroll-controller"
-        onClick={(e) => handleButtonClick(e, "+")}
+        onClick={() =>
+          dispatch({ direction: "+", type: dashActions.setScrollPatternIx })
+        }
       >
         Next
       </button>
