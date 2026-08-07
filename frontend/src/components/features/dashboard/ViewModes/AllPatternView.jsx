@@ -7,7 +7,13 @@ function AllPatternView({ dashState, dashActions, dispatch }) {
     <>
       <div className="all-pattern-view">
         {dashState.patterns.map((pattern) => (
-          <PatternViewer key={pattern.id} pattern={pattern} />
+          <PatternViewer
+            key={pattern.id}
+            pattern={pattern}
+            dashState={dashState}
+            dashActions={dashActions}
+            dispatch={dispatch}
+          />
         ))}
       </div>
     </>

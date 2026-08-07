@@ -13,7 +13,12 @@ function PrevNextView({ dispatch, dashActions, dashState }) {
       >
         Previous
       </button>
-      <PatternViewer pattern={dashState.patterns[dashState.scrollPatternIx]} />
+      <PatternViewer
+        pattern={dashState.patterns[dashState.scrollPatternIx]}
+        dashState={dashState}
+        dashActions={dashActions}
+        dispatch={dispatch}
+      />
       <button
         className="scroll-controller"
         onClick={() =>

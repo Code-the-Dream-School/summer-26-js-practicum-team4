@@ -4,7 +4,7 @@ import React from "react";
 import DownloadPatternBtn from "./DownloadPatternBtn";
 import DeletePatternBtn from "./DeletePatternBtn";
 
-function PatternViewer({ pattern }) {
+function PatternViewer({ pattern, dashState, dashActions, dispatch }) {
   return (
     <>
       <img src={pattern.patternImgUrl} height={200} width={200} />
