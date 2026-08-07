@@ -1,14 +1,14 @@
 import React from "react";
 
 // Component Imports
-import DownloadPattern from "./DownloadPattern";
+import DownloadPatternBtn from "./DownloadPatternBtn";
 
 function PatternViewer({ pattern }) {
   console.log(pattern);
   return (
     <>
       <img src={pattern.patternImgUrl} height={200} width={200} />
-      <DownloadPattern pattern={pattern} />
+      <DownloadPatternBtn pattern={pattern} />
     </>
   );
 }
