@@ -76,7 +76,13 @@ function MyPatternsPage() {
         />
       );
     } else if (dashState.view === "all") {
-      return <AllPatternView patterns={patterns} />;
+      return (
+        <AllPatternView
+          dashState={dashState}
+          dashActions={dashActions}
+          dispatch={dispatch}
+        />
+      );
     }
   }
 

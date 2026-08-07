@@ -2,11 +2,11 @@ import React from "react";
 
 import PatternViewer from "../PatternViewer";
 
-function AllPatternView({ patterns }) {
+function AllPatternView({ dashState, dashActions, dispatch }) {
   return (
     <>
       <div className="all-pattern-view">
-        {patterns.map((pattern) => (
+        {dashState.patterns.map((pattern) => (
           <PatternViewer key={pattern.id} pattern={pattern} />
         ))}
       </div>
