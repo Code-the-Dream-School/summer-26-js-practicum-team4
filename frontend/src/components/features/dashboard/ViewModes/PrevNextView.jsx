@@ -2,15 +2,7 @@ import React, { useState } from "react";
 
 import PatternViewer from "../PatternViewer";
 
-function PrevNextView({ patterns, dispatch, dashActions, dashState }) {
-  const patternsLength = patterns.length;
-  const [scrollPatternIx, setScrollPatternIx] = useState(0);
-
-  function handleButtonClick(e, direction) {
-    // right arrow
-    dispatch({ direction, type: dashActions.setScrollPatternIx });
-  }
-
+function PrevNextView({ dispatch, dashActions, dashState }) {
   return (
     <div className="scroll-view">
       <button
@@ -21,7 +13,7 @@ function PrevNextView({ patterns, dispatch, dashActions, dashState }) {
       >
         Previous
       </button>
-      <PatternViewer pattern={patterns[dashState.scrollPatternIx]} />
+      <PatternViewer pattern={dashState.patterns[dashState.scrollPatternIx]} />
       <button
         className="scroll-controller"
         onClick={() =>

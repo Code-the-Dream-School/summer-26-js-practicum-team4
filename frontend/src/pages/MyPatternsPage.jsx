@@ -70,7 +70,6 @@ function MyPatternsPage() {
     if (dashState.view === "scroll") {
       return (
         <PrevNextView
-          patterns={patterns}
           dashState={dashState}
           dashActions={dashActions}
           dispatch={dispatch}
