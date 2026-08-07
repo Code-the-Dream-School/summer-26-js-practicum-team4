@@ -1,17 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 
 // Component Imports
-import DisplayToggle from "../components/features/DashboardDisplay/DisplayToggle";
+import DisplayToggle from "../components/features/dashboard/DisplayToggle";
 
-import PrevNextView from "../components/features/DashboardDisplay/ViewModes/PrevNextView";
-import AllPatternView from "../components/features/DashboardDisplay/ViewModes/AllPatternView";
+import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextView";
+import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
 
 // Service Imports
 import { fetchCurrentUserPatterns } from "../services/patternService";
 
+// State Import
+import {
+  dashInitState,
+  dashReducer,
+  dashActions,
+} from "../state/dashboard/dashboardReducer";
+
 function MyPatternsPage() {
-  const [view, setView] = useState("scroll");
-  const [patterns, setPatterns] = useState("flowers");
+  const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
+
+  const [deletingStatus, setDeletingStatus] = useState(false);
 
   // Retrieve user patterns when page loads
   useEffect(() => {
@@ -19,10 +27,10 @@ function MyPatternsPage() {
       // ==== UNCOMMENT ONCE USER AUTHENTICATION AND SIGN IN ON FRONT END IS WORKING ====== //
       // const userPatterns = await fetchCurrentUserPatterns();
 
-      // setPatterns(userPatterns);
+      // dispatch({ userPatterns, type: dashActions.setUserPatterns });
 
       // ===== TESTING ONLY: UNCOMMENT BELOW TO TEST FRONTEND FEATURES ====== //
-      const testPatterns = [
+      const userPatterns = [
         {
           id: 1,
           patternName: "Hocus Peocus 1",
@@ -48,20 +56,20 @@ function MyPatternsPage() {
           updatedAt: "2026-08-04T22:06:47.783Z",
         },
       ];
-      setPatterns(testPatterns);
+      dispatch({ userPatterns, type: dashActions.setUserPatterns });
     }
 
     getPatterns();
-  }, []);
+  }, [deletingStatus, setDeletingStatus]);
 
   // Function that processes user's view choice into rendered component
   function userChosenView(patterns) {
     if (patterns.length === 0) {
       return <h1>You have no patterns. </h1>;
     }
-    if (view === "scroll") {
+    if (dashState.view === "scroll") {
       return <PrevNextView patterns={patterns} />;
-    } else if (view === "all") {
+    } else if (dashState.view === "all") {
       return <AllPatternView patterns={patterns} />;
     }
   }
@@ -69,9 +77,17 @@ function MyPatternsPage() {
   return (
     <div>
       <h1>My Patterns Page</h1>
-      <DisplayToggle name="Scroll" onClick={() => setView("scroll")} />
-      <DisplayToggle name="Show All" onClick={() => setView("all")} />
-      {userChosenView(patterns)}
+      <DisplayToggle
+        name="Scroll"
+        onClick={() => dispatch({ type: dashActions.setScrollView })}
+        deletingStatus={deletingStatus}
+        setDeletingStatus={setDeletingStatus}
+      />
+      <DisplayToggle
+        name="Show All"
+        onClick={() => dispatch({ type: dashActions.setAllView })}
+      />
+      {userChosenView(dashState.patterns)}
     </div>
   );
 }
