@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 
 // Component Imports
-import DisplayToggle from "../components/features/PatternDisplay/DisplayToggle";
+import DisplayToggle from "../components/features/DashboardDisplay/DisplayToggle";
 
-import PrevNextView from "../components/features/PatternDisplay/ViewModes/PrevNextView";
-import AllPatternView from "../components/features/PatternDisplay/ViewModes/AllPatternView";
+import PrevNextView from "../components/features/DashboardDisplay/ViewModes/PrevNextView";
+import AllPatternView from "../components/features/DashboardDisplay/ViewModes/AllPatternView";
 
 // Service Imports
 import { fetchCurrentUserPatterns } from "../services/patternRetrieval";
