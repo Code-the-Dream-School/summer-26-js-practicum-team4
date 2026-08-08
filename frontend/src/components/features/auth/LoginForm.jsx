@@ -12,13 +12,16 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const user = await login(email, password);
+      const response = await login(email, password);
       dispatch({
         type: "LOGIN_SUCCESS",
-        payload: user,
+        payload: response.user,
       });
     } catch (error) {
-      console.error(error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: error.message,
+      });
     }
   }
   return (
