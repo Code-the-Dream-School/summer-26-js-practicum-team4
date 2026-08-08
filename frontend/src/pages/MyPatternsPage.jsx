@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 
 // Component Imports
 import DisplayToggle from "../components/features/dashboard/DisplayToggle";
@@ -20,8 +20,6 @@ import {
 
 function MyPatternsPage() {
   const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
-
-  const [deletingStatus, setDeletingStatus] = useState(false);
 
   // Retrieve user patterns when page loads
   useEffect(() => {
@@ -62,7 +60,7 @@ function MyPatternsPage() {
     }
 
     getPatterns();
-  }, [deletingStatus, setDeletingStatus]);
+  }, [dashState.isDeleting]);
 
   // Function that processes user's view choice into rendered component
   function userChosenView(patterns) {

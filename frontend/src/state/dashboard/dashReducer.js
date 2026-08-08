@@ -1,7 +1,7 @@
 const dashInitState = {
   view: "scroll",
   patterns: [],
-  deletingStatus: "false",
+  isDeleting: "false",
   scrollPatternIx: 0,
 };
 
@@ -10,6 +10,8 @@ const dashActions = {
   setAllView: "setAllView",
   setUserPatterns: "setUserPatterns",
   setScrollPatternIx: "setScrollPatternIx",
+  beginDelete: "beginDelete",
+  endDelete: "endDelete",
 };
 
 function dashReducer(state, action) {
@@ -20,6 +22,7 @@ function dashReducer(state, action) {
       return { ...state, view: "all" };
     case dashActions.setUserPatterns:
       return { ...state, patterns: action.userPatterns };
+
     case dashActions.setScrollPatternIx: {
       const patternLength = state.patterns.length;
       let newScrollPatternIx = state.scrollPatternIx;
@@ -44,6 +47,17 @@ function dashReducer(state, action) {
 
       return { ...state, scrollPatternIx: newScrollPatternIx };
     }
+
+    case dashActions.beginDelete:
+      return {
+        ...state,
+        isDeleting: true,
+      };
+    case dashActions.endDelete:
+      return {
+        ...state,
+        isDeleting: false,
+      };
   }
 }
 

@@ -4,7 +4,7 @@ import PatternViewer from "../PatternViewer";
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
 function AllPatternView() {
-  const { dashState, dispatch, dashActions } = useContext(DashContext);
+  const { dashState } = useContext(DashContext);
   return (
     <>
       <div className="all-pattern-view">
