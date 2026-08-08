@@ -6,6 +6,8 @@ import DisplayToggle from "../components/features/dashboard/DisplayToggle";
 import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextView";
 import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
 
+import { DashContext } from "../state/dashboard/dashContext";
+
 // Service Imports
 import { fetchCurrentUserPatterns } from "../services/patternService";
 
@@ -14,7 +16,7 @@ import {
   dashInitState,
   dashReducer,
   dashActions,
-} from "../state/dashboard/dashboardReducer";
+} from "../state/dashboard/dashReducer";
 
 function MyPatternsPage() {
   const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
@@ -68,39 +70,31 @@ function MyPatternsPage() {
       return <h1>You have no patterns. </h1>;
     }
     if (dashState.view === "scroll") {
-      return (
-        <PrevNextView
-          dashState={dashState}
-          dashActions={dashActions}
-          dispatch={dispatch}
-        />
-      );
+      return <PrevNextView />;
     } else if (dashState.view === "all") {
-      return (
-        <AllPatternView
-          dashState={dashState}
-          dashActions={dashActions}
-          dispatch={dispatch}
-        />
-      );
+      return <AllPatternView />;
     }
   }
 
   return (
-    <div>
-      <h1>My Patterns Page</h1>
-      <DisplayToggle
-        name="Scroll"
-        onClick={() => dispatch({ type: dashActions.setScrollView })}
-        deletingStatus={deletingStatus}
-        setDeletingStatus={setDeletingStatus}
-      />
-      <DisplayToggle
-        name="Show All"
-        onClick={() => dispatch({ type: dashActions.setAllView })}
-      />
-      {userChosenView(dashState.patterns)}
-    </div>
+    <>
+      <DashContext value={{ dashState, dispatch, dashActions }}>
+        <div>
+          <h1>My Patterns Page</h1>
+          <DisplayToggle
+            name="Scroll"
+            onClick={() => dispatch({ type: dashActions.setScrollView })}
+            deletingStatus={deletingStatus}
+            setDeletingStatus={setDeletingStatus}
+          />
+          <DisplayToggle
+            name="Show All"
+            onClick={() => dispatch({ type: dashActions.setAllView })}
+          />
+          {userChosenView(dashState.patterns)}
+        </div>
+      </DashContext>
+    </>
   );
 }
 
