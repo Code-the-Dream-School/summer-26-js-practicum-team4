@@ -16,10 +16,10 @@ function RegisterForm() {
 
     if (password !== confirmPassword) {
       dispatch({
-          type: "SET_ERROR",
-          payload: "Passwords do not match",
-        });
-        return;
+        type: "SET_ERROR",
+        payload: "Passwords do not match",
+      });
+      return;
     }
 
     try {
@@ -74,15 +74,15 @@ function RegisterForm() {
         </div>
 
         <div className="form-group">
-        <label htmlFor="confirmPassword">Confirm Password:</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-      </div>
+          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
 
         <button type="submit">Create Account</button>
         <Link to="/login"> Already have an account? Login</Link>
