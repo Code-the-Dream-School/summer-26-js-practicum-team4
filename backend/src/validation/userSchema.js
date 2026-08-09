@@ -5,7 +5,6 @@ const passwordSchema = Joi.string()
   .max(100)
   .pattern(/^\S+$/)
   .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()+-]).+$/)
-  .required()
   .messages({
     "string.pattern.base":
       "Password must contain uppercase letter, lowercase letter, number, special character, and no spaces.",
@@ -16,7 +15,7 @@ const passwordSchema = Joi.string()
 const userSchema = Joi.object({
   userName: Joi.string().trim().min(3).max(30).required(),
   email: Joi.string().email().lowercase().trim().required(),
-  password: passwordSchema,
+  password: passwordSchema.required(),
   userProfileImgUrl: Joi.string().uri().optional(),
 });
 
