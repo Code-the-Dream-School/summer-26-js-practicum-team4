@@ -9,7 +9,7 @@ function Footer() {
       </div>
 
       <div className="justify-self-center">
-        <p>&copy; {new Date().getFullYear()} All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()}. All Rights Reserved.</p>
       </div>
 
       <div className="justify-self-end flex gap-5">

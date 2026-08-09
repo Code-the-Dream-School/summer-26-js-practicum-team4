@@ -3,13 +3,13 @@
 @theme {
   --font-heading: "Judson", serif;
   --font-body: "Ibarra Real Nova", sans-serif;
-  --color-primary: #96472D;
-  --color-secondary: #05152A;
-  --color-accent: #B38C5E;
-  --color-background: #F6F3EF;
-  --color-footer-background: #E4E2DD;
-  --color-surface: #FFFFFF;
-  --color-border: #D9D1C7;
+  --color-primary: #96472d;
+  --color-secondary: #05152a;
+  --color-accent: #b38c5e;
+  --color-background: #f6f3ef;
+  --color-footer-background: #e4e2dd;
+  --color-surface: #ffffff;
+  --color-border: #d9d1c7;
   --color-text: #000000;
   --color-text-secondary: #858484;
 }

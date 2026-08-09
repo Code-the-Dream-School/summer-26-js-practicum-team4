@@ -2,7 +2,7 @@ import React from "react";
 
 function GeneratePage() {
   return (
-    <div>
+    <div className="min-h-[calc(100vh-200px)]">
       <h1>Generate Page</h1>
     </div>
   );

@@ -1,19 +1,27 @@
 // App.tsx
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/layout/Navbar/Navbar";
-import Footer from "./components/layout/Footer/Footer";
+import { Routes, Route, useLocation } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
+import PublicNavbar from "./components/layout/PublicNavbar";
+import Footer from "./components/layout/Footer";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
 import GalleryPage from "./pages/GalleryPage";
+import { useAuth } from "./state/auth/useAuth";
 
 function App() {
+  const { state } = useAuth();
+  const location = useLocation();
+
+  const isAuthPage =
+    location.pathname === "/login" || location.pathname === "/register";
+
   return (
-    <div className="app">
-      <Navbar />
+    <div>
+      {!isAuthPage && (state.isAuthenticated ? <Navbar /> : <PublicNavbar />)}
 
       <main className="main-content">
         <Routes>
@@ -26,9 +34,8 @@ function App() {
         </Routes>
       </main>
 
-      <Footer />
+      {!isAuthPage && <Footer />}
     </div>
   );
 }
-
 export default App;
