@@ -82,8 +82,6 @@ function MyPatternsPage() {
           <DisplayToggle
             name="Scroll"
             onClick={() => dispatch({ type: dashActions.setScrollView })}
-            deletingStatus={deletingStatus}
-            setDeletingStatus={setDeletingStatus}
           />
           <DisplayToggle
             name="Show All"
