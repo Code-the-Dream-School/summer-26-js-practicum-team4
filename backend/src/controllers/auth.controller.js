@@ -119,4 +119,34 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+/* GET CURRENT USER */
+const getCurrentUser = async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.userId },
+      select: {
+        id: true,
+        userName: true,
+        email: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthenticatedError('User not found');
+    }
+    return res.status(StatusCodes.OK).json({ user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/* LOGOUT USER */
+const logoutUser = (req, res) => {
+  res.clearCookie('token');
+
+  return res.status(StatusCodes.OK).json({
+    message: 'Logged out successfully',
+  });
+};
+
+module.exports = { registerUser, loginUser, getCurrentUser,logoutUser };
