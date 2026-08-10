@@ -15,6 +15,8 @@ function DeletePatternBtn({ pattern }) {
 
     // End delete status when pattern successfully deleted
     dispatch({ type: dashActions.endDelete });
+
+    return deletedPattern;
   }
   return <button onClick={handleDelete}>Delete</button>;
 }
