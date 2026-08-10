@@ -4,8 +4,8 @@ async function fetchCurrentUserPatterns() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
+      credentials: "include",
     });
 
     if (!resp.ok) {
@@ -25,8 +25,8 @@ async function deleteUserPattern(patternId) {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        credentials: "include",
       },
+      credentials: "include",
     });
 
     if (!resp.ok) {

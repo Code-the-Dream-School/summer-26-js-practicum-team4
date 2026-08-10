@@ -1,7 +1,7 @@
 const dashInitState = {
   view: "scroll",
   patterns: [],
-  isDeleting: "false",
+  isDeleting: false,
   scrollPatternIx: 0,
 };
 
