@@ -26,7 +26,6 @@ function MyPatternsPage() {
   // Retrieve user patterns when page loads
   useEffect(() => {
     async function getPatterns() {
-
       dispatch({ type: dashActions.resetScrollPatternIx }); // reset scroll interface to display first image
       dispatch({ type: dashActions.beginFetch }); // displays loader
 
@@ -34,7 +33,6 @@ function MyPatternsPage() {
 
       dispatch({ type: dashActions.endFetch });
       dispatch({ userPatterns, type: dashActions.setUserPatterns });
-
     }
 
     getPatterns();
