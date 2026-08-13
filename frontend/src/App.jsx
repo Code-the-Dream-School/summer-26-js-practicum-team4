@@ -11,6 +11,7 @@ import MyPatternsPage from "./pages/MyPatternsPage";
 import GalleryPage from "./pages/GalleryPage";
 import PublicRoutes from "./routes/PublicRoutes";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
+import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/generate" element={<GeneratePage />} />
             <Route path="/mypatterns" element={<MyPatternsPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/profile" element={<UserProfilePage />} />
           </Route>
         </Routes>
       </main>

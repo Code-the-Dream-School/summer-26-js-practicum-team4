@@ -3,7 +3,7 @@ module.exports = async function waitForRouteHandler(routeHandler, req, res) {
   // Create promise which only resolves if routeHandler completes its process or next is called
   const promise = new Promise((resolve, reject) => {
     // Create mock next to process error and display messages in tester file.
-    const next = jest.fn((error) => {
+    next = jest.fn((error) => {
       // Reject promise if error encountered; otherwise, resolve upon next function's termination
       if (error) {
         return reject(error);
