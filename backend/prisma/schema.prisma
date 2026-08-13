@@ -12,9 +12,9 @@ model User {
   email             String   @unique @db.VarChar(255)
   userName          String   @map("user_name") @db.VarChar(30)
   hashedPassword    String   @map("hashed_password") @db.VarChar(255)
-  userProfileImgUrl String  @map("user_profile_img_url")
+  userProfileImgUrl String?  @map("user_profile_img_url")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamp(6) @default(now())
 
   patterns Pattern[]
 
