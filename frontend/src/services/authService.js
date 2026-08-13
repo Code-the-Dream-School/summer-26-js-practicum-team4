@@ -42,7 +42,7 @@ async function getCurrentUser() {
   const data = await response.json();
 
   if (!response.ok) {
-  const error = new Error(data.message || "Failed to get current user");
+    const error = new Error(data.message || "Failed to get current user");
     error.status = response.status;
     throw error;
   }
@@ -66,4 +66,3 @@ async function logout() {
 }
 
 export { register, login, getCurrentUser, logout };
-

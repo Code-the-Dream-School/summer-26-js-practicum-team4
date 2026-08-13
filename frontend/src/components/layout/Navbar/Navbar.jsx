@@ -14,27 +14,28 @@ function Navbar() {
         <Link to="/">X-Stitch</Link>
       </div>
 
-      <ul className="navbar-menu">
-        <li>
-          <Link to="/generate">Generate</Link>
-        </li>
-        <li>
-          <Link to="/mypatterns">My Patterns</Link>
-        </li>
-        <li>
-          <Link to="/gallery">Gallery</Link>
-        </li>
-
-        <li>
-          <Link to="/profile">Profile</Link>
-        </li>
-      </ul>
-
       {isAuthenticated ? (
-        <div className="navbar-user">
-          {user && <span className="username">{user.userName}</span>}
-          <LogoutBtn />
-        </div>
+        <>
+          <ul className="navbar-menu">
+            <li>
+              <Link to="/generate">Generate</Link>
+            </li>
+            <li>
+              <Link to="/mypatterns">My Patterns</Link>
+            </li>
+            <li>
+              <Link to="/gallery">Gallery</Link>
+            </li>
+
+            <li>
+              <Link to="/profile">Profile</Link>
+            </li>
+          </ul>
+          <div className="navbar-user">
+            {user && <span className="username">{user.userName}</span>}
+            <LogoutBtn />
+          </div>
+        </>
       ) : (
         <Link to="/login" className="login-btn">
           Login
