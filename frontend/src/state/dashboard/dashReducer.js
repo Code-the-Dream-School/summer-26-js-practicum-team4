@@ -75,6 +75,8 @@ function dashReducer(state, action) {
         ...state,
         isFetching: false,
       };
+    default:
+      return state;
   }
 }
 
