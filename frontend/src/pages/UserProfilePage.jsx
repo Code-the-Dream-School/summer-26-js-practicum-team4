@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import "./UserProfilePage.css";
+import LogoutBtn from "../components/features/auth/LogoutBtn";
 
 function UserProfilePage() {
   const [user, setUser] = useState({
@@ -102,10 +103,6 @@ function UserProfilePage() {
     if (confirmed) {
       setMessage("Delete Account will be connected to the backend later.");
     }
-  };
-
-  const handleLogout = () => {
-    setMessage("Logout will be connected to authentication later.");
   };
 
   return (
@@ -248,9 +245,7 @@ function UserProfilePage() {
           </button>
         </section>
 
-        <button type="button" className="logout-button" onClick={handleLogout}>
-          Log Out
-        </button>
+        <LogoutBtn className="logout-button" />
       </section>
     </main>
   );

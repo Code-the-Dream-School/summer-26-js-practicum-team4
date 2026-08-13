@@ -1,8 +1,9 @@
 import React from "react";
 import { logout } from "../../../services/authService";
 import { useAuth } from "../../../state/auth/useAuth";
+import PropTypes from "prop-types";
 
-function LogoutBtn() {
+function LogoutBtn({ className }) {
   const {
     dispatch,
     state: { loading },
@@ -20,10 +21,14 @@ function LogoutBtn() {
   }
 
   return (
-    <button onClick={handleLogout} disabled={loading}>
+    <button className={className} onClick={handleLogout} disabled={loading}>
       Logout
     </button>
   );
 }
+
+LogoutBtn.propTypes = {
+  className: PropTypes.string,
+};
 
 export default LogoutBtn;
