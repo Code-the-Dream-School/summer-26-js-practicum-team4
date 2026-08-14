@@ -12,6 +12,7 @@ import GalleryPage from "./pages/GalleryPage";
 import PublicRoutes from "./routes/PublicRoutes";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import UserProfilePage from "./pages/UserProfilePage";
+import NotFoundPage from "./pages/NotFound";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="*" element={<NotFoundPage/>} />
           <Route element={<PublicRoutes />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
