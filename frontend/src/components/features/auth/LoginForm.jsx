@@ -1,19 +1,27 @@
 import React, { useState } from "react";
 import { login } from "../../../services/authService";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../state/auth/useAuth";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { dispatch } = useAuth();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
-      const user = await login(email, password);
-      console.log("Logged in:", user);
+      const response = await login(email, password);
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: response.user,
+      });
     } catch (error) {
-      console.error(error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: error.message,
+      });
     }
   }
   return (

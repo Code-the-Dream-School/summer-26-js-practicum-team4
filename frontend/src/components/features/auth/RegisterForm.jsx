@@ -1,22 +1,41 @@
 import React, { useState } from "react";
 import { register } from "../../../services/authService";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../state/auth/useAuth";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { dispatch } = useAuth();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Passwords do not match",
+      });
+      return;
+    }
+
     try {
-      const user = await register(username, email, password);
-      console.log("Registered:", user);
+      const response = await register(username, email, password);
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: response.user,
+      });
     } catch (error) {
-      console.error(error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: error.message,
+      });
     }
   }
+
   return (
     <div className="register-form">
       <h2>Register</h2>
@@ -53,6 +72,18 @@ function RegisterForm() {
             required
           />
         </div>
+
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
+
         <button type="submit">Create Account</button>
         <Link to="/login"> Already have an account? Login</Link>
       </form>
