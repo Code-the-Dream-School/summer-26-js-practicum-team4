@@ -10,6 +10,9 @@ import RegisterPage from "./pages/RegisterPage";
 import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
 import GalleryPage from "./pages/GalleryPage";
+import PublicRoutes from "./routes/PublicRoutes";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
+import UserProfilePage from "./pages/UserProfilePage";
 import { useAuth } from "./state/auth/useAuth";
 
 function App() {
@@ -26,11 +29,16 @@ function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/generate" element={<GeneratePage />} />
-          <Route path="/mypatterns" element={<MyPatternsPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
+          <Route element={<PublicRoutes />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/generate" element={<GeneratePage />} />
+            <Route path="/mypatterns" element={<MyPatternsPage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/profile" element={<UserProfilePage />} />
+          </Route>
         </Routes>
       </main>
 

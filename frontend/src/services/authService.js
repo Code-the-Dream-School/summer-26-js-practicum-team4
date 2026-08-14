@@ -25,7 +25,6 @@ async function login(email, password) {
     credentials: "include",
     body: JSON.stringify({ email, password }),
   });
-
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || "Login failed");
@@ -34,4 +33,21 @@ async function login(email, password) {
   return response.json();
 }
 
-export { register, login };
+async function getCurrentUser() {
+  const response = await fetch("/api/auth/me", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const error = new Error(data.message || "Failed to get current user");
+    error.status = response.status;
+    throw error;
+  }
+
+  return data.user;
+}
+
+export { register, login, getCurrentUser };
