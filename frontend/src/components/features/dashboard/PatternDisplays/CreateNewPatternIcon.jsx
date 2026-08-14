@@ -1,9 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function CreateNewPatternIcon() {
   return (
     <>
-      <img src="" />
+      <Link to="/generate">
+        <img
+          src="./../../../../../public/images/add-pattern-icon.png"
+          width={200}
+          height={200}
+        />
+      </Link>
     </>
   );
 }
