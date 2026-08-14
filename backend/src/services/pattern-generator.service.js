@@ -32,8 +32,8 @@ async function preprocessImage(imageBuffer, options = {}) {
     throw new Error("An image buffer is required.");
   }
 
-  const hasWidth = options.width !== undefined && options.width !== null;
-  const hasHeight = options.height !== undefined && options.height !== null;
+  const hasWidth = options.width !== undefined 
+  const hasHeight = options.height !== undefined 
 
   if (hasWidth === hasHeight) {
     throw new Error("Provide exactly one stitch dimension: width or height.");
