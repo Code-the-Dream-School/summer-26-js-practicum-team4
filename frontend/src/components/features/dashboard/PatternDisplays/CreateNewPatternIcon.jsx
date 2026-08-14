@@ -6,7 +6,7 @@ function CreateNewPatternIcon() {
     <>
       <Link to="/generate">
         <img
-          src="./../../../../../public/images/add-pattern-icon.png"
+          src="./../../../../../images/add-pattern-icon.png"
           width={200}
           height={200}
         />
