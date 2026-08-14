@@ -78,6 +78,12 @@ async function getPattern(req, res, next) {
       },
     });
 
+    if (obtainedPattern === null) {
+      throw new NotFoundError(
+        "The pattern you are looking for cannot be found. ",
+      );
+    }
+
     return res
       .status(StatusCodes.OK)
       .json({ data: { pattern: obtainedPattern } });
