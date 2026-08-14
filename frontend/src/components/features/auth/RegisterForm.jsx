@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { register } from "../../../services/authService";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../state/auth/useAuth";
 
@@ -13,6 +13,7 @@ function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { dispatch } = useAuth();
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -31,6 +32,7 @@ function RegisterForm() {
         type: "LOGIN_SUCCESS",
         payload: response.user,
       });
+      navigate("/generate");
     } catch (error) {
       dispatch({
         type: "SET_ERROR",

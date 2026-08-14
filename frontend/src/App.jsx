@@ -1,6 +1,5 @@
-// App.tsx
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import PublicNavbar from "./components/layout/PublicNavbar";
 import Footer from "./components/layout/Footer";
@@ -28,11 +27,22 @@ function App() {
 
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/"
+            element={
+              state.isAuthenticated ? (
+                <Navigate to="/generate" replace />
+              ) : (
+                <LandingPage />
+              )
+            }
+          />
+
           <Route element={<PublicRoutes />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Route>
+
           <Route element={<ProtectedRoutes />}>
             <Route path="/generate" element={<GeneratePage />} />
             <Route path="/mypatterns" element={<MyPatternsPage />} />
@@ -46,4 +56,5 @@ function App() {
     </div>
   );
 }
+
 export default App;

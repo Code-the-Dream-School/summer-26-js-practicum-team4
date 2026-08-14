@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../state/auth/useAuth";
 
 function Navbar() {
+  const { state } = useAuth();
+
   return (
-    <nav className="flex flex-col bg-background px-20 py-6 ">
-      <div className="flex items-center justify-between  border-b border-gray-300 pb-4">
+    <nav className="flex flex-col bg-background px-20 py-6">
+      <div className="flex items-center justify-between border-b border-gray-300 pb-4">
         <Link to="/" className="text-2xl font-bold text-primary">
           <img
             src="images/logo.png"
@@ -14,7 +17,7 @@ function Navbar() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <span className="text-text">username</span>
+          <span className="text-text">{state.user?.userName}</span>
 
           <Link
             to="/logout"
