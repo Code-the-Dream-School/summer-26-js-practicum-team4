@@ -54,7 +54,6 @@ function RegisterForm() {
       </div>
 
       <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-3xl bg-white shadow-xl">
-        {/* Form Section */}
         <div className="flex w-[50%] flex-col justify-center px-16 py-16">
           <div className="mb-10 text-center">
             <h2 className="text-3xl font-bold">Create Account</h2>
