@@ -1,8 +1,8 @@
 import React from "react";
 
 // Component Imports
-import DownloadPatternBtn from "./PatternManagementBtns/DownloadPatternBtn";
-import DeletePatternBtn from "./PatternManagementBtns/DeletePatternBtn";
+import DownloadPatternBtn from "./../PatternManagementBtns/DownloadPatternBtn";
+import DeletePatternBtn from "./../PatternManagementBtns/DeletePatternBtn";
 
 function PatternViewer({ pattern }) {
   return (
