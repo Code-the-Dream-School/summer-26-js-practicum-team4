@@ -4,6 +4,7 @@ import { useAuth } from "../../../state/auth/useAuth";
 import PropTypes from "prop-types";
 
 function LogoutBtn({ className }) {
+  
   const {
     dispatch,
     state: { loading },
