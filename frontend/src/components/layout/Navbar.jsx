@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../state/auth/useAuth";
 
-
 function Navbar() {
   const { state } = useAuth();
 
@@ -20,7 +19,7 @@ function Navbar() {
         <div className="flex items-center gap-4">
           <span className="text-text">{state.user?.userName}</span>
 
-           <Link
+          <Link
             to="/logout"
             className="rounded-lg bg-secondary px-10 py-2 text-white hover:opacity-90"
           >
@@ -57,7 +56,7 @@ function Navbar() {
           </Link>
         </li>
 
-  <li>
+        <li>
           <Link
             to="/profile"
             className="rounded-lg bg-primary px-6 py-3 text-white hover:opacity-90"
@@ -65,7 +64,6 @@ function Navbar() {
             My Profile
           </Link>
         </li>
-
       </ul>
     </nav>
   );
