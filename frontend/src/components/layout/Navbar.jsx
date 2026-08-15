@@ -52,7 +52,7 @@ function Navbar() {
           </Link>
         </li>
 
-  <li>
+        <li>
           <Link
             to="/profile"
             className="rounded-lg bg-primary px-6 py-3 text-white hover:opacity-90"
@@ -60,7 +60,6 @@ function Navbar() {
             My Profile
           </Link>
         </li>
-
       </ul>
     </nav>
   );
