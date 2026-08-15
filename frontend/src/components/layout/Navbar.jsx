@@ -51,6 +51,16 @@ function Navbar() {
             My Patterns
           </Link>
         </li>
+
+  <li>
+          <Link
+            to="/profile"
+            className="rounded-lg bg-primary px-6 py-3 text-white hover:opacity-90"
+          >
+            My Profile
+          </Link>
+        </li>
+
       </ul>
     </nav>
   );
