@@ -12,9 +12,13 @@ const {
 
 // Middleware imports
 const upload = require("../middleware/upload.middleware");
+const authMiddleware = require("../middleware/authentication");
 
 // Router to handle all routes to patterns
 const router = express.Router();
+
+// JWT authentication for route
+router.use(authMiddleware);
 
 // Generate image
 router.post("/generate", upload.single("image"), generatePattern);
