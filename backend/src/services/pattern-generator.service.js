@@ -2,7 +2,8 @@ const sharp = require("sharp");
 
 const MIN_STITCH_DIMENSION = 10;
 const MAX_STITCH_DIMENSION = 200;
-const ALLOWED_MAX_COLORS = new Set([8, 16, 24, 32, 48]);
+const MIN_COLORS = 8;
+const MAX_COLORS = 48;
 const WHITE_BACKGROUND = { r: 255, g: 255, b: 255 };
 
 function validateStitchDimension(name, value) {
@@ -142,8 +143,14 @@ function averageBox(colors) {
 }
 
 async function reduceColors(preprocessedImage, { maxColors } = {}) {
-  if (!ALLOWED_MAX_COLORS.has(maxColors)) {
-    throw new Error("maxColors must be one of: 8, 16, 24, 32, 48.");
+  if (
+    !Number.isInteger(maxColors) ||
+    maxColors < MIN_COLORS ||
+    maxColors > MAX_COLORS
+  ) {
+    throw new Error(
+      `maxColors must be an integer between ${MIN_COLORS} and ${MAX_COLORS}.`,
+    );
   }
 
   if (
