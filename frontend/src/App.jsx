@@ -23,12 +23,12 @@ function App() {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       {!isAuthPage && (state.isAuthenticated ? <Navbar /> : <PublicNavbar />)}
 
-      <main className="main-content">
+      <main className="main-content flex flex-1 flex-col ">
         <Routes>
-         <Route
+          <Route
             path="/"
             element={
               state.isAuthenticated ? (
@@ -49,7 +49,7 @@ function App() {
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/profile" element={<UserProfilePage />} />
           </Route>
-           <Route path="*" element={<NotFoundPage/>} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 
