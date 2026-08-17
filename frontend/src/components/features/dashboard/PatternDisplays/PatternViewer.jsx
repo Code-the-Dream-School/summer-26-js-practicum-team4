@@ -7,10 +7,12 @@ import DeletePatternBtn from "./../PatternManagementBtns/DeletePatternBtn";
 function PatternViewer({ pattern }) {
   return (
     <>
-      <img src={pattern.patternImgUrl} height={200} width={200} />
-      <h3>{pattern.patternName}</h3>
-      <DownloadPatternBtn pattern={pattern} />
-      <DeletePatternBtn pattern={pattern} />
+      <div className="pattern-interface">
+        <h3>{pattern.patternName}</h3>
+        <img src={pattern.patternImgUrl} height={200} width={200} />
+        <DownloadPatternBtn pattern={pattern} />
+        <DeletePatternBtn pattern={pattern} />
+      </div>
     </>
   );
 }

@@ -7,7 +7,7 @@ import { DashContext } from "../../../../state/dashboard/dashContext";
 function PrevNextView() {
   const { dispatch, dashActions, dashState } = useContext(DashContext);
   return (
-    <div className="scroll-view">
+    <div className="scroll-view flex">
       <button
         className="scroll-controller"
         onClick={() =>
