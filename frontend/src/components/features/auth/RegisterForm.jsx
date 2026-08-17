@@ -3,6 +3,7 @@ import { register } from "../../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../state/auth/useAuth";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -11,6 +12,7 @@ function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [reCaptchaToken, setReCaptchaToken] = useState(null);
 
   const { dispatch } = useAuth();
   const navigate = useNavigate();
@@ -163,6 +165,12 @@ function RegisterForm() {
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
             </div>
+  <ReCAPTCHA className="flex justify-center max-w-full"
+            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+            onChange={(token) => setReCaptchaToken(token)}
+            size="normal"
+          />
+         
 
             <button
               type="submit"
