@@ -8,7 +8,7 @@ function AllPatternView() {
   const { dashState } = useContext(DashContext);
   return (
     <>
-      <div className="all-pattern-view flex flex-wrap mx-20 mt-10">
+      <div className="all-pattern-view mx-20 mt-10 grid grid-cols-3">
         {dashState.patterns.map((pattern) => (
           <PatternViewerAll key={pattern.id} pattern={pattern} />
         ))}

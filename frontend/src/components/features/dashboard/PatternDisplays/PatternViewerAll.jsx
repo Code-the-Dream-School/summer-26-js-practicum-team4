@@ -11,7 +11,7 @@ function getDate(dateTimeStr) {
 function PatternViewerAll({ pattern }) {
   return (
     <>
-      <div className="container max-w-90">
+      <div>
         <div className="pattern-interface bg-white border rounded-2xl border-gray-400 m-2">
           <div className="download-and-delete-buttons text-right mr-2 mt-2">
             <DownloadPatternBtn pattern={pattern} />
@@ -20,6 +20,7 @@ function PatternViewerAll({ pattern }) {
           <img
             className="mx-auto p-5 object-contain"
             src={pattern.patternImgUrl}
+            alt={pattern.patternName}
           />
         </div>
         <h2 className="text-2xl ml-5">{pattern.patternName}</h2>

@@ -13,6 +13,7 @@ function PatternViewerScroll({ pattern }) {
           <img
             className="mx-auto p-10 max-h-100 max-w-100"
             src={pattern.patternImgUrl}
+            alt={pattern.patternName}
           />
         </div>
         <div className="flex justify-center gap-x-15 my-8">

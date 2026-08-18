@@ -44,7 +44,9 @@ function MyPatternsPage() {
     if (patterns.length === 0) {
       return (
         <>
-          <h1>You have no patterns. </h1>
+          <h3 className="ml-20 my-5">
+            Welcome! Let's add your first pattern.{" "}
+          </h3>
           <CreateNewPatternIcon />
         </>
       );
