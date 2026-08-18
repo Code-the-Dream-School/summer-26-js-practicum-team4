@@ -1,9 +1,6 @@
 const prisma = require("../config/prismaClient");
 const { StatusCodes } = require("http-status-codes");
 
-const getUser = (req, res) => {};
-const updateUser = (req, res) => {};
-
 const deleteUser = async (req, res,next) => {
  try{ await prisma.user.delete({
     where: { id: req.user.userId },
@@ -17,4 +14,4 @@ const deleteUser = async (req, res,next) => {
   }
 };
 
-module.exports = { getUser, updateUser, deleteUser };
+module.exports = { deleteUser };
