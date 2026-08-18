@@ -14,11 +14,17 @@ function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [reCaptchaToken, setReCaptchaToken] = useState(null);
 
-  const { dispatch } = useAuth();
+  const {
+    dispatch,
+    state: { error },
+  } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
+    dispatch({
+      type: "CLEAR_ERROR",
+    });
 
     if (password !== confirmPassword) {
       dispatch({
@@ -182,9 +188,14 @@ function RegisterForm() {
               className="flex justify-center max-w-full "
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               onChange={(token) => setReCaptchaToken(token)}
+              onExpired={() => setReCaptchaToken(null)}
               size="normal"
               hl="en"
             />
+
+            {error && (
+              <p className="text-center text-sm text-red-500">{error}</p>
+            )}
 
             <button
               type="submit"
