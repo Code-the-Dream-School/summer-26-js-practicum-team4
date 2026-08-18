@@ -5,7 +5,12 @@ async function register(username, email, password, reCaptchaToken) {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ userName: username, email, password, reCaptchaToken}),
+    body: JSON.stringify({
+      userName: username,
+      email,
+      password,
+      reCaptchaToken,
+    }),
   });
 
   if (!response.ok) {

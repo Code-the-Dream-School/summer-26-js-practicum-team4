@@ -27,7 +27,7 @@ function RegisterForm() {
       });
       return;
     }
-if (!reCaptchaToken) {
+    if (!reCaptchaToken) {
       dispatch({
         type: "SET_ERROR",
         payload: "Complete the reCAPTCHA",
@@ -35,9 +35,13 @@ if (!reCaptchaToken) {
       return;
     }
 
-
     try {
-      const response = await register(username, email, password, reCaptchaToken);
+      const response = await register(
+        username,
+        email,
+        password,
+        reCaptchaToken,
+      );
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: response.user,
@@ -173,12 +177,14 @@ if (!reCaptchaToken) {
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
             </div>
-  <ReCAPTCHA className="flex justify-center max-w-full"
-            sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-            onChange={(token) => setReCaptchaToken(token)}
-            size="normal"
-          />
-         
+
+            <ReCAPTCHA
+              className="flex justify-center max-w-full "
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              onChange={(token) => setReCaptchaToken(token)}
+              size="normal"
+              hl="en"
+            />
 
             <button
               type="submit"
