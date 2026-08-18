@@ -9,7 +9,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { dispatch } = useAuth();
+  const { state, dispatch } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
@@ -103,6 +103,12 @@ function LoginForm() {
               />
             </div>
 
+            {state.error && (
+              <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+                {state.error}
+              </p>
+            )}
+            
             <button
               type="submit"
               className="w-full rounded-lg bg-primary px-6 py-3 text-lg text-white transition hover:opacity-90"
