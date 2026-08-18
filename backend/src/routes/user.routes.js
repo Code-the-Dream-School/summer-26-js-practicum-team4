@@ -1,11 +1,13 @@
 const express = require("express");
 
+const authenticationMiddleware = require("../middleware/authentication");
 // Route handler function imports
-const {} = require("../controllers/user.controller");
+const { getUser } = require("../controllers/user.controller");
 
 // Router to handle all routes to users
 const router = express.Router();
 
 // Routes
+router.get("/profile", authenticationMiddleware, getUser);
 
 module.exports = router;
