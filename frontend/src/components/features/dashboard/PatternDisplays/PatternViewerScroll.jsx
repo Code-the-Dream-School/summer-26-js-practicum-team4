@@ -11,10 +11,8 @@ function PatternViewerScroll({ pattern }) {
         <h2 className="text-3xl mb-5">{pattern.patternName}</h2>
         <div className="pattern-interface bg-white border rounded-2xl border-gray-400">
           <img
-            className="mx-auto pt-10 pb-10"
+            className="mx-auto p-10 max-h-100 max-w-100"
             src={pattern.patternImgUrl}
-            height={200}
-            width={200}
           />
         </div>
         <div className="flex justify-center gap-x-15 my-8">

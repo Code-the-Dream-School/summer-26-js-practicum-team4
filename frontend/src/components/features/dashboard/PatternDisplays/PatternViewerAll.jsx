@@ -4,21 +4,26 @@ import React from "react";
 import DownloadPatternBtn from "./../PatternManagementBtns/DownloadPatternBtn";
 import DeletePatternBtn from "./../PatternManagementBtns/DeletePatternBtn";
 
+function getDate(dateTimeStr) {
+  return dateTimeStr.split("T")[0];
+}
+
 function PatternViewerAll({ pattern }) {
   return (
     <>
-      <div className="container mx-auto">
-        <div className="pattern-interface bg-white border rounded-2xl border-gray-400">
-          <DownloadPatternBtn pattern={pattern} />
-          <DeletePatternBtn pattern={pattern} />
+      <div className="container max-w-90">
+        <div className="pattern-interface bg-white border rounded-2xl border-gray-400 m-2">
+          <div className="download-and-delete-buttons text-right mr-2 mt-2">
+            <DownloadPatternBtn pattern={pattern} />
+            <DeletePatternBtn pattern={pattern} />
+          </div>
           <img
-            className="mx-auto pt-10 pb-10"
+            className="mx-auto p-5 object-contain"
             src={pattern.patternImgUrl}
-            height={200}
-            width={200}
           />
         </div>
-        <h2 className="text-3xl mb-5">{pattern.patternName}</h2>
+        <h2 className="text-2xl ml-5">{pattern.patternName}</h2>
+        <h3 className="mb-10 ml-5">Created {getDate(pattern.createdAt)}</h3>
       </div>
     </>
   );

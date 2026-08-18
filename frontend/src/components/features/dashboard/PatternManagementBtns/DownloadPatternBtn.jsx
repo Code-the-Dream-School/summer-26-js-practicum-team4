@@ -13,7 +13,12 @@ function DownloadPatternBtn({ pattern }) {
             Download
           </button>
         ) : (
-          <h1>Naye</h1>
+          <button>
+            <img
+              src="images/all-pattern-download.png"
+              className="max-w-10 hover:bg-gray-300"
+            />
+          </button>
         )}
       </a>
     </>

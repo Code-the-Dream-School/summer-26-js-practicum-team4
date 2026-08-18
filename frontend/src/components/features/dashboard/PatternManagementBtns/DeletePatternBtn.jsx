@@ -30,7 +30,14 @@ function DeletePatternBtn({ pattern }) {
       </button>
     );
   } else if (dashState.view === "all") {
-    return <h1>Huye</h1>;
+    return (
+      <button onClick={handleDelete}>
+        <img
+          src="images/all-pattern-delete.png"
+          className="max-w-10 hover:bg-gray-300"
+        />
+      </button>
+    );
   }
 }
 
