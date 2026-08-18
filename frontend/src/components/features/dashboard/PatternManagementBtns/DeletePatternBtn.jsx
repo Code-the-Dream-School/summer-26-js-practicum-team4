@@ -6,7 +6,7 @@ import { DashContext } from "../../../../state/dashboard/dashContext";
 import { deleteUserPattern } from "../../../../services/patternService";
 
 function DeletePatternBtn({ pattern }) {
-  const { dispatch, dashActions } = useContext(DashContext);
+  const { dispatch, dashState, dashActions } = useContext(DashContext);
 
   async function handleDelete() {
     dispatch({ type: dashActions.beginDelete });
@@ -18,7 +18,20 @@ function DeletePatternBtn({ pattern }) {
 
     return deletedPattern;
   }
-  return <button onClick={handleDelete}>Delete</button>;
+
+  // Customize button icon according to display
+  if (dashState.view === "scroll") {
+    return (
+      <button
+        onClick={handleDelete}
+        className="bg-primary text-white px-10 py-2 border border-black rounded-md hover:bg-accent"
+      >
+        Delete
+      </button>
+    );
+  } else if (dashState.view === "all") {
+    return <h1>Huye</h1>;
+  }
 }
 
 export default DeletePatternBtn;

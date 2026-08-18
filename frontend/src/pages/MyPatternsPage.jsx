@@ -59,23 +59,21 @@ function MyPatternsPage() {
   return (
     <>
       <DashContext value={{ dashState, dispatch, dashActions }}>
-        <div>
-          <h1 className="text-5xl font-bold">My Patterns Page</h1>
+        <div className="bg-background">
           <div className="flex flex-row-reverse mx-auto content-end">
             {" "}
             <DisplayToggle
               name="Scroll"
               onClick={() => dispatch({ type: dashActions.setScrollView })}
-              displayImagePath={"./../../../../images/scroll-view-toggle.png"}
+              displayImagePath={"images/scroll-view-toggle.png"}
             />
             <DisplayToggle
               name="Show All"
               onClick={() => dispatch({ type: dashActions.setAllView })}
-              displayImagePath={
-                "./../../../../images/all-pattern-view-toggle.png"
-              }
+              displayImagePath={"images/all-pattern-view-toggle.png"}
             />
           </div>
+          <h1 className="text-5xl font-heading ml-19">Dashboard</h1>
           {dashState.isFetching ? (
             <Loader />
           ) : (
