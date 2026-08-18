@@ -1,11 +1,11 @@
-async function register(username, email, password) {
+async function register(username, email, password, reCaptchaToken) {
   const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ userName: username, email, password }),
+    body: JSON.stringify({ userName: username, email, password, reCaptchaToken}),
   });
 
   if (!response.ok) {

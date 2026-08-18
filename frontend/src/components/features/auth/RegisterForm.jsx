@@ -27,9 +27,17 @@ function RegisterForm() {
       });
       return;
     }
+if (!reCaptchaToken) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Complete the reCAPTCHA",
+      });
+      return;
+    }
+
 
     try {
-      const response = await register(username, email, password);
+      const response = await register(username, email, password, reCaptchaToken);
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: response.user,
