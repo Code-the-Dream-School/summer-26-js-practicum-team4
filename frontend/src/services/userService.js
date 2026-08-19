@@ -13,4 +13,19 @@ async function getUser() {
   return data.user;
 }
 
-export { getUser };
+async function deleteUser() {
+  const response = await fetch("/api/user/profile", {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to delete user");
+  }
+
+  return response.json();
+}
+
+export { getUser, deleteUser };
+

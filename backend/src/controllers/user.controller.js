@@ -23,4 +23,17 @@ const getUser = async (req, res, next) => {
   }
 };
 
-module.exports = { getUser };
+const deleteUser = async (req, res,next) => {
+ try{ await prisma.user.delete({
+    where: { id: req.user.userId },
+  });
+  res.clearCookie("token");
+  return res.status(StatusCodes.OK).json({
+    message: "User deleted successfully.",
+  });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getUser, deleteUser };
