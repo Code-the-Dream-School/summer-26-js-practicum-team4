@@ -9,9 +9,10 @@ datasource db {
 
 model User {
   id                Int      @id @default(autoincrement())
+  googleId          String?  @unique
   email             String   @unique @db.VarChar(255)
   userName          String   @map("user_name") @db.VarChar(30)
-  hashedPassword    String   @map("hashed_password") @db.VarChar(255)
+  hashedPassword    String?  @map("hashed_password") @db.VarChar(255)
   userProfileImgUrl String?  @map("user_profile_img_url")
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)

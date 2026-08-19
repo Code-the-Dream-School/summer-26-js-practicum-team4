@@ -15,7 +15,7 @@ const passwordSchema = Joi.string()
 const userSchema = Joi.object({
   userName: Joi.string().trim().min(3).max(30).required(),
   email: Joi.string().email().lowercase().trim().required(),
-  password: passwordSchema.required(),
+  password: passwordSchema.optional(),
   userProfileImgUrl: Joi.string().uri().optional(),
 });
 
