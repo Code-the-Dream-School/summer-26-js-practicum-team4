@@ -1,5 +1,5 @@
 async function getUser() {
-  const response = await fetch("/api/profile", {
+  const response = await fetch("/api/user/profile", {
     method: "GET",
     credentials: "include",
   });
@@ -28,4 +28,3 @@ async function deleteUser() {
 }
 
 export { getUser, deleteUser };
-
