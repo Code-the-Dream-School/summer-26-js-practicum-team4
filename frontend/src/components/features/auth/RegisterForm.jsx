@@ -163,7 +163,7 @@ function RegisterForm() {
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
             </div>
-            
+
             {state.error && (
               <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
                 {state.error}

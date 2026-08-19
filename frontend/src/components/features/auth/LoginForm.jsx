@@ -108,7 +108,7 @@ function LoginForm() {
                 {state.error}
               </p>
             )}
-            
+
             <button
               type="submit"
               className="w-full rounded-lg bg-primary px-6 py-3 text-lg text-white transition hover:opacity-90"
