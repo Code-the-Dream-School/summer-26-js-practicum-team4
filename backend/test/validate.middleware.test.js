@@ -183,4 +183,46 @@ describe("1) User registration validation", () => {
     expect(error.statusCode).toBe(400);
     expect(error.message).toBe('"email" must be a valid email');
   });
+
+  test("1.10) Registration rejects a username shorter than 3 characters.", () => {
+    const req = {
+      body: {
+        userName: "ab",
+        email: "username1@example.com",
+        password: "Test1234!",
+      },
+    };
+
+    const next = jest.fn();
+
+    validate(userSchema)(req, {}, next);
+
+    const error = next.mock.calls[0][0];
+
+    expect(error.statusCode).toBe(400);
+    expect(error.message).toBe(
+      '"userName" length must be at least 3 characters long',
+    );
+  });
+
+  test("1.11) Registration rejects a username longer than 30 characters.", () => {
+    const req = {
+      body: {
+        userName: "a".repeat(31),
+        email: "username2@example.com",
+        password: "Test1234!",
+      },
+    };
+
+    const next = jest.fn();
+
+    validate(userSchema)(req, {}, next);
+
+    const error = next.mock.calls[0][0];
+
+    expect(error.statusCode).toBe(400);
+    expect(error.message).toBe(
+      '"userName" length must be less than or equal to 30 characters long',
+    );
+  });
 });

@@ -6,7 +6,7 @@ const { EventEmitter } = require("events");
 
 const waitForRouteHandler = require("./waitForRouteHandler");
 
-const { registerUser } = require("../src/controllers/auth.controller");
+const { registerUser, loginUser } = require("../src/controllers/auth.controller");
 
 let respObj = null;
 
@@ -75,5 +75,68 @@ describe("1) User registration", () => {
 });
 
 describe("2) User login", () => {
-  // Add login controller tests here.
+  test("2.1) User can successfully log in.", async () => {
+    const req = httpMocks.createRequest({
+      method: "POST",
+      body: {
+        email: "tester@example.com",
+        password: "Test1234!",
+      },
+    });
+
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    await waitForRouteHandler(loginUser, req, respObj);
+
+    const data = respObj._getJSONData();
+
+    expect(respObj.statusCode).toBe(200);
+    expect(data.user.email).toBe("tester@example.com");
+    expect(data.user.userName).toBe("test");
+  });
+
+  test("2.2) Login rejects an incorrect password.", async () => {
+    const req = httpMocks.createRequest({
+      method: "POST",
+      body: {
+        email: "tester@example.com",
+        password: "WrongPassword1!",
+      },
+    });
+
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    try {
+      await waitForRouteHandler(loginUser, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(401);
+      expect(error.message).toBe("Invalid credentials");
+    }
+  });
+
+  test("2.3) Login rejects a nonexistent email.", async () => {
+    const req = httpMocks.createRequest({
+      method: "POST",
+      body: {
+        email: "doesnotexist@example.com",
+        password: "Test1234!",
+      },
+    });
+
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    try {
+      await waitForRouteHandler(loginUser, req, respObj);
+    } catch (error) {
+      expect(error.statusCode).toBe(401);
+      expect(error.message).toBe("Invalid credentials");
+    }
+  });
+
 });
