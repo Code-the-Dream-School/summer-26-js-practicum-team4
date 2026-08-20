@@ -188,6 +188,9 @@ async function getAllUserPatterns(req, res, next) {
         createdAt: true,
         updatedAt: true,
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
     return res.status(StatusCodes.OK).json({
