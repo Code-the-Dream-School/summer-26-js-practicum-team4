@@ -317,7 +317,7 @@ describe("4) Deleting pattern names in the database.", () => {
 });
 
 describe("5) Reading all patterns from a given user", () => {
-  test("5.1) user1 receives NotFoundError if user1 has no patterns.", async () => {
+  test("5.1) user1 receives Empty list of patterns", async () => {
     // Create req and res for retrieving user1 patterns
     const req = httpMocks.createRequest({
       user: { userId: user1.id },
@@ -329,11 +329,9 @@ describe("5) Reading all patterns from a given user", () => {
     });
 
     // Make request and verify output
-    try {
-      await waitForRouteHandler(getAllUserPatterns, req, respObj);
-    } catch (error) {
-      expect(error.statusCode).toBe(404);
-    }
+    await waitForRouteHandler(getAllUserPatterns, req, respObj);
+    const patternList = respObj._getJSONData().data.patterns;
+    expect(patternList.length).toBe(0);
   });
   test("5.2) user1 can read all of their retrieved patterns.", async () => {
     // Create request and responses for creating database entries
