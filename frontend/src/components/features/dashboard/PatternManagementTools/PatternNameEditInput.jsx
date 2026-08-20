@@ -11,11 +11,17 @@ function PatternNameEditInput({
   currentPatternName,
   setCurrentPatternName,
   textStyle,
+  setEditingThisPattern = false,
 }) {
   const { dispatch, dashActions, dashState } = useContext(DashContext);
 
   function handleCancel() {
     setCurrentPatternName(defaultPatternName);
+
+    // if editing pattern in all patterns view
+    if (setEditingThisPattern) {
+      setEditingThisPattern(false);
+    }
 
     dispatch({ type: dashActions.endEditing });
   }
@@ -24,6 +30,11 @@ function PatternNameEditInput({
     dispatch({ type: dashActions.beginSaving });
 
     await saveNewPatternName(patternId, currentPatternName);
+
+    // if editing pattern in all patterns view
+    if (setEditingThisPattern) {
+      setEditingThisPattern(false);
+    }
 
     dispatch({ type: dashActions.endEditing });
     dispatch({ type: dashActions.endSaving });

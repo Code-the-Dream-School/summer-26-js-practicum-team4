@@ -13,6 +13,7 @@ function getDate(dateTimeStr) {
 
 function PatternViewerAll({ pattern }) {
   const { dashState, dashActions, dispatch } = useContext(DashContext);
+  const [editingThisPattern, setEditingThisPattern] = useState(false);
   const [currentPatternName, setCurrentPatternName] = useState(
     pattern.patternName,
   );
@@ -23,9 +24,38 @@ function PatternViewerAll({ pattern }) {
     }
 
     setCurrentPatternName(pattern.patternName);
+    setEditingThisPattern(true);
+
     dispatch({ type: dashActions.beginEditing });
 
     return;
+  }
+
+  function patternEditInterface() {
+    if (dashState.isEditing && editingThisPattern) {
+      return (
+        <PatternNameEditInput
+          patternId={pattern.id}
+          defaultPatternName={pattern.patternName}
+          currentPatternName={currentPatternName}
+          setCurrentPatternName={setCurrentPatternName}
+          setEditingThisPattern={setEditingThisPattern}
+          textStyle="text-2xl ml-5"
+        />
+      );
+    } else {
+      return (
+        <div className="grid grid-cols-5 place-content-center">
+          <h2 className="text-2xl ml-5">{pattern.patternName}</h2>
+          <button className="col-start-6" onClick={handleEdit}>
+            <img
+              src="images/edit.png"
+              className="hover:bg-gray-300 mb-5 w-10"
+            />
+          </button>
+        </div>
+      );
+    }
   }
   return (
     <>
@@ -41,26 +71,7 @@ function PatternViewerAll({ pattern }) {
             alt={pattern.patternName}
           />
         </div>
-
-        {dashState.isEditing ? (
-          <PatternNameEditInput
-            patternId={pattern.id}
-            defaultPatternName={pattern.patternName}
-            currentPatternName={currentPatternName}
-            setCurrentPatternName={setCurrentPatternName}
-            textStyle="text-2xl ml-5"
-          />
-        ) : (
-          <div className="grid grid-cols-5 place-content-center">
-            <h2 className="text-2xl ml-5">{pattern.patternName}</h2>
-            <button className="col-start-6" onClick={handleEdit}>
-              <img
-                src="images/edit.png"
-                className="hover:bg-gray-300 mb-5 w-10"
-              />
-            </button>
-          </div>
-        )}
+        {patternEditInterface()}
 
         <h3 className="mb-10 ml-5">Created {getDate(pattern.createdAt)}</h3>
       </div>
