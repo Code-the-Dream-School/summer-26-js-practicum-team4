@@ -9,6 +9,7 @@ function CreateNewPatternIcon() {
           src="./../../../../../images/add-pattern-icon.png"
           width={200}
           height={200}
+          alt="create new pattern"
         />
       </Link>
     </>
