@@ -37,7 +37,7 @@ function PatternViewerScroll({ pattern }) {
         ) : (
           <div className="grid grid-cols-5 place-content-center">
             <h2 className="text-3xl mb-5">{pattern.patternName}</h2>
-            <button onClick={handleEdit}>
+            <button className="col-start-6" onClick={handleEdit}>
               <img
                 src="images/edit.png"
                 className="hover:bg-gray-300 mb-5 w-10"
