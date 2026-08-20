@@ -1,8 +1,8 @@
 import React from "react";
 
 // Component Imports
-import DownloadPatternBtn from "./../PatternManagementBtns/DownloadPatternBtn";
-import DeletePatternBtn from "./../PatternManagementBtns/DeletePatternBtn";
+import DownloadPatternBtn from "./../PatternManagementTools/DownloadPatternBtn";
+import DeletePatternBtn from "./../PatternManagementTools/DeletePatternBtn";
 
 function getDate(dateTimeStr) {
   return dateTimeStr.split("T")[0];
