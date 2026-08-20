@@ -10,6 +10,7 @@ function PatternNameEditInput({
   defaultPatternName,
   currentPatternName,
   setCurrentPatternName,
+  textStyle,
 }) {
   const { dispatch, dashActions, dashState } = useContext(DashContext);
 
@@ -38,20 +39,22 @@ function PatternNameEditInput({
           onChange={() => {
             setCurrentPatternName(event.target.value);
           }}
-          className="text-3xl bg-white rounded-xl p-1 border mb-5"
+          className={`${textStyle} bg-white rounded-xl p-1 border mb-5 col-span-4`}
         ></input>
-        <button
-          className="col-start-5 col-span-1 bg-primary hover:bg-accent text-white border border-black rounded-md ml-auto"
-          onClick={handleSave}
-        >
-          Save
-        </button>
-        <button
-          className="col-start-6 col-span-1 bg-primary hover:bg-accent text-white border border-black rounded-md m-auto"
-          onClick={handleCancel}
-        >
-          Cancel
-        </button>
+        <div className="col-start-6">
+          <button
+            className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto mr-1 p-1"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+          <button
+            className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto p-1"
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );

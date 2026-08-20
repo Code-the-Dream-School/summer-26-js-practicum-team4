@@ -33,6 +33,7 @@ function PatternViewerScroll({ pattern }) {
             defaultPatternName={pattern.patternName}
             currentPatternName={currentPatternName}
             setCurrentPatternName={setCurrentPatternName}
+            textStyle="text-3xl"
           />
         ) : (
           <div className="grid grid-cols-5 place-content-center">
