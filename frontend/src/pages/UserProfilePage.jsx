@@ -1,7 +1,15 @@
 import React, { useRef, useState } from "react";
 import "./UserProfilePage.css";
+import LogoutBtn from "../components/features/auth/LogoutBtn";
+import { deleteUser } from "../services/userService";
+import { useAuth } from "../state/auth/useAuth";
 
 function UserProfilePage() {
+  const {
+    dispatch,
+    state: { loading },
+  } = useAuth();
+
   const [user, setUser] = useState({
     fullName: "Millicent Traylor",
     email: "millicent@email.com",
@@ -94,19 +102,21 @@ function UserProfilePage() {
     setMessage("Change Password will be added in the next step.");
   };
 
-  const handleDeleteAccount = () => {
+  async function handleDeleteAccount() {
     const confirmed = window.confirm(
       "Are you sure you want to delete your account?",
     );
 
     if (confirmed) {
-      setMessage("Delete Account will be connected to the backend later.");
+      dispatch({ type: "SET_LOADING" });
+      try {
+        await deleteUser();
+        dispatch({ type: "LOGOUT" });
+      } catch (error) {
+        dispatch({ type: "SET_ERROR", payload: error.message });
+      }
     }
-  };
-
-  const handleLogout = () => {
-    setMessage("Logout will be connected to authentication later.");
-  };
+  }
 
   return (
     <main className="profile-page">
@@ -240,6 +250,7 @@ function UserProfilePage() {
 
           <button
             type="button"
+            disabled={loading}
             className="settings-button delete-button"
             onClick={handleDeleteAccount}
           >
@@ -248,9 +259,7 @@ function UserProfilePage() {
           </button>
         </section>
 
-        <button type="button" className="logout-button" onClick={handleLogout}>
-          Log Out
-        </button>
+        <LogoutBtn className="logout-button" />
       </section>
     </main>
   );
