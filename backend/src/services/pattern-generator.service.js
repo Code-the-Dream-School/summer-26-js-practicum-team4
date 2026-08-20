@@ -47,6 +47,7 @@ async function preprocessImage(imageBuffer, options = {}) {
   const metadata = await sharp(imageBuffer).metadata();
   const source = getOrientedDimensions(metadata);
 
+  // Calculate the missing dimension to keep the original aspect ratio.
   const resolvedWidth = hasWidth
     ? suppliedDimension
     : Math.round(suppliedDimension * (source.width / source.height));
@@ -174,6 +175,7 @@ async function reduceColors(preprocessedImage, { maxColors } = {}) {
     throw new Error("Preprocessed image dimensions do not match its buffer.");
   }
 
+  // Count repeated RGB colors while keeping each pixel's original raster position.
   const histogram = new Map();
   const pixelKeys = [];
 
@@ -195,6 +197,7 @@ async function reduceColors(preprocessedImage, { maxColors } = {}) {
 
   let boxes = [[...histogram.values()]];
 
+  // Split the most varied color group until we reach the requested color limit.
   while (boxes.length < maxColors) {
     let boxIndex = -1;
     let selectedStats = null;
@@ -220,6 +223,7 @@ async function reduceColors(preprocessedImage, { maxColors } = {}) {
     boxes.splice(boxIndex, 1, first, second);
   }
 
+  // Average each color group and map every source color to its new palette index.
   const palette = [];
   const paletteIndexes = new Map();
   const colorToPaletteIndex = new Map();

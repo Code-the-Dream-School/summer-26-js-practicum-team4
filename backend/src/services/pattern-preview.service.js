@@ -37,6 +37,7 @@ function validateStitchGrid(stitchGrid) {
 async function renderPatternPreview(stitchGrid) {
   validateStitchGrid(stitchGrid);
 
+  // Rebuild the image in raster order, using one DMC RGB color per stitch.
   const pixels = Buffer.alloc(stitchGrid.grid.length * 3);
 
   stitchGrid.grid.forEach((paletteIndex, stitchIndex) => {

@@ -1,3 +1,4 @@
+// Avoid characters like I, O, 0, and 1 that are easy to confuse in small cells.
 const SYMBOLS = Object.freeze(
   Array.from("ABCDEFGHJKLMNPQRSTUVWXYZ23456789!#$%&*+-/<=>?@^~"),
 );

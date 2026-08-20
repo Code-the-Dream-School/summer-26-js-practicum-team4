@@ -82,6 +82,7 @@ function createOverlay(pattern, width, height) {
     );
   });
 
+  // Draw a stronger line every 10 stitches to make large sections easier to count.
   for (let column = 0; column <= pattern.width; column += 1) {
     const position = column * CELL_SIZE;
     const lineWidth = column % 10 === 0 ? 2 : 1;
