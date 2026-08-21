@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 
 // Component Imports
-import PatternViewerScroll from "../PatternDisplays/PatternViewerScroll";
 import PatternViewer from "../PatternDisplays/PatternViewer";
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
