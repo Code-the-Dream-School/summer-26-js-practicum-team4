@@ -10,6 +10,7 @@ function CreateNewPatternIcon() {
             <img
               src="images/new-project-icon.png"
               className="mx-auto p-5 object-contain w-70"
+              alt="create new pattern"
             />
           </Link>
         </div>
