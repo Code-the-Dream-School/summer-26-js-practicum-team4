@@ -67,7 +67,7 @@ async function getPattern(req, res, next) {
     const obtainedPattern = await prisma.pattern.findUnique({
       where: {
         id: patternId,
-        userId: req.user.userId
+        userId: req.user.userId,
       },
       select: {
         id: true,
@@ -78,6 +78,12 @@ async function getPattern(req, res, next) {
         updatedAt: true,
       },
     });
+
+    if (obtainedPattern === null) {
+      throw new NotFoundError(
+        "The pattern you are looking for cannot be found. ",
+      );
+    }
 
     return res
       .status(StatusCodes.OK)
@@ -99,7 +105,7 @@ async function deletePattern(req, res, next) {
     const deletedPattern = await prisma.pattern.delete({
       where: {
         id: patternId,
-        userId: req.user.userId
+        userId: req.user.userId,
       },
       select: {
         id: true,
@@ -146,7 +152,7 @@ async function updatePattern(req, res, next) {
       data: value,
       where: {
         id: patternId,
-        userId: req.user.userId
+        userId: req.user.userId,
       },
       select: {
         id: true,
@@ -185,10 +191,6 @@ async function getAllUserPatterns(req, res, next) {
       },
     });
 
-    // NotFoundError for no patterns
-    if (userPatterns.length === 0) {
-      throw new NotFoundError();
-    }
     return res.status(StatusCodes.OK).json({
       data: {
         patterns: userPatterns,
