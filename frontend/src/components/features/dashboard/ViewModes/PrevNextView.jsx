@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 
 // Component Imports
 import PatternViewerScroll from "../PatternDisplays/PatternViewerScroll";
+import PatternViewer from "../PatternDisplays/PatternViewer";
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
 function PrevNextView() {
@@ -19,8 +20,9 @@ function PrevNextView() {
           src="images/scroll-left.png"
         />
       </button>
-      <PatternViewerScroll
+      <PatternViewer
         pattern={dashState.patterns[dashState.scrollPatternIx]}
+        view="scroll"
       />
       <button
         className="scroll-controller pb-20"

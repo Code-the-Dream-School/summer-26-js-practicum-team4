@@ -11,17 +11,14 @@ function PatternNameEditInput({
   currentPatternName,
   setCurrentPatternName,
   textStyle,
-  setEditingThisPattern = false,
+  setEditingThisPattern,
 }) {
   const { dispatch, dashActions, dashState } = useContext(DashContext);
 
   function handleCancel() {
     setCurrentPatternName(defaultPatternName);
 
-    // if editing pattern in all patterns view
-    if (setEditingThisPattern) {
-      setEditingThisPattern(false);
-    }
+    setEditingThisPattern(false);
 
     dispatch({ type: dashActions.endEditing });
   }
