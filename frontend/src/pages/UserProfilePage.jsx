@@ -30,13 +30,14 @@ try{
     fullName: userData.userName,
     email: userData.email,
     memberSince: convertedDate,
-    profilePhoto: "url",
+    profilePhoto: userData.userProfileImgUrl,
   });
   }}catch(error){
   setMessage(error.message);
   }
   }
 getUserData();
+
 },[]);
 
 
