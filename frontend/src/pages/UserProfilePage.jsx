@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import "./UserProfilePage.css";
 import {getUser, deleteUser } from "../services/userService";
+import LogoutBtn from "../components/features/auth/LogoutBtn";
 import { useAuth } from "../state/auth/useAuth";
 import { useEffect } from "react";
 
@@ -133,10 +134,6 @@ getUserData();
       }
     }
   }
-
-  const handleLogout = () => {
-    setMessage("Logout will be connected to authentication later.");
-  };
 
   return (
     <main className="profile-page">
@@ -279,9 +276,7 @@ getUserData();
           </button>
         </section>
 
-        <button type="button" className="logout-button" onClick={handleLogout}>
-          Log Out
-        </button>
+        <LogoutBtn className="logout-button" />
       </section>
     </main>
   );

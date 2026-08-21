@@ -5,6 +5,7 @@ import DisplayToggle from "../components/features/dashboard/DisplayToggle";
 
 import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextView";
 import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
+import CreateNewPatternIcon from "../components/features/dashboard/PatternDisplays/CreateNewPatternIcon";
 
 import { DashContext } from "../state/dashboard/dashContext";
 
@@ -41,7 +42,12 @@ function MyPatternsPage() {
   // Function that processes user's view choice into rendered component
   function userChosenView(patterns) {
     if (patterns.length === 0) {
-      return <h1>You have no patterns. </h1>;
+      return (
+        <>
+          <h1>You have no patterns. </h1>
+          <CreateNewPatternIcon />
+        </>
+      );
     }
     if (dashState.view === "scroll") {
       return <PrevNextView />;
