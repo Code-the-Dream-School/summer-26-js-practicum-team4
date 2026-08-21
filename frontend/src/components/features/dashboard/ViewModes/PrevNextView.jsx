@@ -7,23 +7,32 @@ import { DashContext } from "../../../../state/dashboard/dashContext";
 function PrevNextView() {
   const { dispatch, dashActions, dashState } = useContext(DashContext);
   return (
-    <div className="scroll-view">
+    <div className="scroll-view flex mt-10 mx-10 gap-x-2">
       <button
-        className="scroll-controller"
+        className="scroll-controller pb-20"
         onClick={() =>
           dispatch({ direction: "-", type: dashActions.setScrollPatternIx })
         }
       >
-        Previous
+        <img
+          className="w-30 opacity-85 hover:bg-gray-300"
+          src="images/scroll-left.png"
+        />
       </button>
-      <PatternViewer pattern={dashState.patterns[dashState.scrollPatternIx]} />
+      <PatternViewer
+        pattern={dashState.patterns[dashState.scrollPatternIx]}
+        view="scroll"
+      />
       <button
-        className="scroll-controller"
+        className="scroll-controller pb-20"
         onClick={() =>
           dispatch({ direction: "+", type: dashActions.setScrollPatternIx })
         }
       >
-        Next
+        <img
+          className="w-30 opacity-85 hover:bg-gray-300"
+          src="images/scroll-right.png"
+        />
       </button>
     </div>
   );
