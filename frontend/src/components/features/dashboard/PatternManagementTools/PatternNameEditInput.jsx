@@ -11,9 +11,10 @@ function PatternNameEditInput({
   currentPatternName,
   setCurrentPatternName,
   textStyle,
+  ref,
   setEditingThisPattern,
 }) {
-  const { dispatch, dashActions, dashState } = useContext(DashContext);
+  const { dispatch, dashActions } = useContext(DashContext);
 
   function handleCancel() {
     setCurrentPatternName(defaultPatternName);
@@ -23,9 +24,10 @@ function PatternNameEditInput({
     dispatch({ type: dashActions.endEditing });
   }
 
-  async function handleSave() {
-    dispatch({ type: dashActions.beginSaving });
+  async function handleSave(event) {
+    event.preventDefault();
 
+    dispatch({ type: dashActions.beginSaving });
     await saveNewPatternName(patternId, currentPatternName);
 
     // if editing pattern in all patterns view
@@ -38,32 +40,35 @@ function PatternNameEditInput({
   }
   return (
     <div>
-      <label htmlFor={patternId}></label>
-      <div className="grid grid-cols-5 place-content-center">
-        <input
-          id={patternId}
-          type="text"
-          value={currentPatternName}
-          onChange={(event) => {
-            setCurrentPatternName(event.target.value);
-          }}
-          className={`${textStyle} bg-white rounded-xl p-1 border mb-5 col-span-4`}
-        ></input>
-        <div className="col-start-6">
-          <button
-            className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto mr-1 p-1"
-            onClick={handleSave}
-          >
-            Save
-          </button>
-          <button
-            className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto p-1"
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
+      <form onSubmit={handleSave}>
+        <label htmlFor={patternId}></label>
+        <div className="grid grid-cols-5 place-content-center">
+          <input
+            id={patternId}
+            type="text"
+            value={currentPatternName}
+            onChange={(event) => {
+              setCurrentPatternName(event.target.value);
+            }}
+            ref={ref}
+            className={`${textStyle} bg-white rounded-xl p-1 border mb-5 col-span-4`}
+          ></input>
+          <div className="col-start-6">
+            <button
+              className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto mr-1 p-1"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <button
+              className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto p-1"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 
 // Component Imports
 import DownloadPatternBtn from "./../PatternManagementTools/DownloadPatternBtn";
@@ -27,11 +27,22 @@ function getDate(dateTimeStr) {
 }
 
 function PatternViewer({ pattern, view }) {
+  // Relevant states
   const { dashState, dashActions, dispatch } = useContext(DashContext);
+
   const [editingThisPattern, setEditingThisPattern] = useState(false);
   const [currentPatternName, setCurrentPatternName] = useState(
     pattern.patternName,
   );
+
+  const editFocus = useRef("");
+
+  // Focus on editing field if useRef has a non-empty reference
+  useEffect(() => {
+    if (editFocus.current) {
+      editFocus.current.focus();
+    }
+  }, [dashState.isEditing]);
 
   function handleEdit() {
     if (dashState.isEditing) {
@@ -55,6 +66,7 @@ function PatternViewer({ pattern, view }) {
           currentPatternName={currentPatternName}
           setCurrentPatternName={setCurrentPatternName}
           setEditingThisPattern={setEditingThisPattern}
+          ref={editFocus}
           textStyle={displayStyle[view].textStyle}
         />
       );
