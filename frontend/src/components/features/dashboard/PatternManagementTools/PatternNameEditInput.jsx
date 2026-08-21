@@ -44,7 +44,7 @@ function PatternNameEditInput({
           id={patternId}
           type="text"
           value={currentPatternName}
-          onChange={() => {
+          onChange={(event) => {
             setCurrentPatternName(event.target.value);
           }}
           className={`${textStyle} bg-white rounded-xl p-1 border mb-5 col-span-4`}

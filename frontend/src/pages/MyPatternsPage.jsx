@@ -30,7 +30,6 @@ function MyPatternsPage() {
       dispatch({ type: dashActions.beginFetch }); // displays loader
 
       const userPatterns = await fetchCurrentUserPatterns();
-      console.log(userPatterns);
 
       dispatch({ type: dashActions.endFetch });
 
@@ -38,7 +37,6 @@ function MyPatternsPage() {
     }
 
     getPatterns();
-    console.log("the state has been refreshed");
   }, [dashState.isDeleting, dashState.isSaving]);
 
   // Function that processes user's view choice into rendered component
