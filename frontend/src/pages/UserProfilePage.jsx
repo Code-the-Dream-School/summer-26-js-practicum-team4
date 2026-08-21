@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import "./UserProfilePage.css";
 import LogoutBtn from "../components/features/auth/LogoutBtn";
 import { deleteUser } from "../services/userService";
 import { useAuth } from "../state/auth/useAuth";
@@ -93,6 +92,7 @@ function UserProfilePage() {
     }));
 
     setMessage("Profile photo selected.");
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -109,27 +109,33 @@ function UserProfilePage() {
 
     if (confirmed) {
       dispatch({ type: "SET_LOADING" });
+
       try {
         await deleteUser();
         dispatch({ type: "LOGOUT" });
       } catch (error) {
-        dispatch({ type: "SET_ERROR", payload: error.message });
+        dispatch({
+          type: "SET_ERROR",
+          payload: error.message,
+        });
       }
     }
   }
 
   return (
-    <main className="profile-page">
-      <section className="profile-container">
-        <h1>User Profile</h1>
+    <main className="min-h-screen bg-background px-4 py-10">
+      <section className="mx-auto max-w-2xl rounded-2xl border border-border bg-surface p-6 shadow-md md:p-10">
+        <h1 className="mb-8 text-center font-heading text-4xl font-bold text-secondary">
+          User Profile
+        </h1>
 
-        <div className="profile-photo-section">
-          <div className="profile-avatar">
+        <div className="mb-8 flex flex-col items-center gap-3">
+          <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-2 border-secondary bg-background text-6xl">
             {user.profilePhoto ? (
               <img
                 src={user.profilePhoto}
                 alt={`${user.fullName}'s profile`}
-                className="profile-image"
+                className="h-full w-full object-cover"
               />
             ) : (
               <span aria-hidden="true">👤</span>
@@ -140,31 +146,39 @@ function UserProfilePage() {
             ref={fileInputRef}
             type="file"
             accept="image/png,image/jpeg,image/webp"
-            className="hidden-file-input"
+            className="hidden"
             onChange={handlePhotoChange}
           />
 
           <button
             type="button"
-            className="upload-button"
+            className="rounded-lg bg-primary px-6 py-2 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
             onClick={handleUploadButtonClick}
           >
             Upload Photo
           </button>
 
-          <small>JPG, PNG or WEBP. Maximum 2 MB.</small>
+          <small className="text-sm text-text-secondary">
+            JPG, PNG or WEBP. Maximum 2 MB.
+          </small>
         </div>
 
         {message && (
-          <p className="profile-message" role="status">
+          <p
+            className="mb-6 rounded-lg border border-border bg-background px-4 py-3 text-center text-secondary"
+            role="status"
+          >
             {message}
           </p>
         )}
 
         <form onSubmit={handleSaveProfile}>
-          <section className="profile-information">
-            <div className="profile-field">
-              <label htmlFor="fullName" className="field-label">
+          <section className="mb-8 space-y-4">
+            <div className="grid gap-2 md:grid-cols-[140px_1fr] md:items-center">
+              <label
+                htmlFor="fullName"
+                className="font-semibold text-secondary"
+              >
                 Full Name
               </label>
 
@@ -175,16 +189,18 @@ function UserProfilePage() {
                   type="text"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="field-input"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   required
                 />
               ) : (
-                <span className="field-value">{user.fullName}</span>
+                <span className="rounded-lg border border-border bg-background px-4 py-3 text-text">
+                  {user.fullName}
+                </span>
               )}
             </div>
 
-            <div className="profile-field">
-              <label htmlFor="email" className="field-label">
+            <div className="grid gap-2 md:grid-cols-[140px_1fr] md:items-center">
+              <label htmlFor="email" className="font-semibold text-secondary">
                 Email
               </label>
 
@@ -195,29 +211,37 @@ function UserProfilePage() {
                   type="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="field-input"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   required
                 />
               ) : (
-                <span className="field-value">{user.email}</span>
+                <span className="rounded-lg border border-border bg-background px-4 py-3 text-text">
+                  {user.email}
+                </span>
               )}
             </div>
 
-            <div className="profile-field">
-              <span className="field-label">Member Since</span>
-              <span className="field-value">{user.memberSince}</span>
+            <div className="grid gap-2 md:grid-cols-[140px_1fr] md:items-center">
+              <span className="font-semibold text-secondary">Member Since</span>
+
+              <span className="rounded-lg border border-border bg-background px-4 py-3 text-text">
+                {user.memberSince}
+              </span>
             </div>
           </section>
 
           {isEditing && (
-            <div className="edit-actions">
-              <button type="submit" className="save-button">
+            <div className="mb-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <button
+                type="submit"
+                className="rounded-lg bg-secondary px-6 py-3 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
+              >
                 Save Changes
               </button>
 
               <button
                 type="button"
-                className="cancel-button"
+                className="rounded-lg border border-border bg-surface px-6 py-3 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
                 onClick={handleCancelEdit}
               >
                 Cancel
@@ -226,40 +250,46 @@ function UserProfilePage() {
           )}
         </form>
 
-        <section className="account-settings">
-          <h2>Account Settings</h2>
+        <section className="border-t border-border pt-6">
+          <h2 className="mb-4 font-heading text-2xl font-semibold text-secondary">
+            Account Settings
+          </h2>
 
-          <button
-            type="button"
-            className="settings-button"
-            onClick={handleEditProfile}
-            disabled={isEditing}
-          >
-            <span>✏️ Edit Profile</span>
-            <span aria-hidden="true">›</span>
-          </button>
+          <div className="space-y-3">
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 text-left transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={handleEditProfile}
+              disabled={isEditing}
+            >
+              <span>✏️ Edit Profile</span>
+              <span aria-hidden="true">›</span>
+            </button>
 
-          <button
-            type="button"
-            className="settings-button"
-            onClick={handleChangePassword}
-          >
-            <span>🔒 Change Password</span>
-            <span aria-hidden="true">›</span>
-          </button>
+            <button
+              type="button"
+              className="flex w-full items-center justify-between rounded-lg border border-border bg-surface px-4 py-3 text-left transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+              onClick={handleChangePassword}
+            >
+              <span>🔒 Change Password</span>
+              <span aria-hidden="true">›</span>
+            </button>
 
-          <button
-            type="button"
-            disabled={loading}
-            className="settings-button delete-button"
-            onClick={handleDeleteAccount}
-          >
-            <span>🗑️ Delete Account</span>
-            <span aria-hidden="true">›</span>
-          </button>
+            <button
+              type="button"
+              disabled={loading}
+              className="flex w-full items-center justify-between rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-left text-red-700 transition hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={handleDeleteAccount}
+            >
+              <span>🗑️ Delete Account</span>
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
         </section>
 
-        <LogoutBtn className="logout-button" />
+        <div className="mt-8 flex justify-center">
+          <LogoutBtn className="rounded-lg bg-secondary px-8 py-3 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent" />
+        </div>
       </section>
     </main>
   );
