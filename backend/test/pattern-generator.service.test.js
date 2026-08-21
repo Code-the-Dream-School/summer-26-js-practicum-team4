@@ -234,13 +234,21 @@ describe("reduceColors", () => {
     expect(first).toEqual(second);
   });
 
-  test.each([undefined, 10])(
-    "rejects an unsupported maxColors value: %s",
+  test("accepts a maxColors value that was not a previous preset", async () => {
+    const image = await createPreprocessedColorGrid(manyColors);
+
+    const result = await reduceColors(image, { maxColors: 20 });
+
+    expect(result.palette.length).toBeLessThanOrEqual(20);
+  });
+
+  test.each([undefined, 7, 49, 20.5])(
+    "rejects an invalid maxColors value: %s",
     async (maxColors) => {
       const image = await createPreprocessedColorGrid(manyColors);
 
       await expect(reduceColors(image, { maxColors })).rejects.toThrow(
-        "maxColors must be one of: 8, 16, 24, 32, 48.",
+        "maxColors must be an integer between 8 and 48.",
       );
     },
   );
