@@ -1,7 +1,7 @@
 const prisma = require("../config/prismaClient");
 const { StatusCodes } = require("http-status-codes");
 const { userUpdateSchema } = require("../validation/userSchema");
-const { BadRequestError, UnauthenticatedError } = require('../errors');
+const { BadRequestError, UnauthenticatedError } = require("../errors");
 
 const getUser = async (req, res, next) => {
   try {
@@ -13,6 +13,9 @@ const getUser = async (req, res, next) => {
         email: true,
         userProfileImgUrl: true,
         createdAt: true,
+        _count: {
+          select: { patterns: true },
+        },
       },
     });
 
@@ -27,14 +30,13 @@ const getUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
-const { error, value } = userUpdateSchema.validate(req.body, {
-    abortEarly: false,
-  });
- 
-  if (error) {
-throw new BadRequestError(error.message);
+    const { error, value } = userUpdateSchema.validate(req.body, {
+      abortEarly: false,
+    });
 
-  }
+    if (error) {
+      throw new BadRequestError(error.message);
+    }
 
     const updatedUser = await prisma.user.update({
       where: { id: req.user.userId },
@@ -45,9 +47,12 @@ throw new BadRequestError(error.message);
         email: true,
         userProfileImgUrl: true,
         createdAt: true,
+         _count: {
+          select: { patterns: true },
+        },
       },
     });
-    return res.status(StatusCodes.OK).json({updatedUser});
+    return res.status(StatusCodes.OK).json({ updatedUser });
   } catch (error) {
     next(error);
   }
