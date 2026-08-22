@@ -1,3 +1,20 @@
+async function getUser() {
+  const response = await fetch("/api/user/profile", {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to get user profile");
+  }
+
+  return data.user;
+}
+
+
+
 async function deleteUser() {
   const response = await fetch("/api/user/profile", {
     method: "DELETE",
@@ -12,4 +29,4 @@ async function deleteUser() {
   return response.json();
 }
 
-export { deleteUser };
+export { getUser, deleteUser };

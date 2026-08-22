@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import "./UserProfilePage.css";
+import { getUser, deleteUser } from "../services/userService";
 import LogoutBtn from "../components/features/auth/LogoutBtn";
-import { deleteUser } from "../services/userService";
 import { useAuth } from "../state/auth/useAuth";
+import { useEffect } from "react";
 
 function UserProfilePage() {
   const {
@@ -10,18 +11,40 @@ function UserProfilePage() {
     state: { loading },
   } = useAuth();
 
-  const [user, setUser] = useState({
-    fullName: "Millicent Traylor",
-    email: "millicent@email.com",
-    memberSince: "July 2026",
-    profilePhoto: "",
-  });
-
+  const [user, setUser] = useState({});
   const [formData, setFormData] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
 
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        const userData = await getUser();
+
+        if (userData) {
+          const convertedDate = `${new Date(userData.createdAt).toLocaleString(
+            "en-US",
+            {
+              month: "long",
+            },
+          )} ${new Date(userData.createdAt).getFullYear()}`;
+
+          setUser({
+            fullName: userData.userName,
+            email: userData.email,
+            memberSince: convertedDate,
+            profilePhoto: userData.userProfileImgUrl,
+            patterns: userData._count.patterns,
+          });
+        }
+      } catch (error) {
+        setMessage(error.message);
+      }
+    }
+    getUserData();
+  }, []);
 
   const handleEditProfile = () => {
     setFormData(user);
