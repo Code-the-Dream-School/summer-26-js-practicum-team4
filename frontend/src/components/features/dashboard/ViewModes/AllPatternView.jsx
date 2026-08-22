@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 
-import PatternViewer from "../PatternViewer";
+import PatternViewer from "../PatternDisplays/PatternViewer";
+import CreateNewPatternIcon from "../PatternDisplays/CreateNewPatternIcon";
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
 function AllPatternView() {
@@ -11,6 +12,7 @@ function AllPatternView() {
         {dashState.patterns.map((pattern) => (
           <PatternViewer key={pattern.id} pattern={pattern} />
         ))}
+        <CreateNewPatternIcon />
       </div>
     </>
   );
