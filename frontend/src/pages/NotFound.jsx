@@ -6,10 +6,11 @@ function NotFoundPage() {
 
   return (
     <div className="h-full flex flex-1 flex-col items-center justify-center">
-      <p className="text-center text-primary text-5xl">
+      <img  className="max-w-[40%]" src="../images/not-found.png" alt="needle with a ball of yarn"/>
+      <p className="text-center text-primary text-5xl mt-10">
         <span className="text-secondary">404</span> Page Not Found
       </p>
-      <div className="flex items-center justify-center mt-10 ">
+      <div className="flex items-center justify-center mt-20 ">
         <button
           onClick={() => navigate(-1)}
           className="rounded-lg mr-10 w-40 bg-secondary py-2 px-4 text-white transition hover:opacity-90"
