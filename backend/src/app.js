@@ -13,7 +13,7 @@ const patternRoutes = require("./routes/pattern.routes");
 
 // Error Middleware Import
 const errorHandlerMiddleware = require("./middleware/error-handler");
-
+const notFoundMiddeleware = require("./middleware/not-found.middleware");
 const app = express();
 
 // Security & best‑practice middleware
@@ -60,6 +60,7 @@ app.use((error, req, res, next) => {
   return next(error);
 });
 
+app.use(notFoundMiddeleware);
 // Handle controller errors
 app.use(errorHandlerMiddleware);
 

@@ -3,7 +3,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="grid grid-cols-[1fr_auto_1fr] items-center border-t border-gray-300 px-8 py-6 bg-footer-background text-text-secondary">
+    <footer className="grid grid-cols-[1fr_auto_1fr] items-center border-t border-gray-300 px-8 py-6 bg-footer-background text-text-secondary mt-auto">
       <div className="justify-self-start">
         <p>X-Stitch</p>
       </div>
