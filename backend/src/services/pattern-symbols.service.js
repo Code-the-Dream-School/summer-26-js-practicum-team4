@@ -1,4 +1,7 @@
-const sharp = require("sharp");
+// Avoid characters like I, O, 0, and 1 that are easy to confuse in small cells.
+const SYMBOLS = Object.freeze(
+  Array.from("ABCDEFGHJKLMNPQRSTUVWXYZ23456789!#$%&*+-/<=>?@^~"),
+);
 
 function isDmcColor(color) {
   return (
@@ -20,6 +23,7 @@ function validateStitchGrid(stitchGrid) {
     stitchGrid.height <= 0 ||
     !Array.isArray(stitchGrid?.palette) ||
     stitchGrid.palette.length === 0 ||
+    stitchGrid.palette.length > SYMBOLS.length ||
     !stitchGrid.palette.every(isDmcColor) ||
     !Array.isArray(stitchGrid?.grid) ||
     stitchGrid.grid.length !== stitchGrid.width * stitchGrid.height ||
@@ -30,41 +34,22 @@ function validateStitchGrid(stitchGrid) {
         index < stitchGrid.palette.length,
     )
   ) {
-    throw new Error("A valid stitch grid is required.");
+    throw new Error("A valid stitch grid with at most 48 colors is required.");
   }
 }
 
-async function renderPatternPreview(stitchGrid) {
+function addPatternSymbols(stitchGrid) {
   validateStitchGrid(stitchGrid);
 
-  // Rebuild the image in raster order, using one DMC RGB color per stitch.
-  const pixels = Buffer.alloc(stitchGrid.grid.length * 3);
-
-  stitchGrid.grid.forEach((paletteIndex, stitchIndex) => {
-    const color = stitchGrid.palette[paletteIndex];
-    const offset = stitchIndex * 3;
-
-    pixels[offset] = color.r;
-    pixels[offset + 1] = color.g;
-    pixels[offset + 2] = color.b;
-  });
-
-  const buffer = await sharp(pixels, {
-    raw: {
-      width: stitchGrid.width,
-      height: stitchGrid.height,
-      channels: 3,
-    },
-  })
-    .png()
-    .toBuffer();
-
   return {
-    buffer,
     width: stitchGrid.width,
     height: stitchGrid.height,
-    format: "png",
+    palette: stitchGrid.palette.map((color, index) => ({
+      ...color,
+      symbol: SYMBOLS[index],
+    })),
+    grid: [...stitchGrid.grid],
   };
 }
 
-module.exports = { renderPatternPreview };
+module.exports = { addPatternSymbols };
