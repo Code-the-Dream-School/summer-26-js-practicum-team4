@@ -6,7 +6,11 @@ function NotFoundPage() {
 
   return (
     <div className="h-full flex flex-1 flex-col items-center justify-center">
-      <img  className="max-w-[40%]" src="../images/not-found.png" alt="needle with a ball of yarn"/>
+      <img
+        className="max-w-[40%]"
+        src="../images/not-found.png"
+        alt="needle with a ball of yarn"
+      />
       <p className="text-center text-primary text-5xl mt-10">
         <span className="text-secondary">404</span> Page Not Found
       </p>
