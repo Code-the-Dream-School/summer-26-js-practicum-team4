@@ -2,7 +2,8 @@ const sharp = require("sharp");
 
 const MIN_STITCH_DIMENSION = 10;
 const MAX_STITCH_DIMENSION = 200;
-const ALLOWED_MAX_COLORS = new Set([8, 16, 24, 32, 48]);
+const MIN_COLORS = 8;
+const MAX_COLORS = 48;
 const WHITE_BACKGROUND = { r: 255, g: 255, b: 255 };
 
 function validateStitchDimension(name, value) {
@@ -46,6 +47,7 @@ async function preprocessImage(imageBuffer, options = {}) {
   const metadata = await sharp(imageBuffer).metadata();
   const source = getOrientedDimensions(metadata);
 
+  // Calculate the missing dimension to keep the original aspect ratio.
   const resolvedWidth = hasWidth
     ? suppliedDimension
     : Math.round(suppliedDimension * (source.width / source.height));
@@ -142,8 +144,14 @@ function averageBox(colors) {
 }
 
 async function reduceColors(preprocessedImage, { maxColors } = {}) {
-  if (!ALLOWED_MAX_COLORS.has(maxColors)) {
-    throw new Error("maxColors must be one of: 8, 16, 24, 32, 48.");
+  if (
+    !Number.isInteger(maxColors) ||
+    maxColors < MIN_COLORS ||
+    maxColors > MAX_COLORS
+  ) {
+    throw new Error(
+      `maxColors must be an integer between ${MIN_COLORS} and ${MAX_COLORS}.`,
+    );
   }
 
   if (
@@ -167,6 +175,7 @@ async function reduceColors(preprocessedImage, { maxColors } = {}) {
     throw new Error("Preprocessed image dimensions do not match its buffer.");
   }
 
+  // Count repeated RGB colors while keeping each pixel's original raster position.
   const histogram = new Map();
   const pixelKeys = [];
 
@@ -188,6 +197,7 @@ async function reduceColors(preprocessedImage, { maxColors } = {}) {
 
   let boxes = [[...histogram.values()]];
 
+  // Split the most varied color group until we reach the requested color limit.
   while (boxes.length < maxColors) {
     let boxIndex = -1;
     let selectedStats = null;
@@ -213,6 +223,7 @@ async function reduceColors(preprocessedImage, { maxColors } = {}) {
     boxes.splice(boxIndex, 1, first, second);
   }
 
+  // Average each color group and map every source color to its new palette index.
   const palette = [];
   const paletteIndexes = new Map();
   const colorToPaletteIndex = new Map();
