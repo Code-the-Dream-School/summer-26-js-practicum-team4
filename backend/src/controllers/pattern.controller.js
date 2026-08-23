@@ -55,6 +55,10 @@ async function createPattern(req, res, next) {
   }
 }
 
+async function createMultiplePatterns(req, res, next) {
+  return;
+}
+
 async function getPattern(req, res, next) {
   const patternId = Number(req.params?.id);
 
@@ -201,6 +205,10 @@ async function getAllUserPatterns(req, res, next) {
   }
 }
 
+async function getAllPatterns(req, res, next) {
+  return;
+}
+
 async function generatePattern(req, res) {
   try {
     if (!req.file) {
@@ -242,7 +250,9 @@ async function generatePattern(req, res) {
 module.exports = {
   generatePattern,
   getAllUserPatterns,
+  getAllPatterns,
   createPattern,
+  createMultiplePatterns,
   getPattern,
   deletePattern,
   updatePattern,
