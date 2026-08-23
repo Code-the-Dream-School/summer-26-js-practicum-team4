@@ -12,7 +12,7 @@ function AllPatternView() {
         {dashState.patterns.map((pattern) => (
           <PatternViewer key={pattern.id} pattern={pattern} view="all" />
         ))}
-        <CreateNewPatternIcon />
+        <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />
       </div>
     </>
   );
