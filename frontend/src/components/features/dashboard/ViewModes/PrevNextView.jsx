@@ -2,38 +2,19 @@ import React, { useContext } from "react";
 
 // Component Imports
 import PatternViewer from "../PatternDisplays/PatternViewer";
+import PatternScrollBtn from "../PatternManagementTools/PatternScrollBtn";
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
 function PrevNextView() {
-  const { dispatch, dashActions, dashState } = useContext(DashContext);
+  const { dashState } = useContext(DashContext);
   return (
-    <div className="scroll-view flex mt-10 mx-10 gap-x-2">
-      <button
-        className="scroll-controller pb-20"
-        onClick={() =>
-          dispatch({ direction: "-", type: dashActions.setScrollPatternIx })
-        }
-      >
-        <img
-          className="w-30 opacity-85 hover:bg-gray-300"
-          src="images/scroll-left.png"
-        />
-      </button>
+    <div className="scroll-view grid grid-cols-[7%_86%_7%] place-items-center mt-10 mx-10 gap-x-2">
+      <PatternScrollBtn imgSrc="images/scroll-left.png" direction="-" />
       <PatternViewer
         pattern={dashState.patterns[dashState.scrollPatternIx]}
         view="scroll"
       />
-      <button
-        className="scroll-controller pb-20"
-        onClick={() =>
-          dispatch({ direction: "+", type: dashActions.setScrollPatternIx })
-        }
-      >
-        <img
-          className="w-30 opacity-85 hover:bg-gray-300"
-          src="images/scroll-right.png"
-        />
-      </button>
+      <PatternScrollBtn imgSrc="images/scroll-right.png" direction="+" />
     </div>
   );
 }

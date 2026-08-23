@@ -10,15 +10,15 @@ import { DashContext } from "../../../../state/dashboard/dashContext";
 const displayStyle = {
   scroll: {
     textStyle: "text-3xl mb-5",
-    patternInterface: "",
+    patternInterface: "mx-auto h-[60dvh]",
     downloadAndDelete: "flex justify-center gap-x-15 my-8",
-    image: "mx-auto p-10 max-h-100 max-w-100",
+    image: "mx-auto p-10 h-full object-contain",
   },
   all: {
     textStyle: "text-2xl ml-5",
-    patternInterface: "m-2",
-    downloadAndDelete: "text-right mr-2 mt-2",
-    image: "mx-auto p-5 object-contain",
+    patternInterface: "m-2 h-[45dvh]",
+    downloadAndDelete: "text-right mr-2 mt-2 object-contain",
+    image: "mx-auto p-5 h-[70%] object-contain",
   },
 };
 
@@ -88,7 +88,7 @@ function PatternViewer({ pattern, view }) {
   }
   return (
     <>
-      <div className="container mx-auto">
+      <div className="container">
         {
           // if in scroll view, title and pattern edit interface goes above interface
           view === "scroll" ? patternEditInterface() : <></>
