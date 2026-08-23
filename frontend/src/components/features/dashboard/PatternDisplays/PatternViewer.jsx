@@ -22,8 +22,29 @@ const displayStyle = {
   },
 };
 
+const monthsLst = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 function getDate(dateTimeStr) {
-  return dateTimeStr.split("T")[0];
+  const yrMthDay = dateTimeStr.split("T")[0].split("-");
+
+  const monthStr = monthsLst[parseInt(yrMthDay[1] - 1)];
+  const dayStr = yrMthDay[2] + ",";
+  const yearStr = yrMthDay[0];
+
+  return [monthStr, dayStr, yearStr].join(" ");
 }
 
 function PatternViewer({ pattern, view }) {
