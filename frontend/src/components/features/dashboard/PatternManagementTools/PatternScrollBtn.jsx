@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { DashContext } from "../../../../state/dashboard/dashContext";
+import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
 
 function PatternScrollBtn({ imgSrc, direction }) {
-  const { dispatch, dashActions } = useContext(DashContext);
+  const { dispatch, dashGallActions } = useContext(DashGallContext);
 
   return (
     <button
@@ -10,7 +10,7 @@ function PatternScrollBtn({ imgSrc, direction }) {
       onClick={() =>
         dispatch({
           direction: direction,
-          type: dashActions.setScrollPatternIx,
+          type: dashGallActions.setScrollPatternIx,
         })
       }
     >

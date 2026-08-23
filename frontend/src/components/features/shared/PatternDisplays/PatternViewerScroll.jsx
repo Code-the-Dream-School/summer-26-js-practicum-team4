@@ -5,7 +5,7 @@ import DownloadPatternBtn from "./../../dashboard/PatternManagementTools/Downloa
 import DeletePatternBtn from "./../../dashboard/PatternManagementTools/DeletePatternBtn";
 import PatternNameEditInput from "./../../dashboard/PatternManagementTools/PatternNameEditInput";
 
-import { DashContext } from "../../../../state/dashboard/dashContext";
+import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
 
 const pageOrigin = {
   dashboard: {
@@ -49,7 +49,8 @@ function getDate(dateTimeStr) {
 
 function PatternViewerScroll({ pattern, page }) {
   // Relevant states
-  const { dashState, dashActions, dispatch } = useContext(DashContext);
+  const { dashGallState, dashGallActions, dispatch } =
+    useContext(DashGallContext);
 
   const [editingThisPattern, setEditingThisPattern] = useState(false);
   const [currentPatternName, setCurrentPatternName] = useState(
@@ -63,23 +64,23 @@ function PatternViewerScroll({ pattern, page }) {
     if (editFocus.current) {
       editFocus.current.focus();
     }
-  }, [dashState.isEditing]);
+  }, [dashGallState.isEditing]);
 
   function handleEdit() {
-    if (dashState.isEditing) {
+    if (dashGallState.isEditing) {
       return;
     }
 
     setCurrentPatternName(pattern.patternName);
     setEditingThisPattern(true);
 
-    dispatch({ type: dashActions.beginEditing });
+    dispatch({ type: dashGallActions.beginEditing });
 
     return;
   }
 
   function patternEditInterface() {
-    if (dashState.isEditing && editingThisPattern) {
+    if (dashGallState.isEditing && editingThisPattern) {
       return (
         <PatternNameEditInput
           patternId={pattern.id}
