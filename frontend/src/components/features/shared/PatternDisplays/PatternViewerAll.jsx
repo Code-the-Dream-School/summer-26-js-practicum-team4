@@ -1,20 +1,21 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 
 // Component Imports
-import DownloadPatternBtn from "./../PatternManagementTools/DownloadPatternBtn";
-import DeletePatternBtn from "./../PatternManagementTools/DeletePatternBtn";
-import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
+
+import DownloadPatternBtn from "./../../dashboard/PatternManagementTools/DownloadPatternBtn";
+import DeletePatternBtn from "./../../dashboard/PatternManagementTools/DeletePatternBtn";
+import PatternNameEditInput from "./../../dashboard/PatternManagementTools/PatternNameEditInput";
 
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
-const displayStyle = {
-  scroll: {
-    textStyle: "text-3xl mb-5",
-    patternInterface: "mx-auto h-[60dvh]",
-    downloadAndDelete: "flex justify-center gap-x-15 my-8",
-    image: "mx-auto p-10 h-full object-contain",
+const pageOrigin = {
+  dashboard: {
+    textStyle: "text-2xl ml-5",
+    patternInterface: "m-2 h-[45dvh]",
+    downloadAndDelete: "text-right mr-2 mt-2 object-contain",
+    image: "mx-auto p-5 h-[70%] object-contain",
   },
-  all: {
+  gallery: {
     textStyle: "text-2xl ml-5",
     patternInterface: "m-2 h-[45dvh]",
     downloadAndDelete: "text-right mr-2 mt-2 object-contain",
@@ -47,7 +48,7 @@ function getDate(dateTimeStr) {
   return [monthStr, dayStr, yearStr].join(" ");
 }
 
-function PatternViewer({ pattern, view }) {
+function PatternViewerAll({ pattern, page }) {
   // Relevant states
   const { dashState, dashActions, dispatch } = useContext(DashContext);
 
@@ -88,15 +89,13 @@ function PatternViewer({ pattern, view }) {
           setCurrentPatternName={setCurrentPatternName}
           setEditingThisPattern={setEditingThisPattern}
           ref={editFocus}
-          textStyle={displayStyle[view].textStyle}
+          textStyle={pageOrigin[page].textStyle}
         />
       );
     } else {
       return (
         <div className="grid grid-cols-5 place-content-center">
-          <h2 className={displayStyle[view].textStyle}>
-            {pattern.patternName}
-          </h2>
+          <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
           <button className="col-start-6" onClick={handleEdit}>
             <img
               src="images/edit.png"
@@ -110,59 +109,24 @@ function PatternViewer({ pattern, view }) {
   return (
     <>
       <div className="container">
-        {
-          // if in scroll view, title and pattern edit interface goes above interface
-          view === "scroll" ? patternEditInterface() : <></>
-        }
-
         <div
-          className={`pattern-interface bg-white border rounded-2xl border-gray-400 ${displayStyle[view].patternInterface}`}
+          className={`pattern-interface bg-white border rounded-2xl border-gray-400 ${pageOrigin[page].patternInterface}`}
         >
-          {
-            // download and delete buttons go above image in 'all' view
-            view === "all" ? (
-              <div className={displayStyle[view].downloadAndDelete}>
-                <DownloadPatternBtn pattern={pattern} />
-                <DeletePatternBtn pattern={pattern} />
-              </div>
-            ) : (
-              <></>
-            )
-          }
+          <div className={pageOrigin[page].downloadAndDelete}>
+            <DownloadPatternBtn pattern={pattern} />
+            <DeletePatternBtn pattern={pattern} />
+          </div>
           <img
-            className={displayStyle[view].image}
+            className={pageOrigin[page].image}
             src={pattern.patternImgUrl}
             alt={pattern.patternName}
           />
         </div>
-        {
-          // download and delete buttons go under interface in 'scroll' view
-          view === "scroll" ? (
-            <div className={displayStyle[view].downloadAndDelete}>
-              <DownloadPatternBtn pattern={pattern} />
-              <DeletePatternBtn pattern={pattern} />
-            </div>
-          ) : (
-            <></>
-          )
-        }
-
-        {
-          // edit interface goes below pattern interface (along with creation date) in 'all' view
-          view === "all" ? (
-            <>
-              {patternEditInterface()}{" "}
-              <h3 className="mb-10 ml-5">
-                Created {getDate(pattern.createdAt)}
-              </h3>
-            </>
-          ) : (
-            <></>
-          )
-        }
+        {patternEditInterface()}{" "}
+        <h3 className="mb-10 ml-5">Created {getDate(pattern.createdAt)}</h3>
       </div>
     </>
   );
 }
 
-export default PatternViewer;
+export default PatternViewerAll;
