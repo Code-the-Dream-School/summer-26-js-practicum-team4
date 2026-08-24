@@ -25,6 +25,8 @@ const patternSchema = Joi.object({
   ...patternParameters,
 });
 
+const patternBulkSchema = Joi.array.items(patternSchema);
+
 const patternUpdateSchema = Joi.object({
   patternName: Joi.string().trim().min(3).max(30).messages({
     "string.min": "Pattern name must be at least 3 characters long.",
@@ -39,5 +41,6 @@ const patternUpdateSchema = Joi.object({
 
 module.exports = {
   patternSchema,
+  patternBulkSchema,
   patternUpdateSchema,
 };
