@@ -8,7 +8,7 @@ const {
 } = require("../services/pattern-generator.service");
 
 // Error handler Imports
-const { BadRequestError, NotFoundError, CustomAPIError } = require("../errors");
+const { BadRequestError, NotFoundError } = require("../errors");
 
 const {
   patternSchema,
@@ -30,7 +30,7 @@ async function createPattern(req, res, next) {
       throw new BadRequestError("The input Pattern information is malformed.");
     }
 
-    // value contains: patternName, originalImgUrl, and patternImgUrl
+    // value contains: patternName, originalImgUrl, and patternImgUrl, and optional stitch width and height
     const createdPattern = await prisma.pattern.create({
       data: {
         ...value,
@@ -56,7 +56,47 @@ async function createPattern(req, res, next) {
 }
 
 async function createMultiplePatterns(req, res, next) {
-  return;
+  try {
+    if (!req.body) {
+      req.body = {};
+    }
+
+    const allValidatedPatterns = [];
+
+    for (const pattern of req.body) {
+      const { error, value } = patternSchema.validate(pattern, {
+        abortEarly: false,
+      });
+
+      if (error) {
+        throw new BadRequestError(
+          "The input Pattern information is malformed.",
+        );
+      }
+
+      allValidatedPatterns.push({ ...value, userId: req.user.userId });
+    }
+
+    // value contains: array of pattern objects
+    const createdPatterns = await prisma.pattern.createManyAndReturn({
+      data: allValidatedPatterns,
+      select: {
+        id: true,
+        patternName: true,
+        originalImgUrl: true,
+        patternImgUrl: true,
+        createdAt: true,
+      },
+    });
+
+    return res.status(StatusCodes.CREATED).json({
+      data: { patterns: createdPatterns },
+    });
+  } catch (error) {
+    // Send to global error handler
+    console.log(error.message);
+    next(error);
+  }
 }
 
 async function getPattern(req, res, next) {

@@ -400,3 +400,9 @@ describe("5) Reading all patterns from a given user", () => {
     expect(respData.data.patterns.length).toBe(2);
   });
 });
+
+describe("6) Retrieving all patterns from every user", () => {
+  test("6.1) If two users create patterns, any given user can retrieve all patterns", async () => {
+    return;
+  });
+});

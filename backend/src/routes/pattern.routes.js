@@ -38,6 +38,6 @@ router.route("/:id").delete(deletePattern);
 router.route("/:id").patch(updatePattern);
 
 // Bulk operations
-route.route("/bulkcreate").post(createMultiplePatterns);
+router.route("/bulkcreate").post(createMultiplePatterns);
 
 module.exports = router;
