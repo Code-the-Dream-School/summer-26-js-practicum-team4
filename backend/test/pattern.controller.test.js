@@ -16,6 +16,7 @@ const { EventEmitter } = require("events");
 // Controller function imports
 const {
   getAllUserPatterns,
+  getAllPatterns,
   createPattern,
   getPattern,
   deletePattern,
@@ -398,5 +399,29 @@ describe("5) Reading all patterns from a given user", () => {
 
     expect(respObj.statusCode).toBe(200);
     expect(respData.data.patterns.length).toBe(2);
+  });
+});
+
+describe("6) Retrieving all patterns from every user", () => {
+  test("6.1) If two users create patterns, any given user can retrieve all patterns", async () => {
+    // Create req and res for retrieving all patterns
+    const req = httpMocks.createRequest({
+      user: { userId: user1.id },
+      method: "GET",
+    });
+
+    respObj = httpMocks.createResponse({
+      eventEmitter: EventEmitter,
+    });
+
+    // Make request and verify output
+    await waitForRouteHandler(getAllPatterns, req, respObj);
+    respData = respObj._getJSONData();
+
+    // Ensure OK response and that the length of patterns array is 3.
+    expect.assertions(2);
+
+    expect(respObj.statusCode).toBe(200);
+    expect(respData.data.patterns.length).toBe(3);
   });
 });
