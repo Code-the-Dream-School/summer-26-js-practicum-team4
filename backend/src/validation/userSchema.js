@@ -21,7 +21,8 @@ const userSchema = Joi.object({
 
 const userUpdateSchema = Joi.object({
   userName: Joi.string().trim().min(3).max(30),
-  password: passwordSchema,
+  oldPassword: passwordSchema,
+  newPassword: passwordSchema,
   userProfileImgUrl: Joi.string().uri(),
 })
   .min(1)

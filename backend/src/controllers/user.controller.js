@@ -2,6 +2,7 @@ const prisma = require("../config/prismaClient");
 const { StatusCodes } = require("http-status-codes");
 const { userUpdateSchema } = require("../validation/userSchema");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
+const bcrypt = require("bcrypt");
 
 const getUser = async (req, res, next) => {
   try {
@@ -38,6 +39,29 @@ const updateUser = async (req, res, next) => {
       throw new BadRequestError(error.message);
     }
 
+    if (value.oldPassword && value.newPassword) {
+ if(value.oldPassword===value.newPassword) { throw  new BadRequestError("Old and new password should be different");}
+      const user = await prisma.user.findUnique({
+        where: { id: req.user.userId },
+      });
+
+      const passwordMatches = await bcrypt.compare(
+        value.oldPassword,
+        user.hashedPassword,
+      );
+
+      if (!passwordMatches) {
+        throw new BadRequestError("Incorrect password");
+      } else {
+        const hashedPassword = await bcrypt.hash(value.newPassword, 10);
+        value.hashedPassword = hashedPassword;
+        delete value.oldPassword;
+        delete value.newPassword;
+      }
+    } else if (value.oldPassword || value.newPassword) {
+      throw new BadRequestError("Both passwords are required");
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id: req.user.userId },
       data: { ...value },
@@ -47,7 +71,7 @@ const updateUser = async (req, res, next) => {
         email: true,
         userProfileImgUrl: true,
         createdAt: true,
-         _count: {
+        _count: {
           select: { patterns: true },
         },
       },

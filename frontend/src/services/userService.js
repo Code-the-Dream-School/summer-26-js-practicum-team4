@@ -13,8 +13,6 @@ async function getUser() {
   return data.user;
 }
 
-
-
 async function deleteUser() {
   const response = await fetch("/api/user/profile", {
     method: "DELETE",
