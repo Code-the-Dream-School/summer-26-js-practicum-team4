@@ -246,7 +246,26 @@ async function getAllUserPatterns(req, res, next) {
 }
 
 async function getAllPatterns(req, res, next) {
-  return;
+  try {
+    const allPatterns = await prisma.pattern.findMany({
+      select: {
+        id: true,
+        patternName: true,
+        patternImgUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return res.status(StatusCodes.OK).json({
+      data: {
+        patterns: allPatterns,
+      },
+    });
+  } catch (error) {
+    // Send to global error handler
+    next(error);
+  }
 }
 
 async function generatePattern(req, res) {
