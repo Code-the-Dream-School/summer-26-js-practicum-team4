@@ -1,5 +1,4 @@
 const dashGallInitState = {
-  currentUser: "",
   view: "scroll",
   page: "dashboard",
   patterns: [],
@@ -11,7 +10,6 @@ const dashGallInitState = {
 };
 
 const dashGallActions = {
-  setCurrentUser: "setCurrentUser",
   setScrollView: "setScrollView",
   setAllView: "setAllView",
   setUserPatterns: "setUserPatterns",
@@ -29,8 +27,6 @@ const dashGallActions = {
 
 function dashGallReducer(state, action) {
   switch (action.type) {
-    case dashGallActions.setCurrentUser:
-      return { ...state, currentUser: action.user };
     case dashGallActions.setScrollView:
       return { ...state, view: "scroll" };
     case dashGallActions.setAllView:
