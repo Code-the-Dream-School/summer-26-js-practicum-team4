@@ -263,7 +263,11 @@ async function getAllPatterns(req, res, next) {
         createdAt: true,
         updatedAt: true,
         userId: true,
-        userName: true,
+        User: {
+          select: {
+            userName: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "asc",
