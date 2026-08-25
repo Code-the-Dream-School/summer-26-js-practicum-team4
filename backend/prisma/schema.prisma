@@ -3,16 +3,19 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique @db.VarChar(255)
-  userName       String   @map("user_name") @db.VarChar(30)
-  hashedPassword String   @map("hashed_password") @db.VarChar(255)
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  id                Int      @id @default(autoincrement())
+  googleId          String?  @unique @map("google_id")
+  email             String   @unique @db.VarChar(255)
+  userName          String   @map("user_name") @db.VarChar(30)
+  hashedPassword    String?  @map("hashed_password") @db.VarChar(255)
+  userProfileImgUrl String?  @map("user_profile_img_url")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   patterns Pattern[]
 
@@ -24,10 +27,14 @@ model Pattern {
   patternName    String   @map("pattern_name") @db.VarChar(30)
   originalImgUrl String   @map("original_img_url")
   patternImgUrl  String   @map("pattern_img_url")
+  stitchWidth    Int?     @map("stitch_width")
+  stitchHeight   Int?     @map("stitch_height")
+  maxColors      Int?     @map("max_colors")
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
   userId         Int      @map("user_id")
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
+  @@unique([id, userId], map: "compound_unique_pattern_id_user_id")
   @@map("patterns")
 }

@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 
 // Component Imports
-import { DashContext } from "../../../state/dashboard/dashContext";
+import { DashContext } from "../../../../state/dashboard/dashContext";
 
-import { deleteUserPattern } from "../../../services/patternService";
+import { deleteUserPattern } from "../../../../services/patternService";
 
 function DeletePatternBtn({ pattern }) {
   const { dispatch, dashActions } = useContext(DashContext);

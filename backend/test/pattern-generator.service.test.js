@@ -2,6 +2,7 @@ const sharp = require("sharp");
 
 const {
   preprocessImage,
+  reduceColors,
 } = require("../src/services/pattern-generator.service");
 
 async function createImage({
@@ -163,4 +164,92 @@ describe("preprocessImage", () => {
     expect(first.height).toBe(second.height);
     expect(first.buffer.equals(second.buffer)).toBe(true);
   });
+});
+
+async function createPreprocessedColorGrid(colors) {
+  const width = 10;
+  const height = 10;
+  const pixels = Buffer.alloc(width * height * 3);
+
+  for (let index = 0; index < width * height; index += 1) {
+    const color = colors[index % colors.length];
+    pixels.set(color, index * 3);
+  }
+
+  const buffer = await sharp(pixels, {
+    raw: { width, height, channels: 3 },
+  })
+    .png()
+    .toBuffer();
+
+  return { buffer, width, height, format: "png", colorSpace: "srgb" };
+}
+
+describe("reduceColors", () => {
+  const manyColors = Array.from({ length: 32 }, (_, index) => [
+    (index * 47) % 256,
+    (index * 89) % 256,
+    (index * 131) % 256,
+  ]);
+
+  test("limits the palette and returns valid structured output", async () => {
+    const image = await createPreprocessedColorGrid(manyColors);
+
+    const result = await reduceColors(image, { maxColors: 8 });
+
+    expect(result.width).toBe(image.width);
+    expect(result.height).toBe(image.height);
+    expect(result.palette.length).toBeLessThanOrEqual(8);
+    expect(result.colorIndexes).toHaveLength(image.width * image.height);
+    expect(
+      result.colorIndexes.every(
+        (index) =>
+          Number.isInteger(index) &&
+          index >= 0 &&
+          index < result.palette.length,
+      ),
+    ).toBe(true);
+  });
+
+  test("preserves an image that already has fewer colors than the limit", async () => {
+    const colors = [
+      [255, 0, 0],
+      [0, 255, 0],
+      [0, 0, 255],
+    ];
+    const image = await createPreprocessedColorGrid(colors);
+
+    const result = await reduceColors(image, { maxColors: 8 });
+
+    expect(result.palette).toHaveLength(colors.length);
+    expect(new Set(result.colorIndexes).size).toBe(colors.length);
+  });
+
+  test("produces deterministic palette and indexes", async () => {
+    const image = await createPreprocessedColorGrid(manyColors);
+
+    const first = await reduceColors(image, { maxColors: 16 });
+    const second = await reduceColors(image, { maxColors: 16 });
+
+    expect(first).toEqual(second);
+  });
+
+  test("accepts a maxColors value that was not a previous preset", async () => {
+    const image = await createPreprocessedColorGrid(manyColors);
+
+    const result = await reduceColors(image, { maxColors: 20 });
+
+    expect(result.palette.length).toBeLessThanOrEqual(20);
+  });
+
+  test.each([undefined, 7, 49, 20.5])(
+    "rejects an invalid maxColors value: %s",
+    async (maxColors) => {
+      const image = await createPreprocessedColorGrid(manyColors);
+
+      await expect(reduceColors(image, { maxColors })).rejects.toThrow(
+        "maxColors must be an integer between 8 and 48.",
+      );
+    },
+  );
 });
