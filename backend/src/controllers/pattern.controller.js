@@ -77,20 +77,25 @@ async function createMultiplePatterns(req, res, next) {
       allValidatedPatterns.push({ ...value, userId: req.user.userId });
     }
 
-    // value contains: array of pattern objects
-    const createdPatterns = await prisma.pattern.createManyAndReturn({
-      data: allValidatedPatterns,
-      select: {
-        id: true,
-        patternName: true,
-        originalImgUrl: true,
-        patternImgUrl: true,
-        createdAt: true,
-      },
-    });
+    // create each pattern individually so that createdAt can reliably sort patterns
+    const returnedPatterns = [];
+    for (const pattern of allValidatedPatterns) {
+      const createdPattern = await prisma.pattern.create({
+        data: pattern,
+        select: {
+          id: true,
+          patternName: true,
+          originalImgUrl: true,
+          patternImgUrl: true,
+          createdAt: true,
+        },
+      });
+
+      returnedPatterns.push(createdPattern);
+    }
 
     return res.status(StatusCodes.CREATED).json({
-      data: { patterns: createdPatterns },
+      data: { patterns: returnedPatterns },
     });
   } catch (error) {
     // Send to global error handler
