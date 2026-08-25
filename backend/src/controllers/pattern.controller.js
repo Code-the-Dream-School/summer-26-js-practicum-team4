@@ -225,6 +225,12 @@ async function generatePattern(req, res) {
 
     return res.status(200).json({ data: { pattern } });
   } catch (error) {
+    if (error.code === "PATTERN_DIMENSION_OUT_OF_RANGE") {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+        message: `This size is too small for this image. Try increasing the ${error.suppliedDimensionName} for a clearer, better-proportioned pattern.`,
+      });
+    }
+
     return res.status(500).json({
       message: "Unable to generate the pattern.",
     });
