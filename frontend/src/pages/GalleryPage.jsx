@@ -31,15 +31,15 @@ function GalleryPage() {
 
   useEffect(() => {
     async function getPatterns() {
+      dispatch({ type: dashGallActions.beginFetch }); // displays loader
+
       const userPatterns = await fetchAllUserPatterns();
       dispatch({ userPatterns, type: dashGallActions.setUserPatterns });
+
+      dispatch({ type: dashGallActions.endFetch });
     }
 
-    dispatch({ type: dashGallActions.beginFetch }); // displays loader
-
     getPatterns();
-
-    dispatch({ type: dashGallActions.endFetch });
 
     // Set page in reducer to gallery as well as view to all
     dispatch({ page: "gallery", type: dashGallActions.setPage });
