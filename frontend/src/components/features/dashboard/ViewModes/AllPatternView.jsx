@@ -8,7 +8,7 @@ function AllPatternView() {
   const { dashGallState } = useContext(DashGallContext);
   return (
     <>
-      <div className="all-pattern-view mx-20 mt-10 grid grid-cols-3">
+      <div className="all-pattern-view mx-20 mt-10 pb-20 grid grid-cols-3">
         {dashGallState.patterns.map((pattern) => (
           <PatternViewerAll
             key={pattern.id}

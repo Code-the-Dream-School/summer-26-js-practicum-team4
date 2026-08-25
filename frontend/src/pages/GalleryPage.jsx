@@ -50,7 +50,7 @@ function GalleryPage() {
     <>
       <DashGallContext value={{ dashGallState, dispatch, dashGallActions }}>
         <div className="bg-background">
-          <h1 className="text-5xl font-heading ml-19">Gallery Page</h1>
+          <h1 className="text-5xl font-heading ml-19 pt-15">Gallery Page</h1>
           <div className="relative">
             {dashGallState.isFetching ? (
               <>

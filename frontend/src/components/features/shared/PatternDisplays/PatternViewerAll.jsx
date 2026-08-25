@@ -12,12 +12,14 @@ import { useAuth } from "../../../../state/auth/useAuth";
 const pageOrigin = {
   dashboard: {
     textStyle: "text-2xl ml-5",
+    subTextStyle: "ml-5",
     patternInterface: "m-2 h-[45dvh]",
     downloadAndDelete: "text-right mr-2 mt-2 object-contain",
     image: "mx-auto p-5 h-[70%] object-contain",
   },
   gallery: {
     textStyle: "text-2xl ml-5",
+    subTextStyle: "ml-5",
     patternInterface: "m-2 h-[45dvh]",
     downloadAndDelete: "text-right mr-2 mt-2 object-contain",
     image: "mx-auto p-5 h-[70%] object-contain",
@@ -73,8 +75,6 @@ function PatternViewerAll({ pattern, page }) {
   }, [dashGallState.isEditing]);
 
   function belongsToUser() {
-    console.log(pattern);
-    console.log(user);
     return pattern.userId === user.id;
   }
 
@@ -139,7 +139,16 @@ function PatternViewerAll({ pattern, page }) {
           />
         </div>
         {patternEditInterface()}
-        <h3 className="mb-10 ml-5">Created {getDate(pattern.createdAt)}</h3>
+        {dashGallState.page === "dashboard" ? (
+          <></>
+        ) : (
+          <h3 className={pageOrigin[page].subTextStyle}>
+            Pattern by: <b>{pattern.user.userName}</b>
+          </h3>
+        )}
+        <h3 className={pageOrigin[page].subTextStyle}>
+          Created {getDate(pattern.createdAt)}
+        </h3>
       </div>
     </>
   );
