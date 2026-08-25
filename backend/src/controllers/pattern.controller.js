@@ -259,6 +259,9 @@ async function getAllPatterns(req, res, next) {
         updatedAt: true,
         userId: true,
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
     return res.status(StatusCodes.OK).json({
