@@ -72,8 +72,14 @@ function PatternViewerAll({ pattern, page }) {
     }
   }, [dashGallState.isEditing]);
 
+  function belongsToUser() {
+    console.log(pattern);
+    console.log(user);
+    return pattern.userId === user.id;
+  }
+
   function handleEdit() {
-    if (dashGallState.isEditing) {
+    if (dashGallState.isEditing || !belongsToUser()) {
       return;
     }
 
@@ -83,10 +89,6 @@ function PatternViewerAll({ pattern, page }) {
     dispatch({ type: dashGallActions.beginEditing });
 
     return;
-  }
-
-  function belongsToUser() {
-    return pattern.userId === pattern.id;
   }
 
   function patternEditInterface() {
@@ -106,12 +108,16 @@ function PatternViewerAll({ pattern, page }) {
       return (
         <div className="grid grid-cols-5 place-content-center">
           <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
-          <button className="col-start-6" onClick={handleEdit}>
-            <img
-              src="images/edit.png"
-              className="hover:bg-gray-300 mb-5 w-10"
-            />
-          </button>
+          {belongsToUser() ? (
+            <button className="col-start-6" onClick={handleEdit}>
+              <img
+                src="images/edit.png"
+                className="hover:bg-gray-300 mb-5 w-10"
+              />
+            </button>
+          ) : (
+            <></>
+          )}
         </div>
       );
     }
@@ -124,7 +130,7 @@ function PatternViewerAll({ pattern, page }) {
         >
           <div className={pageOrigin[page].downloadAndDelete}>
             <DownloadPatternBtn pattern={pattern} />
-            <DeletePatternBtn pattern={pattern} />
+            {belongsToUser() ? <DeletePatternBtn pattern={pattern} /> : <></>}
           </div>
           <img
             className={pageOrigin[page].image}
@@ -132,7 +138,7 @@ function PatternViewerAll({ pattern, page }) {
             alt={pattern.patternName}
           />
         </div>
-        {patternEditInterface()}{" "}
+        {patternEditInterface()}
         <h3 className="mb-10 ml-5">Created {getDate(pattern.createdAt)}</h3>
       </div>
     </>
