@@ -40,7 +40,9 @@ const updateUser = async (req, res, next) => {
     }
 
     if (value.oldPassword && value.newPassword) {
- if(value.oldPassword===value.newPassword) { throw  new BadRequestError("Old and new password should be different");}
+      if (value.oldPassword === value.newPassword) {
+        throw new BadRequestError("Old and new password should be different");
+      }
       const user = await prisma.user.findUnique({
         where: { id: req.user.userId },
       });
@@ -76,7 +78,7 @@ const updateUser = async (req, res, next) => {
         },
       },
     });
-    return res.status(StatusCodes.OK).json({ updatedUser });
+    return res.status(StatusCodes.OK).json({ user: updatedUser });
   } catch (error) {
     next(error);
   }
