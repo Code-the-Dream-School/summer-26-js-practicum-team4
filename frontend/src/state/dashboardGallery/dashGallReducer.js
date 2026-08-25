@@ -1,6 +1,7 @@
 const dashGallInitState = {
   currentUser: "",
   view: "scroll",
+  page: "dashboard",
   patterns: [],
   isDeleting: false,
   isFetching: false,
@@ -23,6 +24,7 @@ const dashGallActions = {
   endEditing: "endEditing",
   beginSaving: "beginSaving",
   endSaving: "endSaving",
+  setPage: "setPage",
 };
 
 function dashGallReducer(state, action) {
@@ -98,6 +100,9 @@ function dashGallReducer(state, action) {
 
     case dashGallActions.endSaving:
       return { ...state, isSaving: false };
+
+    case dashGallActions.setPage:
+      return { ...state, page: action.page };
     default:
       return state;
   }

@@ -13,7 +13,7 @@ function AllPatternView() {
           <PatternViewerAll
             key={pattern.id}
             pattern={pattern}
-            page="dashboard"
+            page={dashGallState.page}
           />
         ))}
         <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />
