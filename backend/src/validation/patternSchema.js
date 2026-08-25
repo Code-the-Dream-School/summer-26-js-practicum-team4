@@ -37,7 +37,13 @@ const patternUpdateSchema = Joi.object({
     "object.min": "At least one field must be provided for update.",
   });
 
+const patternGenerationSchema = Joi.object({
+  width: Joi.number().integer().min(10).max(200),
+  height: Joi.number().integer().min(10).max(200),
+}).xor("width", "height");
+
 module.exports = {
   patternSchema,
   patternUpdateSchema,
+  patternGenerationSchema,
 };
