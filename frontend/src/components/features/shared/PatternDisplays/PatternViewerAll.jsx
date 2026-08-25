@@ -73,7 +73,7 @@ function PatternViewerAll({ pattern, page }) {
   }, [dashGallState.isEditing]);
 
   function handleEdit() {
-    if (dashGallState.isEditing || !belongsToUser()) {
+    if (dashGallState.isEditing) {
       return;
     }
 
@@ -90,7 +90,7 @@ function PatternViewerAll({ pattern, page }) {
   }
 
   function patternEditInterface() {
-    if (dashGallState.isEditing && editingThisPattern && belongsToUser()) {
+    if (dashGallState.isEditing && editingThisPattern) {
       return (
         <PatternNameEditInput
           patternId={pattern.id}

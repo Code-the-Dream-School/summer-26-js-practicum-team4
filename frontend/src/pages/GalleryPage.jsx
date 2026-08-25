@@ -41,8 +41,9 @@ function GalleryPage() {
 
     dispatch({ type: dashGallActions.endFetch });
 
-    // Set page in reducer to gallery
+    // Set page in reducer to gallery as well as view to all
     dispatch({ page: "gallery", type: dashGallActions.setPage });
+    dispatch({ type: dashGallActions.setAllView });
   }, [dashGallState.isDeleting, dashGallState.isSaving]);
 
   return (
