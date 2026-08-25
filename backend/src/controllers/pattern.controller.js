@@ -257,6 +257,7 @@ async function getAllPatterns(req, res, next) {
         patternImgUrl: true,
         createdAt: true,
         updatedAt: true,
+        userId: true,
       },
     });
 
