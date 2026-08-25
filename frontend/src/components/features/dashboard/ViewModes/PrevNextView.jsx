@@ -12,7 +12,7 @@ function PrevNextView() {
       <PatternScrollBtn imgSrc="images/scroll-left.png" direction="-" />
       <PatternViewerScroll
         pattern={dashGallState.patterns[dashGallState.scrollPatternIx]}
-        page="dashboard"
+        page={dashGallState.page}
       />
       <PatternScrollBtn imgSrc="images/scroll-right.png" direction="+" />
     </div>

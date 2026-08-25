@@ -7,6 +7,7 @@ import DeletePatternBtn from "./../../dashboard/PatternManagementTools/DeletePat
 import PatternNameEditInput from "./../../dashboard/PatternManagementTools/PatternNameEditInput";
 
 import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
+import { useAuth } from "../../../../state/auth/useAuth";
 
 const pageOrigin = {
   dashboard: {
@@ -53,6 +54,10 @@ function PatternViewerAll({ pattern, page }) {
   const { dashGallState, dashGallActions, dispatch } =
     useContext(DashGallContext);
 
+  const {
+    state: { user },
+  } = useAuth();
+
   const [editingThisPattern, setEditingThisPattern] = useState(false);
   const [currentPatternName, setCurrentPatternName] = useState(
     pattern.patternName,
@@ -68,7 +73,7 @@ function PatternViewerAll({ pattern, page }) {
   }, [dashGallState.isEditing]);
 
   function handleEdit() {
-    if (dashGallState.isEditing) {
+    if (dashGallState.isEditing || !belongsToUser()) {
       return;
     }
 
@@ -80,8 +85,12 @@ function PatternViewerAll({ pattern, page }) {
     return;
   }
 
+  function belongsToUser() {
+    return pattern.userId === pattern.id;
+  }
+
   function patternEditInterface() {
-    if (dashGallState.isEditing && editingThisPattern) {
+    if (dashGallState.isEditing && editingThisPattern && belongsToUser()) {
       return (
         <PatternNameEditInput
           patternId={pattern.id}
