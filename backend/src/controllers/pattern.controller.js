@@ -236,6 +236,12 @@ async function getAllUserPatterns(req, res, next) {
         patternImgUrl: true,
         createdAt: true,
         updatedAt: true,
+        userId: true,
+        user: {
+          select: {
+            userName: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "asc",
