@@ -36,17 +36,15 @@ function MyPatternsPage() {
   // Retrieve user patterns when page loads
   useEffect(() => {
     async function getPatterns() {
+      dispatch({ type: dashGallActions.beginFetch }); // displays loader
+
       const userPatterns = await fetchCurrentUserPatterns();
-      console.log("Patterns are being fetched!");
 
       dispatch({ userPatterns, type: dashGallActions.setUserPatterns });
+      dispatch({ type: dashGallActions.endFetch });
     }
 
-    dispatch({ type: dashGallActions.beginFetch }); // displays loader
-
     getPatterns();
-
-    dispatch({ type: dashGallActions.endFetch });
   }, [dashGallState.isDeleting, dashGallState.isSaving]);
 
   // Function that processes user's view choice into rendered component
