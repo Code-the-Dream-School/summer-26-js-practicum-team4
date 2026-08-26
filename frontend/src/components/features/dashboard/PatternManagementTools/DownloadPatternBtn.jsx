@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 
-import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
+import { DashContext } from "../../../../state/dashboard/dashContext";
 
 function DownloadPatternBtn({ pattern }) {
-  const { dashGallState } = useContext(DashGallContext);
+  const { dashState } = useContext(DashContext);
 
   return (
     <>
       <a href={pattern.patternImgUrl} target="_blank" rel="noreferrer" download>
-        {dashGallState.view === "scroll" ? (
+        {dashState.view === "scroll" ? (
           <button className="bg-primary text-white px-10 py-2 border border-black rounded-md hover:bg-accent">
             Download
           </button>

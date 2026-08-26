@@ -6,7 +6,7 @@ import DownloadPatternBtn from "./../../dashboard/PatternManagementTools/Downloa
 import DeletePatternBtn from "./../../dashboard/PatternManagementTools/DeletePatternBtn";
 import PatternNameEditInput from "./../../dashboard/PatternManagementTools/PatternNameEditInput";
 
-import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
+import { DashContext } from "../../../../state/dashboard/dashContext";
 import { useAuth } from "../../../../state/auth/useAuth";
 
 const pageOrigin = {
@@ -53,8 +53,7 @@ function getDate(dateTimeStr) {
 
 function PatternViewerAll({ pattern, page }) {
   // Relevant states
-  const { dashGallState, dashGallActions, dispatch } =
-    useContext(DashGallContext);
+  const { dashState, dashActions, dispatch } = useContext(DashContext);
 
   const {
     state: { user },
@@ -72,27 +71,27 @@ function PatternViewerAll({ pattern, page }) {
     if (editFocus.current) {
       editFocus.current.focus();
     }
-  }, [dashGallState.isEditing]);
+  }, [dashState.isEditing]);
 
   function belongsToUser() {
     return pattern.userId === user.id;
   }
 
   function handleEdit() {
-    if (dashGallState.isEditing || !belongsToUser()) {
+    if (dashState.isEditing || !belongsToUser()) {
       return;
     }
 
     setCurrentPatternName(pattern.patternName);
     setEditingThisPattern(true);
 
-    dispatch({ type: dashGallActions.beginEditing });
+    dispatch({ type: dashActions.beginEditing });
 
     return;
   }
 
   function patternEditInterface() {
-    if (dashGallState.isEditing && editingThisPattern) {
+    if (dashState.isEditing && editingThisPattern) {
       return (
         <PatternNameEditInput
           patternId={pattern.id}
@@ -139,7 +138,7 @@ function PatternViewerAll({ pattern, page }) {
           />
         </div>
         {patternEditInterface()}
-        {dashGallState.page === "dashboard" ? (
+        {dashState.page === "dashboard" ? (
           <></>
         ) : (
           <h3 className={pageOrigin[page].subTextStyle}>

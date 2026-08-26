@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 // Import components
-import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
+import { DashContext } from "../../../../state/dashboard/dashContext";
 
 import { saveNewPatternName } from "../../../../services/patternService";
 
@@ -14,20 +14,20 @@ function PatternNameEditInput({
   ref,
   setEditingThisPattern,
 }) {
-  const { dispatch, dashGallActions } = useContext(DashGallContext);
+  const { dispatch, dashActions } = useContext(DashContext);
 
   function handleCancel() {
     setCurrentPatternName(defaultPatternName);
 
     setEditingThisPattern(false);
 
-    dispatch({ type: dashGallActions.endEditing });
+    dispatch({ type: dashActions.endEditing });
   }
 
   async function handleSave(event) {
     event.preventDefault();
 
-    dispatch({ type: dashGallActions.beginSaving });
+    dispatch({ type: dashActions.beginSaving });
     await saveNewPatternName(patternId, currentPatternName);
 
     // if editing pattern in all patterns view
@@ -35,8 +35,8 @@ function PatternNameEditInput({
       setEditingThisPattern(false);
     }
 
-    dispatch({ type: dashGallActions.endEditing });
-    dispatch({ type: dashGallActions.endSaving });
+    dispatch({ type: dashActions.endEditing });
+    dispatch({ type: dashActions.endSaving });
   }
   return (
     <div>

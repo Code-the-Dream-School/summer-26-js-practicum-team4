@@ -1,27 +1,26 @@
 import React, { useContext } from "react";
 
 // Component Imports
-import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
+import { DashContext } from "../../../../state/dashboard/dashContext";
 
 import { deleteUserPattern } from "../../../../services/patternService";
 
 function DeletePatternBtn({ pattern }) {
-  const { dispatch, dashGallState, dashGallActions } =
-    useContext(DashGallContext);
+  const { dispatch, dashState, dashActions } = useContext(DashContext);
 
   async function handleDelete() {
-    dispatch({ type: dashGallActions.beginDelete });
+    dispatch({ type: dashActions.beginDelete });
 
     const deletedPattern = await deleteUserPattern(pattern.id);
 
     // End delete status when pattern successfully deleted
-    dispatch({ type: dashGallActions.endDelete });
+    dispatch({ type: dashActions.endDelete });
 
     return deletedPattern;
   }
 
   // Customize button icon according to display
-  if (dashGallState.view === "scroll") {
+  if (dashState.view === "scroll") {
     return (
       <button
         onClick={handleDelete}
@@ -30,7 +29,7 @@ function DeletePatternBtn({ pattern }) {
         Delete
       </button>
     );
-  } else if (dashGallState.view === "all") {
+  } else if (dashState.view === "all") {
     return (
       <button onClick={handleDelete}>
         <img

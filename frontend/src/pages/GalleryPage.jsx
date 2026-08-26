@@ -8,7 +8,7 @@ import AllPatternView from "../components/features/dashboard/ViewModes/AllPatter
 import CreateNewPatternIcon from "../components/features/dashboard/PatternDisplays/CreateNewPatternIcon";
 
 // Context
-import { DashGallContext } from "../state/dashboardGallery/dashGallContext";
+import { DashContext } from "../state/dashboard/dashContext";
 
 // Loader
 import Loader from "../components/Loader/Loader";
@@ -18,41 +18,38 @@ import { fetchAllUserPatterns } from "../services/patternService";
 
 // State Imports
 import {
-  dashGallInitState,
-  dashGallReducer,
-  dashGallActions,
-} from "../state/dashboardGallery/dashGallReducer";
+  dashInitState,
+  dashReducer,
+  dashActions,
+} from "../state/dashboard/dashReducer";
 
 function GalleryPage() {
-  const [dashGallState, dispatch] = useReducer(
-    dashGallReducer,
-    dashGallInitState,
-  );
+  const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
 
   useEffect(() => {
     async function getPatterns() {
-      dispatch({ type: dashGallActions.beginFetch }); // displays loader
+      dispatch({ type: dashActions.beginFetch }); // displays loader
 
       const userPatterns = await fetchAllUserPatterns();
-      dispatch({ userPatterns, type: dashGallActions.setUserPatterns });
+      dispatch({ userPatterns, type: dashActions.setUserPatterns });
 
-      dispatch({ type: dashGallActions.endFetch });
+      dispatch({ type: dashActions.endFetch });
     }
 
     getPatterns();
 
     // Set page in reducer to gallery as well as view to all
-    dispatch({ page: "gallery", type: dashGallActions.setPage });
-    dispatch({ type: dashGallActions.setAllView });
-  }, [dashGallState.isDeleting, dashGallState.isSaving]);
+    dispatch({ page: "gallery", type: dashActions.setPage });
+    dispatch({ type: dashActions.setAllView });
+  }, [dashState.isDeleting, dashState.isSaving]);
 
   return (
     <>
-      <DashGallContext value={{ dashGallState, dispatch, dashGallActions }}>
+      <DashContext value={{ dashState, dispatch, dashActions }}>
         <div className="bg-background">
           <h1 className="text-5xl font-heading ml-19 pt-15">Gallery Page</h1>
           <div className="relative">
-            {dashGallState.isFetching ? (
+            {dashState.isFetching ? (
               <>
                 {" "}
                 <div className=" absolute h-full w-full bg-gray-300 opacity-70"></div>
@@ -66,7 +63,7 @@ function GalleryPage() {
             <AllPatternView />
           </div>
         </div>
-      </DashGallContext>
+      </DashContext>
     </>
   );
 }
