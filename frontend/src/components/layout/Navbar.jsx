@@ -36,15 +36,6 @@ function Navbar() {
 
         <li>
           <Link
-            to="/gallery"
-            className="rounded-lg bg-primary px-8 py-3 text-white hover:opacity-90"
-          >
-            Gallery
-          </Link>
-        </li>
-
-        <li>
-          <Link
             to="/mypatterns"
             className="rounded-lg bg-primary px-6 py-3 text-white hover:opacity-90"
           >
