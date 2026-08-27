@@ -8,7 +8,7 @@ function NotFoundPage() {
     <div className="h-full flex flex-1 flex-col items-center justify-center">
       <img
         className="max-w-[40%]"
-        src="../images/not-found.png"
+        src="/images/not-found.png"
         alt="needle with a ball of yarn"
       />
       <p className="text-center text-primary text-5xl mt-10">
