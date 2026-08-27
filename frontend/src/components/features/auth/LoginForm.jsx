@@ -3,7 +3,7 @@ import { login } from "../../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../state/auth/useAuth";
-import { GoogleLogin } from "@react-oauth/google";
+import GoogleBtn from "./GoogleBtn";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -111,15 +111,8 @@ function LoginForm() {
               Login
             </button>
           </form>
-<span>OR</span>
-             <GoogleLogin text="continue_with" 
-               onSuccess={credentialResponse => {
-      console.log(credentialResponse);
-    }}
-    onError={() => {
-      console.log('Login Failed');
-    }}
-  />
+          <span>OR</span>
+          <GoogleBtn />
           <p className="mt-8 text-center">
             Don&apos;t have an account?{" "}
             <Link

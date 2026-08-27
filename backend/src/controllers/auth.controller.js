@@ -166,9 +166,10 @@ const logoutUser = (req, res) => {
   });
 };
 
-const googleUserLogin = async (req, res, next) => {
+const googleUserAuth = async (req, res, next) => {
   try {
-    const googleToken = req.body?.credential;
+    const googleToken = req.body?.googleToken;
+
     if (typeof googleToken !== "string" || !googleToken.trim()) {
       throw new Error("Google token is required");
     }
@@ -233,7 +234,7 @@ const googleUserLogin = async (req, res, next) => {
 module.exports = {
   registerUser,
   loginUser,
-  googleUserLogin,
+  googleUserAuth,
   getCurrentUser,
   logoutUser,
 };

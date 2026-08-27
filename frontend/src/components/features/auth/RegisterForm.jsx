@@ -1,10 +1,10 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { register } from "../../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../state/auth/useAuth";
 import ReCAPTCHA from "react-google-recaptcha";
-import { GoogleLogin } from "@react-oauth/google";
+import GoogleBtn from "./GoogleBtn";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -204,17 +204,10 @@ function RegisterForm() {
             >
               Create Account
             </button>
-<span>OR</span>
-             <GoogleLogin text="continue_with"
-    onSuccess={credentialResponse => {
-      console.log(credentialResponse);
-    }}
-    onError={() => {
-      console.log('Login Failed');
-    }}
-  />
+            <span>OR</span>
+            <GoogleBtn />
           </form>
-          
+
           <p className="mt-8 text-center">
             Already have an account?{" "}
             <Link

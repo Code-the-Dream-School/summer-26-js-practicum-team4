@@ -70,4 +70,23 @@ async function logout() {
   return data;
 }
 
-export { register, login, getCurrentUser, logout };
+async function googleAuth(googleToken) {
+  const response = await fetch("/api/auth/google", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      googleToken,
+    }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || "Registration failed");
+  }
+
+  return data.user;
+}
+export { register, login, getCurrentUser, logout, googleAuth };

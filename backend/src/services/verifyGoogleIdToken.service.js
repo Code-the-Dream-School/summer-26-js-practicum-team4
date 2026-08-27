@@ -17,10 +17,9 @@ const verifyGoogleIdToken = async (token) => {
     } = payload;
 
     return { googleId, email, userName, userProfileImgUrl };
-  } catch (error){
-     throw new Error(`Google verification failed: ${error.message}`);
+  } catch (error) {
+    throw new Error(`Google verification failed: ${error.message}`);
   }
 };
 
 module.exports = { verifyGoogleIdToken };
-
