@@ -19,6 +19,11 @@ async function fetchCurrentUserPatterns() {
   }
 }
 
+async function fetchAllUserPatterns() {
+  // to be implemented later when implementing Gallery Page
+  return;
+}
+
 async function deleteUserPattern(patternId) {
   try {
     const resp = await fetch(`/api/patterns/${patternId}`, {
@@ -40,9 +45,28 @@ async function deleteUserPattern(patternId) {
   }
 }
 
-async function fetchAllUserPatterns() {
-  // to be implemented later when implementing Gallery Page
-  return;
+async function saveNewPatternName(patternId, newPatternName) {
+  try {
+    const resp = await fetch(`/api/patterns/${patternId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        patternName: newPatternName,
+      }),
+    });
+
+    if (!resp.ok) {
+      throw new Error(resp.message);
+    }
+
+    const { data } = await resp.json();
+    return data.pattern;
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 async function generatePattern({ image, width = 50, height = 50 }) {
@@ -76,7 +100,8 @@ async function generatePattern({ image, width = 50, height = 50 }) {
 
 export {
   fetchCurrentUserPatterns,
-  deleteUserPattern,
   fetchAllUserPatterns,
+  deleteUserPattern,
+  saveNewPatternName,
   generatePattern,
 };

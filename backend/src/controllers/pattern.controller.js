@@ -4,8 +4,8 @@ const prisma = require("../config/prismaClient");
 
 // Function Imports
 const {
-  generatePatternImage,
-} = require("../services/pattern-generator.service");
+  generatePattern: generatePatternPipeline,
+} = require("../services/pattern-pipeline.service");
 
 // Error handler Imports
 const { BadRequestError, NotFoundError, CustomAPIError } = require("../errors");
@@ -13,6 +13,7 @@ const { BadRequestError, NotFoundError, CustomAPIError } = require("../errors");
 const {
   patternSchema,
   patternUpdateSchema,
+  patternGenerationSchema,
 } = require("../validation/patternSchema");
 
 async function createPattern(req, res, next) {
@@ -188,6 +189,9 @@ async function getAllUserPatterns(req, res, next) {
         createdAt: true,
         updatedAt: true,
       },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
 
     return res.status(StatusCodes.OK).json({
@@ -209,29 +213,20 @@ async function generatePattern(req, res) {
       });
     }
 
-    const requestedWidth = Number(req.body.width) || 50;
-    const requestedHeight = Number(req.body.height) || 50;
+    const { error, value } = patternGenerationSchema.validate(req.body, {
+      abortEarly: false,
+    });
 
-    if (
-      requestedWidth < 10 ||
-      requestedWidth > 200 ||
-      requestedHeight < 10 ||
-      requestedHeight > 200
-    ) {
+    if (error) {
       return res.status(400).json({
-        message: "Pattern width and height must be between 10 and 200.",
+        message:
+          "Provide exactly one valid stitch dimension (width or height) between 10 and 200.",
       });
     }
 
-    const pattern = await generatePatternImage(req.file.buffer, {
-      width: requestedWidth,
-      height: requestedHeight,
-    });
+    const { pattern } = await generatePatternPipeline(req.file.buffer, value);
 
-    res.set("Content-Type", "image/png");
-    res.set("Content-Disposition", 'inline; filename="generated-pattern.png"');
-
-    return res.status(200).send(pattern.buffer);
+    return res.status(200).json({ data: { pattern } });
   } catch (error) {
     return res.status(500).json({
       message: "Unable to generate the pattern.",

@@ -185,6 +185,12 @@ function RegisterForm() {
               />
             </div>
 
+            {error && (
+              <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+                {error}
+              </p>
+            )}
+
             <ReCAPTCHA
               className="flex justify-center max-w-full "
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
