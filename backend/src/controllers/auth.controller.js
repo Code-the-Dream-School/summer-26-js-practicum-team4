@@ -45,30 +45,41 @@ const registerUser = async (req, res, next) => {
     }
 
     // Check if the email is already registered
-    const emailTaken = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: emailNormalized },
     });
 
-    if (emailTaken) {
+    if (existingUser && !existingUser.googleId) {
       throw new ConflictError("This email is already taken.");
     }
     // Hash the password before saving it
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create the user and return only safe fields
-    const user = await prisma.user.create({
-      data: {
-        userName: userNameNormalized,
-        email: emailNormalized,
-        hashedPassword,
-      },
-      select: {
-        id: true,
-        userName: true,
-        email: true,
-      },
-    });
-
+    let user;
+    if (!existingUser) {
+      // Create the user and return only safe fields
+      user = await prisma.user.create({
+        data: {
+          userName: userNameNormalized,
+          email: emailNormalized,
+          hashedPassword,
+        },
+        select: {
+          id: true,
+          userName: true,
+          email: true,
+        },
+      });
+    } else {
+      user = await prisma.user.update({
+        where: { id: existingUser.id },
+        data: { userName: userNameNormalized, hashedPassword },
+        select: {
+          id: true,
+          userName: true,
+          email: true,
+        },
+      });
+    }
     const token = generateToken(user.id, user.userName);
 
     // Log the user in after registration
@@ -166,12 +177,13 @@ const logoutUser = (req, res) => {
   });
 };
 
+/*AUtH USER with GOOGLE*/
 const googleUserAuth = async (req, res, next) => {
   try {
     const googleToken = req.body?.googleToken;
 
     if (typeof googleToken !== "string" || !googleToken.trim()) {
-      throw new Error("Google token is required");
+      throw new BadRequestError("Google token is required");
     }
 
     const googleUser = await verifyGoogleIdToken(googleToken);
@@ -192,7 +204,9 @@ const googleUserAuth = async (req, res, next) => {
           },
         });
       } else if (user.googleId !== googleUser.googleId) {
-        throw new Error("This email is registered with other Google account");
+        throw new ConflictError(
+          "This email is registered with other Google account",
+        );
       }
     } else {
       user = await prisma.user.create({
