@@ -215,7 +215,10 @@ async function updatePattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         updatedAt: true,
       },
     });
