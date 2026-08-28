@@ -88,8 +88,10 @@ async function createMultiplePatterns(req, res, next) {
         select: {
           id: true,
           patternName: true,
-          originalImgUrl: true,
-          patternImgUrl: true,
+          stitchWidth: true,
+          stitchHeight: true,
+          pattern: true,
+          grid: true,
           createdAt: true,
         },
       });
