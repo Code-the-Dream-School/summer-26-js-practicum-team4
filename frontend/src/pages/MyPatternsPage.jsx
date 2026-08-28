@@ -27,26 +27,28 @@ function MyPatternsPage() {
   // Retrieve user patterns when page loads
   useEffect(() => {
     async function getPatterns() {
-      dispatch({ type: dashActions.resetScrollPatternIx }); // reset scroll interface to display first image
       dispatch({ type: dashActions.beginFetch }); // displays loader
 
       const userPatterns = await fetchCurrentUserPatterns();
 
       dispatch({ type: dashActions.endFetch });
+
       dispatch({ userPatterns, type: dashActions.setUserPatterns });
     }
 
     getPatterns();
-  }, [dashState.isDeleting]);
+  }, [dashState.isDeleting, dashState.isSaving]);
 
   // Function that processes user's view choice into rendered component
   function userChosenView(patterns) {
     if (patterns.length === 0) {
       return (
-        <>
-          <h1>You have no patterns. </h1>
+        <div>
+          <h3 className="ml-20 my-5">
+            Welcome! Let's add your first pattern.{" "}
+          </h3>
           <CreateNewPatternIcon />
-        </>
+        </div>
       );
     }
     if (dashState.view === "scroll") {
@@ -59,21 +61,35 @@ function MyPatternsPage() {
   return (
     <>
       <DashContext value={{ dashState, dispatch, dashActions }}>
-        <div>
-          <h1>My Patterns Page</h1>
-          <DisplayToggle
-            name="Scroll"
-            onClick={() => dispatch({ type: dashActions.setScrollView })}
-          />
-          <DisplayToggle
-            name="Show All"
-            onClick={() => dispatch({ type: dashActions.setAllView })}
-          />
-          {dashState.isFetching ? (
-            <Loader />
-          ) : (
-            userChosenView(dashState.patterns)
-          )}
+        <div className="bg-background">
+          <div className="flex flex-row-reverse mx-auto content-end">
+            {" "}
+            <DisplayToggle
+              name="Scroll"
+              onClick={() => dispatch({ type: dashActions.setScrollView })}
+              displayImagePath={"images/scroll-view-toggle.png"}
+            />
+            <DisplayToggle
+              name="Show All"
+              onClick={() => dispatch({ type: dashActions.setAllView })}
+              displayImagePath={"images/all-pattern-view-toggle.png"}
+            />
+          </div>
+          <h1 className="text-5xl font-heading ml-19">Dashboard</h1>
+          <div className="relative">
+            {dashState.isFetching ? (
+              <>
+                {" "}
+                <div className=" absolute h-full w-full bg-gray-300 opacity-70"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <Loader size="300" />
+                </div>
+              </>
+            ) : (
+              <div></div>
+            )}
+            {userChosenView(dashState.patterns)}
+          </div>
         </div>
       </DashContext>
     </>
