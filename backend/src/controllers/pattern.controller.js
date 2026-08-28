@@ -245,7 +245,10 @@ async function getAllUserPatterns(req, res, next) {
       select: {
         id: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         createdAt: true,
         updatedAt: true,
       },
