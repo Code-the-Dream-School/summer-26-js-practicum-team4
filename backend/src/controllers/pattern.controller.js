@@ -31,7 +31,7 @@ async function createPattern(req, res, next) {
       throw new BadRequestError("The input Pattern information is malformed.");
     }
 
-    // value contains: patternName, originalImgUrl, and patternImgUrl, and optional stitch width and height
+    // value contains: patternName, stitch width, height, palette, and grid
     const createdPattern = await prisma.pattern.create({
       data: {
         ...value,
@@ -40,8 +40,10 @@ async function createPattern(req, res, next) {
       select: {
         id: true,
         patternName: true,
-        originalImgUrl: true,
-        patternImgUrl: true,
+        stitchWidth: true,
+        stitchHeight: true,
+        pattern: true,
+        grid: true,
         createdAt: true,
       },
     });
