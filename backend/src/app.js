@@ -17,7 +17,13 @@ const errorHandlerMiddleware = require("./middleware/error-handler");
 const app = express();
 
 // Security & best‑practice middleware
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginOpenerPolicy: {
+      policy: "same-origin-allow-popups",
+    },
+  }),
+);
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",

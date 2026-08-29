@@ -22,6 +22,7 @@ function LoginForm() {
         type: "LOGIN_SUCCESS",
         payload: response.user,
       });
+
       navigate("/generate");
     } catch (error) {
       dispatch({

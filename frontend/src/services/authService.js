@@ -87,6 +87,6 @@ async function googleAuth(googleToken) {
     throw new Error(data.message || "Registration failed");
   }
 
-  return data.user;
+  return data;
 }
 export { register, login, getCurrentUser, logout, googleAuth };

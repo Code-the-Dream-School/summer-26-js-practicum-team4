@@ -49,37 +49,31 @@ const registerUser = async (req, res, next) => {
       where: { email: emailNormalized },
     });
 
-    if (existingUser && !existingUser.googleId) {
-      throw new ConflictError("This email is already taken.");
+    if (existingUser) {
+      throw new ConflictError(
+        existingUser.googleId
+          ? "This email was already registered with Google"
+          : "This email is already taken.",
+      );
     }
+
     // Hash the password before saving it
     const hashedPassword = await bcrypt.hash(password, 10);
-    let user;
-    if (!existingUser) {
-      // Create the user and return only safe fields
-      user = await prisma.user.create({
-        data: {
-          userName: userNameNormalized,
-          email: emailNormalized,
-          hashedPassword,
-        },
-        select: {
-          id: true,
-          userName: true,
-          email: true,
-        },
-      });
-    } else {
-      user = await prisma.user.update({
-        where: { id: existingUser.id },
-        data: { userName: userNameNormalized, hashedPassword },
-        select: {
-          id: true,
-          userName: true,
-          email: true,
-        },
-      });
-    }
+
+    // Create the user and return only safe fields
+    const user = await prisma.user.create({
+      data: {
+        userName: userNameNormalized,
+        email: emailNormalized,
+        hashedPassword,
+      },
+      select: {
+        id: true,
+        userName: true,
+        email: true,
+      },
+    });
+
     const token = generateToken(user.id, user.userName);
 
     // Log the user in after registration
@@ -116,6 +110,12 @@ const loginUser = async (req, res, next) => {
 
     if (!user) {
       throw new UnauthenticatedError("Invalid credentials");
+    }
+
+    if (!user.hashedPassword) {
+      throw new UnauthenticatedError(
+        "This account was created with Google. Please sign in with Google or set up a password on your profile page.",
+      );
     }
 
     /* Compare the password with the saved hash */

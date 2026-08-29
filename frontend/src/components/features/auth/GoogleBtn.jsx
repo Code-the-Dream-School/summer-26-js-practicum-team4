@@ -12,7 +12,6 @@ function GoogleBtn() {
     dispatch({ type: "SET_LOADING" });
     try {
       const response = await googleAuth(googleToken);
-
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: response.user,
@@ -27,11 +26,7 @@ function GoogleBtn() {
     <GoogleLogin
       text="continue_with"
       onSuccess={(credentialResponse) => {
-        console.log(credentialResponse);
         handleGoogle(credentialResponse.credential);
-      }}
-      onError={() => {
-        console.log("Login Failed");
       }}
     />
   );
