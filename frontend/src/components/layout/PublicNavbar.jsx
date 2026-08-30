@@ -7,7 +7,7 @@ function PublicNavbar() {
       <div className="flex items-center justify-between  border-b border-gray-300 pb-4">
         <Link to="/" className="text-2xl font-bold text-primary">
           <img
-            src="images/logo.png"
+            src="/images/logo.png"
             alt="X-Stitch Logo"
             className="h-5 w-auto"
           />
