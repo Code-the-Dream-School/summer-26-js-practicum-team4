@@ -44,14 +44,14 @@ async function getCurrentUser() {
     credentials: "include",
   });
 
-  const data = await response.json();
-
   if (!response.ok) {
-    const error = new Error(data.message || "Failed to get current user");
+    const error = new Error(
+      response.statusText || "Failed to get current user",
+    );
     error.status = response.status;
     throw error;
   }
-
+  const data = await response.json();
   return data.user;
 }
 
