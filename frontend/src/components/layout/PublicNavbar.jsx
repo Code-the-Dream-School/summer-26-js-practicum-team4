@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 function PublicNavbar() {
   return (
-    <nav className="flex flex-col px-20 py-6 ">
-      <div className="flex items-center justify-between  border-b border-gray-300 pb-4">
+    <nav className="flex flex-col px-20 pt-6 ">
+      <div className="flex items-center justify-between  border-b border-gray-300 pb-6">
         <Link to="/" className="text-2xl font-bold text-primary">
           <img
             src="images/logo.png"

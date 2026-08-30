@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../state/auth/useAuth";
+import { useNavigate } from "react-router-dom";
 import LogoutBtn from "../features/auth/LogoutBtn";
 
 function Navbar() {
