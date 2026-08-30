@@ -3,7 +3,6 @@ import React from "react";
 function HelpPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
       <section className="w-full bg-primary py-24 text-center text-white">
         <h1 className="text-6xl font-bold">How Can We Help?</h1>
 
@@ -13,7 +12,6 @@ function HelpPage() {
         </p>
       </section>
 
-      {/* Content */}
       <div className="mx-auto max-w-7xl px-8 py-20">
         <div className="grid gap-8 md:grid-cols-2">
           <div className="min-h-[220px] overflow-hidden rounded-2xl bg-white shadow-md">

@@ -3,7 +3,6 @@ import React from "react";
 function TermsPage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
       <section className="w-full bg-primary py-24 text-center text-white">
         <h1 className="text-6xl font-bold">Terms of Service</h1>
 
@@ -14,9 +13,7 @@ function TermsPage() {
         <p className="mt-4 text-md opacity-80">Last Updated: August 2026</p>
       </section>
 
-      {/* Content */}
       <div className="mx-auto max-w-5xl px-8 py-20">
-    
 
         <article className="space-y-10 text-lg leading-relaxed text-text">
           <section>

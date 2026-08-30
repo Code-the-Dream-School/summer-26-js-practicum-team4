@@ -134,7 +134,6 @@ function PrivacyPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
       <section className="w-full bg-primary py-24 text-center text-white">
         <h1 className="text-6xl font-bold">Privacy Policy</h1>
 
@@ -146,10 +145,8 @@ function PrivacyPage() {
         <p className="mt-4 text-md opacity-80">Last Updated: August 2026</p>
       </section>
 
-      {/* Content */}
       <div className="mx-auto max-w-7xl px-8 py-20">
         <div className="grid gap-16 lg:grid-cols-[2fr_1fr]">
-          {/* Left Side */}
           <article className="space-y-20">
             <section>
               <h2 className="mb-6 text-4xl font-bold text-secondary">
@@ -160,7 +157,6 @@ function PrivacyPage() {
             </section>
           </article>
 
-          {/* Right Side */}
           <aside className="h-fit rounded-2xl border border-border bg-background p-8 shadow-sm lg:sticky lg:top-10">
             <h2 className="mb-8 text-3xl font-bold text-secondary">
               Table of Contents
