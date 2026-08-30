@@ -5,7 +5,7 @@ function ReviewsSection() {
     <section className="mx-auto px-20 py-24">
       <h2 className="text-4xl font-bold">Reviews</h2>
 
-      <p className="mt-4 max-w-4xl text-xl">
+      <p className="mt-4 text-xl">
         Join a growing community of users who use X-Stitch to create custom
         patterns, share their work, and bring their favorite photos to life.
       </p>
