@@ -33,14 +33,8 @@ function GallerySection() {
   return (
     <div className="bg-background pt-80 px-25 py-16">
       <div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center">
           <h2 className="text-4xl font-bold">Top Patterns Gallery</h2>
-          <Link
-            to="/gallery"
-            className="text-lg font-normal hover:font-semibold hover:underline"
-          >
-            Full Gallery
-          </Link>
         </div>
 
         <p className="mt-4 text-xl">
