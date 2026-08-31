@@ -17,7 +17,7 @@ function HowItWorksSection() {
           <h3 className="mt-6 text-3xl font-semibold">1. Upload</h3>
           <p className="mt-4 text-xl">
             Drop your favorite photo or illustration. We support JPEG, PNG, and
-            HEIC files up to 20MB.
+            WEBP files up to 20MB.
           </p>
         </div>
 
@@ -29,8 +29,8 @@ function HowItWorksSection() {
           />
           <h3 className="mt-6 text-3xl font-semibold">2. Adjust</h3>
           <p className="mt-4 text-xl">
-            Adjust the grid size, color palette, complexity, and canvas density
-            to create your perfect pattern.
+            Adjust the dimensions, color palette, and reassign symbols to create
+            your perfect pattern.
           </p>
         </div>
 
