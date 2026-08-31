@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { generatePattern } from "../services/patternService";
+import PatternResult from "../components/features/pattern/PatternResult";
 
 function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
-  const [generatedPatternUrl, setGeneratedPatternUrl] = useState("");
-  const [width, setWidth] = useState(50);
-  const [height, setHeight] = useState(50);
+  const [dimensionMode, setDimensionMode] = useState("width");
+  const [stitchDimension, setStitchDimension] = useState("50");
+  const [generatedPattern, setGeneratedPattern] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -15,12 +16,8 @@ function GeneratePage() {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
-
-      if (generatedPatternUrl) {
-        URL.revokeObjectURL(generatedPatternUrl);
-      }
     };
-  }, [previewUrl, generatedPatternUrl]);
+  }, [previewUrl]);
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
@@ -29,17 +26,9 @@ function GeneratePage() {
       return;
     }
 
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-
-    if (generatedPatternUrl) {
-      URL.revokeObjectURL(generatedPatternUrl);
-    }
-
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
-    setGeneratedPatternUrl("");
+    setGeneratedPattern(null);
     setErrorMessage("");
   };
 
@@ -51,21 +40,32 @@ function GeneratePage() {
       return;
     }
 
+    const parsedDimension = Number(stitchDimension);
+
+    if (
+      stitchDimension.trim() === "" ||
+      !Number.isInteger(parsedDimension) ||
+      parsedDimension < 10 ||
+      parsedDimension > 200
+    ) {
+      setErrorMessage(
+        "Pattern dimension must be an integer between 10 and 200.",
+      );
+      return;
+    }
+
     try {
       setIsGenerating(true);
       setErrorMessage("");
 
-      const patternBlob = await generatePattern({
+      const pattern = await generatePattern({
         image: selectedFile,
-        width,
-        height,
+        ...(dimensionMode === "width"
+          ? { width: parsedDimension }
+          : { height: parsedDimension }),
       });
 
-      if (generatedPatternUrl) {
-        URL.revokeObjectURL(generatedPatternUrl);
-      }
-
-      setGeneratedPatternUrl(URL.createObjectURL(patternBlob));
+      setGeneratedPattern(pattern);
     } catch (error) {
       setErrorMessage(
         error instanceof Error
@@ -77,96 +77,142 @@ function GeneratePage() {
     }
   };
 
-  const handleDownload = () => {
-    if (!generatedPatternUrl) {
-      setErrorMessage("Please generate a pattern before downloading.");
-      return;
-    }
-
-    const downloadLink = document.createElement("a");
-
-    downloadLink.href = generatedPatternUrl;
-    downloadLink.download = "generated-pattern.png";
-
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
+  const handleBackToGenerator = () => {
+    setGeneratedPattern(null);
+    setErrorMessage("");
   };
 
+  const handleUploadNewImage = () => {
+    setSelectedFile(null);
+    setPreviewUrl("");
+    setDimensionMode("width");
+    setStitchDimension("50");
+    setGeneratedPattern(null);
+    setErrorMessage("");
+  };
+
+  if (generatedPattern) {
+    return (
+      <PatternResult
+        pattern={generatedPattern}
+        previewUrl={previewUrl}
+        fileName={selectedFile?.name || "Selected image"}
+        onBack={handleBackToGenerator}
+        onUploadNew={handleUploadNewImage}
+      />
+    );
+  }
+
   return (
-    <main>
-      <h1>Generate Pattern</h1>
+    <main className="min-h-screen bg-background px-4 py-10">
+      <section className="mx-auto max-w-3xl rounded-2xl border border-border bg-surface p-6 shadow-md md:p-10">
+        <h1 className="mb-8 text-center text-4xl font-bold text-secondary">
+          Generate Pattern
+        </h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="pattern-image">Upload an image</label>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <label
+              className="block font-semibold text-secondary"
+              htmlFor="pattern-image"
+            >
+              Upload an image
+            </label>
 
-          <input
-            id="pattern-image"
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            onChange={handleFileChange}
-          />
-        </div>
+            <input
+              id="pattern-image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleFileChange}
+              className="block w-full rounded-lg border border-border bg-background px-4 py-3 text-text file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-white"
+            />
 
-        <div>
-          <label htmlFor="pattern-width">Width</label>
-
-          <input
-            id="pattern-width"
-            type="number"
-            min="10"
-            max="200"
-            value={width}
-            onChange={(event) => setWidth(Number(event.target.value))}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="pattern-height">Height</label>
-
-          <input
-            id="pattern-height"
-            type="number"
-            min="10"
-            max="200"
-            value={height}
-            onChange={(event) => setHeight(Number(event.target.value))}
-          />
-        </div>
-
-        <button type="submit" disabled={isGenerating}>
-          {isGenerating ? "Generating..." : "Generate Pattern"}
-        </button>
-      </form>
-
-      {errorMessage && <p role="alert">{errorMessage}</p>}
-
-      {previewUrl && (
-        <section>
-          <h2>Original Image</h2>
-
-          <img src={previewUrl} alt="Selected image preview" width="300" />
-        </section>
-      )}
-
-      {generatedPatternUrl && (
-        <section>
-          <h2>Generated Pattern</h2>
-
-          <img
-            src={generatedPatternUrl}
-            alt="Generated pattern preview"
-            width="300"
-          />
-
-          <div>
-            <button type="button" onClick={handleDownload}>
-              Download Pattern
-            </button>
+            {selectedFile && (
+              <p className="text-sm text-text-secondary">
+                Selected: {selectedFile.name}
+              </p>
+            )}
           </div>
-        </section>
-      )}
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label
+                className="block font-semibold text-secondary"
+                htmlFor="dimension-mode"
+              >
+                Size pattern by
+              </label>
+
+              <select
+                id="dimension-mode"
+                value={dimensionMode}
+                onChange={(event) => setDimensionMode(event.target.value)}
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              >
+                <option value="width">Width</option>
+                <option value="height">Height</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                className="block font-semibold text-secondary"
+                htmlFor="stitch-dimension"
+              >
+                {dimensionMode === "width" ? "Width" : "Height"} in stitches
+              </label>
+
+              <input
+                id="stitch-dimension"
+                type="number"
+                min="10"
+                max="200"
+                value={stitchDimension}
+                onChange={(event) => setStitchDimension(event.target.value)}
+                className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isGenerating}
+            className="w-full rounded-lg bg-primary px-6 py-3 text-lg font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent disabled:cursor-wait disabled:opacity-60"
+          >
+            {isGenerating ? "Generating..." : "Generate Pattern"}
+          </button>
+        </form>
+
+        {isGenerating && (
+          <p className="mt-4 text-center text-secondary" role="status">
+            Creating your cross-stitch pattern…
+          </p>
+        )}
+
+        {errorMessage && (
+          <p
+            className="mt-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-center text-red-700"
+            role="alert"
+          >
+            {errorMessage}
+          </p>
+        )}
+
+        {previewUrl && (
+          <section className="mt-8 border-t border-border pt-6">
+            <h2 className="mb-4 text-2xl font-semibold text-secondary">
+              Original Image
+            </h2>
+
+            <img
+              src={previewUrl}
+              alt="Selected image preview"
+              className="max-h-80 w-full rounded-xl border border-border object-contain"
+            />
+          </section>
+        )}
+      </section>
     </main>
   );
 }
