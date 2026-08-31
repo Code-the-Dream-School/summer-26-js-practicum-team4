@@ -1,18 +1,20 @@
 const Joi = require("joi");
 
 const patternParameters = {
-  stitchWidth: Joi.number().integer().min(10).max(200).optional().messages({
+  stitchWidth: Joi.number().integer().min(10).max(200).required().messages({
     "number.base": "Stitch width must be a number.",
     "number.integer": "Stitch width must be an integer.",
     "number.min": "Stitch width must be at least 10.",
     "number.max": "Stitch width must be no more than 200.",
   }),
-  stitchHeight: Joi.number().integer().min(10).max(200).optional().messages({
+  stitchHeight: Joi.number().integer().min(10).max(200).required().messages({
     "number.base": "Stitch height must be a number.",
     "number.integer": "Stitch height must be an integer.",
     "number.min": "Stitch height must be at least 10.",
     "number.max": "Stitch height must be no more than 200.",
   }),
+  palette: {},
+  grid: {},
 };
 
 const patternSchema = Joi.object({
@@ -20,8 +22,8 @@ const patternSchema = Joi.object({
     "string.min": "Pattern name must be at least 3 characters long.",
     "string.max": "Pattern name must be no more than 30 characters long.",
   }),
-  originalImgUrl: Joi.string().uri().required(),
-  patternImgUrl: Joi.string().uri().required(),
+  originalImgUrl: Joi.string().uri().optional(),
+  patternImgUrl: Joi.string().uri().optional(),
   ...patternParameters,
 });
 
