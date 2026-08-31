@@ -16,6 +16,24 @@ const {
   patternGenerationSchema,
 } = require("../validation/patternSchema");
 
+function jsonToParsed(patternData) {
+  // Returns three objects: original palette JSON, original grid JSON,
+  // and new patternData object where palette and grid have been parsed
+  return (
+    patternData.palette,
+    patternData.grid,
+    {
+      ...patternData,
+      palette: JSON.parse(patternData.palette),
+      grid: JSON.parse(patternData.grid),
+    }
+  );
+}
+
+function parsedToJson(validatedData, patternJson, gridJson) {
+  return { ...validatedData, pattern: patternJson, grid: gridJson };
+}
+
 async function createPattern(req, res, next) {
   try {
     if (!req.body) {
