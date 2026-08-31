@@ -45,13 +45,11 @@ function HelpPage() {
           <div className="min-h-[220px] overflow-hidden rounded-2xl bg-white shadow-md">
             <div className="h-2 bg-primary" />
             <div className="p-10">
-              <h2 className="text-2xl font-bold text-secondary">
-                My Patterns
-              </h2>
+              <h2 className="text-2xl font-bold text-secondary">My Patterns</h2>
 
               <p className="mt-4 text-lg leading-relaxed text-text">
-                Your saved patterns can be found on the My Patterns page,
-                where you can view and manage your creations.
+                Your saved patterns can be found on the My Patterns page, where
+                you can view and manage your creations.
               </p>
             </div>
           </div>
@@ -64,8 +62,8 @@ function HelpPage() {
               </h2>
 
               <p className="mt-4 text-lg leading-relaxed text-text">
-                Use your profile to manage your account information and
-                access your X-Stitch settings.
+                Use your profile to manage your account information and access
+                your X-Stitch settings.
               </p>
             </div>
           </div>

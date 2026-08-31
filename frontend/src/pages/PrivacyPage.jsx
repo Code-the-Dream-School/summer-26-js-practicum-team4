@@ -9,17 +9,16 @@ function PrivacyPage() {
       content: (
         <>
           <p className="text-lg leading-relaxed text-text">
-            X-Stitch is a platform that helps users transform photos and
-            artwork into custom cross-stitch patterns. This Privacy Policy
-            explains what information we collect, how we use it, and the
-            choices available to you.
+            X-Stitch is a platform that helps users transform photos and artwork
+            into custom cross-stitch patterns. This Privacy Policy explains what
+            information we collect, how we use it, and the choices available to
+            you.
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">
-            This project is intended for educational and demonstration
-            purposes. While we strive to follow modern privacy practices,
-            this website should not be considered a commercial production
-            service.
+            This project is intended for educational and demonstration purposes.
+            While we strive to follow modern privacy practices, this website
+            should not be considered a commercial production service.
           </p>
         </>
       ),
@@ -36,15 +35,15 @@ function PrivacyPage() {
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">
-            We may also temporarily process uploaded images in order to
-            generate cross-stitch patterns. Images are used solely for
-            pattern generation functionality.
+            We may also temporarily process uploaded images in order to generate
+            cross-stitch patterns. Images are used solely for pattern generation
+            functionality.
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">
             Basic technical information such as browser type, device
-            information, and application logs may also be collected to
-            improve performance and troubleshoot issues.
+            information, and application logs may also be collected to improve
+            performance and troubleshoot issues.
           </p>
         </>
       ),
@@ -61,8 +60,8 @@ function PrivacyPage() {
 
           <p className="mt-6 text-lg leading-relaxed text-text">
             We do not sell personal information to third parties. Any data
-            collected is used only to support application functionality and
-            user experience.
+            collected is used only to support application functionality and user
+            experience.
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">
@@ -83,9 +82,9 @@ function PrivacyPage() {
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">
-            However, no online service can guarantee complete security.
-            Users should avoid sharing sensitive personal information
-            through uploaded content.
+            However, no online service can guarantee complete security. Users
+            should avoid sharing sensitive personal information through uploaded
+            content.
           </p>
         </>
       ),
@@ -96,13 +95,13 @@ function PrivacyPage() {
       content: (
         <>
           <p className="text-lg leading-relaxed text-text">
-            User information is retained only as long as necessary to
-            provide services and maintain application functionality.
+            User information is retained only as long as necessary to provide
+            services and maintain application functionality.
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">
-            Uploaded files may be removed periodically to conserve storage
-            and improve system performance.
+            Uploaded files may be removed periodically to conserve storage and
+            improve system performance.
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">
@@ -118,9 +117,9 @@ function PrivacyPage() {
       content: (
         <>
           <p className="text-lg leading-relaxed text-text">
-            If you have questions about this Privacy Policy or the handling
-            of your information, please contact the X-Stitch development
-            team through the project repository or support channels.
+            If you have questions about this Privacy Policy or the handling of
+            your information, please contact the X-Stitch development team
+            through the project repository or support channels.
           </p>
 
           <p className="mt-6 text-lg leading-relaxed text-text">

@@ -6,11 +6,11 @@ function Footer() {
     <footer className="grid grid-cols-[1fr_auto_1fr] items-center border-t border-gray-300 bg-footer-background px-20 py-6 text-text-secondary">
       <div className="justify-self-start">
         <Link to="/">
-                  <img
-                    src="images/logo-g.png"
-                    alt="X-Stitch Logo"
-                    className="h-3 w-auto"
-                  />
+          <img
+            src="images/logo-g.png"
+            alt="X-Stitch Logo"
+            className="h-3 w-auto"
+          />
         </Link>
       </div>
 
