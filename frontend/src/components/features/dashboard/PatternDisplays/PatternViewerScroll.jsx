@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 
 // Component Imports
 import DownloadPatternBtn from "../PatternManagementTools/DownloadPatternBtn";
@@ -21,31 +22,6 @@ const pageOrigin = {
     image: "mx-auto p-10 h-full object-contain",
   },
 };
-
-const monthsLst = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-function getDate(dateTimeStr) {
-  const yrMthDay = dateTimeStr.split("T")[0].split("-");
-
-  const monthStr = monthsLst[parseInt(yrMthDay[1] - 1)];
-  const dayStr = yrMthDay[2] + ",";
-  const yearStr = yrMthDay[0];
-
-  return [monthStr, dayStr, yearStr].join(" ");
-}
 
 function PatternViewerScroll({ pattern, page }) {
   // Relevant states
@@ -127,5 +103,18 @@ function PatternViewerScroll({ pattern, page }) {
     </>
   );
 }
+
+PatternViewerScroll.propTypes = {
+  pattern: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    patternName: PropTypes.string.isRequired,
+    stitchWidth: PropTypes.number.isRequired,
+    stitchHeight: PropTypes.number.isRequired,
+    palette: PropTypes.string.isRequired,
+    grid: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+  }).isRequired,
+  page: PropTypes.string.isRequired,
+};
 
 export default PatternViewerScroll;
