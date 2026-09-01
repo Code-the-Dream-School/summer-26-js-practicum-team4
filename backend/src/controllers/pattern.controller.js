@@ -8,7 +8,7 @@ const {
 } = require("../services/pattern-pipeline.service");
 
 // Error handler Imports
-const { BadRequestError, NotFoundError, CustomAPIError } = require("../errors");
+const { BadRequestError, NotFoundError } = require("../errors");
 
 const {
   patternSchema,
@@ -63,8 +63,10 @@ async function createPattern(req, res, next) {
       select: {
         id: true,
         patternName: true,
-        originalImgUrl: true,
-        patternImgUrl: true,
+        stitchWidth: true,
+        stitchHeight: true,
+        palette: true,
+        grid: true,
         createdAt: true,
       },
     });
@@ -72,6 +74,57 @@ async function createPattern(req, res, next) {
     return res
       .status(StatusCodes.CREATED)
       .json({ data: { pattern: createdPattern } });
+  } catch (error) {
+    // Send to global error handler
+    console.log(error.message);
+    next(error);
+  }
+}
+
+async function createMultiplePatterns(req, res, next) {
+  try {
+    if (!req.body) {
+      req.body = {};
+    }
+
+    const allValidatedPatterns = [];
+
+    for (const pattern of req.body) {
+      const { error, value } = patternSchema.validate(pattern, {
+        abortEarly: false,
+      });
+
+      if (error) {
+        throw new BadRequestError(
+          "The input Pattern information is malformed.",
+        );
+      }
+
+      allValidatedPatterns.push({ ...value, userId: req.user.userId });
+    }
+
+    // create each pattern individually so that createdAt can reliably sort patterns
+    const returnedPatterns = [];
+    for (const pattern of allValidatedPatterns) {
+      const createdPattern = await prisma.pattern.create({
+        data: pattern,
+        select: {
+          id: true,
+          patternName: true,
+          stitchWidth: true,
+          stitchHeight: true,
+          palette: true,
+          grid: true,
+          createdAt: true,
+        },
+      });
+
+      returnedPatterns.push(createdPattern);
+    }
+
+    return res.status(StatusCodes.CREATED).json({
+      data: { patterns: returnedPatterns },
+    });
   } catch (error) {
     // Send to global error handler
     console.log(error.message);
@@ -96,7 +149,10 @@ async function getPattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -134,7 +190,8 @@ async function deletePattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
       },
     });
 
@@ -181,7 +238,10 @@ async function updatePattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         updatedAt: true,
       },
     });
@@ -208,7 +268,10 @@ async function getAllUserPatterns(req, res, next) {
       select: {
         id: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -226,6 +289,10 @@ async function getAllUserPatterns(req, res, next) {
     // Send to global error handler
     next(error);
   }
+}
+
+async function getAllPatterns(req, res, next) {
+  return { message: "This endpoint is being discontinued. " };
 }
 
 async function generatePattern(req, res) {
@@ -251,6 +318,12 @@ async function generatePattern(req, res) {
 
     return res.status(200).json({ data: { pattern } });
   } catch (error) {
+    if (error.code === "PATTERN_DIMENSION_OUT_OF_RANGE") {
+      return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+        message: `This size is too small for this image. Try increasing the ${error.suppliedDimensionName} for a clearer, better-proportioned pattern.`,
+      });
+    }
+
     return res.status(500).json({
       message: "Unable to generate the pattern.",
     });
@@ -260,7 +333,9 @@ async function generatePattern(req, res) {
 module.exports = {
   generatePattern,
   getAllUserPatterns,
+  getAllPatterns,
   createPattern,
+  createMultiplePatterns,
   getPattern,
   deletePattern,
   updatePattern,
