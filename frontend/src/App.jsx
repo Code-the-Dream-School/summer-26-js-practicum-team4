@@ -12,6 +12,7 @@ import GalleryPage from "./pages/GalleryPage";
 import PublicRoutes from "./routes/PublicRoutes";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import UserProfilePage from "./pages/UserProfilePage";
+import NotFoundPage from "./pages/NotFound";
 import { useAuth } from "./state/auth/useAuth";
 
 function App() {
@@ -22,10 +23,10 @@ function App() {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       {!isAuthPage && (state.isAuthenticated ? <Navbar /> : <PublicNavbar />)}
 
-      <main className="main-content">
+      <main className="main-content flex flex-1 flex-col ">
         <Routes>
           <Route
             path="/"
@@ -37,7 +38,6 @@ function App() {
               )
             }
           />
-
           <Route element={<PublicRoutes />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -49,6 +49,7 @@ function App() {
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/profile" element={<UserProfilePage />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 
