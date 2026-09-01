@@ -1,4 +1,4 @@
-const dashInitState = {
+const dashGallInitState = {
   view: "scroll",
   patterns: [],
   isDeleting: false,
@@ -8,7 +8,7 @@ const dashInitState = {
   scrollPatternIx: 0,
 };
 
-const dashActions = {
+const dashGallActions = {
   setScrollView: "setScrollView",
   setAllView: "setAllView",
   setUserPatterns: "setUserPatterns",
@@ -23,16 +23,16 @@ const dashActions = {
   endSaving: "endSaving",
 };
 
-function dashReducer(state, action) {
+function dashGallReducer(state, action) {
   switch (action.type) {
-    case dashActions.setScrollView:
+    case dashGallActions.setScrollView:
       return { ...state, view: "scroll" };
-    case dashActions.setAllView:
+    case dashGallActions.setAllView:
       return { ...state, view: "all" };
-    case dashActions.setUserPatterns:
+    case dashGallActions.setUserPatterns:
       return { ...state, patterns: action.userPatterns };
 
-    case dashActions.setScrollPatternIx: {
+    case dashGallActions.setScrollPatternIx: {
       const patternLength = state.patterns.length;
       let newScrollPatternIx = state.scrollPatternIx;
 
@@ -56,47 +56,47 @@ function dashReducer(state, action) {
 
       return { ...state, scrollPatternIx: newScrollPatternIx };
     }
-    case dashActions.beginDelete:
+    case dashGallActions.beginDelete:
       return {
         ...state,
         isDeleting: true,
       };
-    case dashActions.endDelete:
+    case dashGallActions.endDelete:
       return {
         ...state,
         scrollPatternIx: 0,
         isDeleting: false,
       };
 
-    case dashActions.beginFetch:
+    case dashGallActions.beginFetch:
       return {
         ...state,
         isFetching: true,
       };
-    case dashActions.endFetch:
+    case dashGallActions.endFetch:
       return {
         ...state,
         isFetching: false,
       };
-    case dashActions.beginEditing:
+    case dashGallActions.beginEditing:
       return {
         ...state,
         isEditing: true,
       };
-    case dashActions.endEditing:
+    case dashGallActions.endEditing:
       return {
         ...state,
         isEditing: false,
       };
 
-    case dashActions.beginSaving:
+    case dashGallActions.beginSaving:
       return { ...state, isSaving: true };
 
-    case dashActions.endSaving:
+    case dashGallActions.endSaving:
       return { ...state, isSaving: false };
     default:
       return state;
   }
 }
 
-export { dashInitState, dashReducer, dashActions };
+export { dashGallInitState, dashGallReducer, dashGallActions };
