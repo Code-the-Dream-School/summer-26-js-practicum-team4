@@ -206,7 +206,9 @@ function RegisterForm() {
             >
               Create Account
             </button>
-            <span>OR</span>
+            <div className="flex items-center justify-center">
+              <span className="text-sm text-gray-500">OR</span>
+            </div>
             <GoogleBtn />
           </form>
 

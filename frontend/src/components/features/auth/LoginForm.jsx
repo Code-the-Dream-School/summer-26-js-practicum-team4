@@ -117,9 +117,12 @@ function LoginForm() {
             >
               Login
             </button>
+            <div className="flex items-center justify-center">
+              <span className="text-sm text-gray-500">OR</span>
+            </div>
+            <GoogleBtn />
           </form>
-          <span>OR</span>
-          <GoogleBtn />
+
           <p className="mt-8 text-center">
             Don&apos;t have an account?{" "}
             <Link

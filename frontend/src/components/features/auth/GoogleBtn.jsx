@@ -23,12 +23,23 @@ function GoogleBtn() {
     }
   }
   return (
-    <GoogleLogin
-      text="continue_with"
-      onSuccess={(credentialResponse) => {
-        handleGoogle(credentialResponse.credential);
-      }}
-    />
+    <div className="flex w-full justify-center">
+      <GoogleLogin
+        text="continue_with"
+        size="large"
+        width={304}
+
+        onSuccess={(credentialResponse) => {
+          handleGoogle(credentialResponse.credential);
+        }}
+        onError={() => {
+          dispatch({
+            type: "SET_ERROR",
+            payload: "Google authentication failed",
+          });
+        }}
+      />{" "}
+    </div>
   );
 }
 
