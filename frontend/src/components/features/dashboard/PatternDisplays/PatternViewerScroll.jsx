@@ -1,28 +1,24 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
 
 // Component Imports
-
-import DownloadPatternBtn from "./../../dashboard/PatternManagementTools/DownloadPatternBtn";
-import DeletePatternBtn from "./../../dashboard/PatternManagementTools/DeletePatternBtn";
-import PatternNameEditInput from "./../../dashboard/PatternManagementTools/PatternNameEditInput";
+import DownloadPatternBtn from "../PatternManagementTools/DownloadPatternBtn";
+import DeletePatternBtn from "../PatternManagementTools/DeletePatternBtn";
+import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
 
 import { DashContext } from "../../../../state/dashboard/dashContext";
-import { useAuth } from "../../../../state/auth/useAuth";
 
 const pageOrigin = {
   dashboard: {
-    textStyle: "text-2xl ml-5",
-    subTextStyle: "ml-5",
-    patternInterface: "m-2 h-[45dvh]",
-    downloadAndDelete: "text-right mr-2 mt-2 object-contain",
-    image: "mx-auto p-5 h-[70%] object-contain",
+    textStyle: "text-3xl mb-5",
+    patternInterface: "mx-auto h-[60dvh]",
+    downloadAndDelete: "flex justify-center gap-x-15 my-8",
+    image: "mx-auto p-10 h-full object-contain",
   },
   gallery: {
-    textStyle: "text-2xl ml-5",
-    subTextStyle: "ml-5",
-    patternInterface: "m-2 h-[45dvh]",
-    downloadAndDelete: "text-right mr-2 mt-2 object-contain",
-    image: "mx-auto p-5 h-[70%] object-contain",
+    textStyle: "text-3xl mb-5",
+    patternInterface: "mx-auto h-[60dvh]",
+    downloadAndDelete: "flex justify-center gap-x-15 my-8",
+    image: "mx-auto p-10 h-full object-contain",
   },
 };
 
@@ -51,13 +47,9 @@ function getDate(dateTimeStr) {
   return [monthStr, dayStr, yearStr].join(" ");
 }
 
-function PatternViewerAll({ pattern, page }) {
+function PatternViewerScroll({ pattern, page }) {
   // Relevant states
   const { dashState, dashActions, dispatch } = useContext(DashContext);
-
-  const {
-    state: { user },
-  } = useAuth();
 
   const [editingThisPattern, setEditingThisPattern] = useState(false);
   const [currentPatternName, setCurrentPatternName] = useState(
@@ -73,12 +65,8 @@ function PatternViewerAll({ pattern, page }) {
     }
   }, [dashState.isEditing]);
 
-  function belongsToUser() {
-    return pattern.userId === user.id;
-  }
-
   function handleEdit() {
-    if (dashState.isEditing || !belongsToUser()) {
+    if (dashState.isEditing) {
       return;
     }
 
@@ -107,16 +95,12 @@ function PatternViewerAll({ pattern, page }) {
       return (
         <div className="grid grid-cols-5 place-content-center">
           <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
-          {belongsToUser() ? (
-            <button className="col-start-6" onClick={handleEdit}>
-              <img
-                src="images/edit.png"
-                className="hover:bg-gray-300 mb-5 w-10"
-              />
-            </button>
-          ) : (
-            <></>
-          )}
+          <button className="col-start-6" onClick={handleEdit}>
+            <img
+              src="images/edit.png"
+              className="hover:bg-gray-300 mb-5 w-10"
+            />
+          </button>
         </div>
       );
     }
@@ -124,33 +108,24 @@ function PatternViewerAll({ pattern, page }) {
   return (
     <>
       <div className="container">
+        {patternEditInterface()}
+
         <div
           className={`pattern-interface bg-white border rounded-2xl border-gray-400 ${pageOrigin[page].patternInterface}`}
         >
-          <div className={pageOrigin[page].downloadAndDelete}>
-            <DownloadPatternBtn pattern={pattern} />
-            {belongsToUser() ? <DeletePatternBtn pattern={pattern} /> : <></>}
-          </div>
           <img
             className={pageOrigin[page].image}
             src={pattern.patternImgUrl}
             alt={pattern.patternName}
           />
         </div>
-        {patternEditInterface()}
-        {dashState.page === "dashboard" ? (
-          <></>
-        ) : (
-          <h3 className={pageOrigin[page].subTextStyle}>
-            Pattern by: <b>{pattern.user.userName}</b>
-          </h3>
-        )}
-        <h3 className={pageOrigin[page].subTextStyle}>
-          Created {getDate(pattern.createdAt)}
-        </h3>
+        <div className={pageOrigin[page].downloadAndDelete}>
+          <DownloadPatternBtn pattern={pattern} />
+          <DeletePatternBtn pattern={pattern} />
+        </div>
       </div>
     </>
   );
 }
 
-export default PatternViewerAll;
+export default PatternViewerScroll;
