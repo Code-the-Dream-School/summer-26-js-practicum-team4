@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const paletteSchema = Joi.object({
-  dmcCode: Joi.number().string().required().messages({
+  dmcCode: Joi.string().required().messages({
     "string.base": "dmcCode must be a number.",
   }),
   name: Joi.string().required().messages({
