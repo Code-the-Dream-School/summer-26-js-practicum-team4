@@ -40,8 +40,13 @@ async function createPattern(req, res, next) {
       req.body = {};
     }
 
+    // Parse JSON arguments from req.body
+    const paletteJson,
+      gridJson,
+      parsedBody = jsonToParsed(req.body);
+
     // Use Joi Validation schema to ensure properly formed input
-    const { error, value } = patternSchema.validate(req.body, {
+    const { error, value } = patternSchema.validate(parsedBody, {
       abortEarly: false,
     });
 
@@ -49,10 +54,10 @@ async function createPattern(req, res, next) {
       throw new BadRequestError("The input Pattern information is malformed.");
     }
 
-    // value contains: patternName, originalImgUrl, and patternImgUrl
+    // value contains: patternName, stitchWidth, stitchHeight, palette, grid
     const createdPattern = await prisma.pattern.create({
       data: {
-        ...value,
+        ...parsedToJson(value, paletteJson, gridJson),
         userId: req.user.userId,
       },
       select: {
