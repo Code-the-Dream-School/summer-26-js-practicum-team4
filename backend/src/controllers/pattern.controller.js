@@ -40,11 +40,10 @@ async function createPattern(req, res, next) {
       req.body = {};
     }
 
-    // Parse JSON arguments from req.body
-    const [paletteJson, gridJson, parsedBody] = jsonToParsed(req.body);
+    console.log(req.body);
 
     // Use Joi Validation schema to ensure properly formed input
-    const { error, value } = patternSchema.validate(parsedBody, {
+    const { error, value } = patternSchema.validate(req.body, {
       abortEarly: false,
     });
 
@@ -55,7 +54,7 @@ async function createPattern(req, res, next) {
     // value contains: patternName, stitchWidth, stitchHeight, palette, grid
     const createdPattern = await prisma.pattern.create({
       data: {
-        ...parsedToJson(value, paletteJson, gridJson),
+        ...value,
         userId: req.user.userId,
       },
       select: {
