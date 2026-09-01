@@ -19,15 +19,15 @@ const {
 function jsonToParsed(patternData) {
   // Returns three objects: original palette JSON, original grid JSON,
   // and new patternData object where palette and grid have been parsed
-  return (
+  return [
     patternData.palette,
     patternData.grid,
     {
       ...patternData,
       palette: JSON.parse(patternData.palette),
       grid: JSON.parse(patternData.grid),
-    }
-  );
+    },
+  ];
 }
 
 function parsedToJson(validatedData, patternJson, gridJson) {
@@ -41,9 +41,7 @@ async function createPattern(req, res, next) {
     }
 
     // Parse JSON arguments from req.body
-    const paletteJson,
-      gridJson,
-      parsedBody = jsonToParsed(req.body);
+    const [paletteJson, gridJson, parsedBody] = jsonToParsed(req.body);
 
     // Use Joi Validation schema to ensure properly formed input
     const { error, value } = patternSchema.validate(parsedBody, {
