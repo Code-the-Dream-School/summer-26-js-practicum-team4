@@ -1,4 +1,5 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 
 // Component Imports
 
@@ -7,7 +8,6 @@ import DeletePatternBtn from "../PatternManagementTools/DeletePatternBtn";
 import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
 
 import { DashContext } from "../../../../state/dashboard/dashContext";
-import { useAuth } from "../../../../state/auth/useAuth";
 
 const pageOrigin = {
   dashboard: {
@@ -55,10 +55,6 @@ function PatternViewerAll({ pattern, page }) {
   // Relevant states
   const { dashState, dashActions, dispatch } = useContext(DashContext);
 
-  const {
-    state: { user },
-  } = useAuth();
-
   const [editingThisPattern, setEditingThisPattern] = useState(false);
   const [currentPatternName, setCurrentPatternName] = useState(
     pattern.patternName,
@@ -73,12 +69,8 @@ function PatternViewerAll({ pattern, page }) {
     }
   }, [dashState.isEditing]);
 
-  function belongsToUser() {
-    return pattern.userId === user.id;
-  }
-
   function handleEdit() {
-    if (dashState.isEditing || !belongsToUser()) {
+    if (dashState.isEditing) {
       return;
     }
 
@@ -107,16 +99,12 @@ function PatternViewerAll({ pattern, page }) {
       return (
         <div className="grid grid-cols-5 place-content-center">
           <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
-          {belongsToUser() ? (
-            <button className="col-start-6" onClick={handleEdit}>
-              <img
-                src="images/edit.png"
-                className="hover:bg-gray-300 mb-5 w-10"
-              />
-            </button>
-          ) : (
-            <></>
-          )}
+          <button className="col-start-6" onClick={handleEdit}>
+            <img
+              src="images/edit.png"
+              className="hover:bg-gray-300 mb-5 w-10"
+            />
+          </button>
         </div>
       );
     }
@@ -129,7 +117,7 @@ function PatternViewerAll({ pattern, page }) {
         >
           <div className={pageOrigin[page].downloadAndDelete}>
             <DownloadPatternBtn pattern={pattern} />
-            {belongsToUser() ? <DeletePatternBtn pattern={pattern} /> : <></>}
+            <DeletePatternBtn pattern={pattern} /> : <></>
           </div>
           <img
             className={pageOrigin[page].image}
@@ -138,13 +126,6 @@ function PatternViewerAll({ pattern, page }) {
           />
         </div>
         {patternEditInterface()}
-        {dashState.page === "dashboard" ? (
-          <></>
-        ) : (
-          <h3 className={pageOrigin[page].subTextStyle}>
-            Pattern by: <b>{pattern.user.userName}</b>
-          </h3>
-        )}
         <h3 className={pageOrigin[page].subTextStyle}>
           Created {getDate(pattern.createdAt)}
         </h3>
@@ -152,5 +133,18 @@ function PatternViewerAll({ pattern, page }) {
     </>
   );
 }
+
+PatternViewerAll.propTypes = {
+  pattern: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    patternName: PropTypes.string.isRequired,
+    stitchWidth: PropTypes.number.isRequired,
+    stitchHeight: PropTypes.number.isRequired,
+    palette: PropTypes.string.isRequired,
+    grid: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+  }).isRequired,
+  page: PropTypes.string.isRequired,
+};
 
 export default PatternViewerAll;

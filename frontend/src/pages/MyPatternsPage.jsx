@@ -9,7 +9,6 @@ import CreateNewPatternIcon from "../components/features/dashboard/PatternDispla
 
 // Contexts
 import { DashContext } from "../state/dashboard/dashContext";
-import { useAuth } from "../state/auth/useAuth";
 
 // Loader
 import Loader from "../components/Loader/Loader";
@@ -26,9 +25,6 @@ import {
 
 function MyPatternsPage() {
   const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
-  const {
-    state: { user },
-  } = useAuth();
 
   // Retrieve user patterns when page loads
   useEffect(() => {
@@ -50,7 +46,7 @@ function MyPatternsPage() {
       return (
         <div>
           <h3 className="ml-20 my-5">
-            Welcome! Let's add your first pattern.{" "}
+            Welcome! Let us add your first pattern.{" "}
           </h3>
           <CreateNewPatternIcon />
         </div>
