@@ -38,7 +38,6 @@ function MyPatternsPage() {
 
       // Uncommented until schema changes have been finalized
       const userPatterns = await fetchCurrentUserPatterns();
-      console.log(userPatterns);
 
       // TO REMOVE
       const userPatterns1 = [oldManJenkinsPat, pikaChariPat, soapPat];
