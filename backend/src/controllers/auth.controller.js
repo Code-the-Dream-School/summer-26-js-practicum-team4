@@ -52,7 +52,7 @@ const registerUser = async (req, res, next) => {
     if (existingUser) {
       throw new ConflictError(
         existingUser.googleId
-          ? "This email was already registered with Google"
+          ? "This account was created with Google. Please sign in with Google and set a password in your profile to log in with your email and password."
           : "This email is already taken.",
       );
     }
@@ -114,7 +114,7 @@ const loginUser = async (req, res, next) => {
 
     if (!user.hashedPassword) {
       throw new UnauthenticatedError(
-        "This account was created with Google. Please sign in with Google or set up a password on your profile page.",
+        "This account was created with Google. Please sign in with Google and set a password in your profile to log in with your email and password.",
       );
     }
 

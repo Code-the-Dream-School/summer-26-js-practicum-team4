@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "../../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -13,9 +13,17 @@ function LoginForm() {
   const { state, dispatch } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch({
+      type: "CLEAR_ERROR",
+    });
+  }, [dispatch]);
+
   async function handleSubmit(e) {
     e.preventDefault();
-
+    dispatch({
+      type: "CLEAR_ERROR",
+    });
     try {
       const response = await login(email, password);
       dispatch({
@@ -64,7 +72,10 @@ function LoginForm() {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -99,7 +110,10 @@ function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />

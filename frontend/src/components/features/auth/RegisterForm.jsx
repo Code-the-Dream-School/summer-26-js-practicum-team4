@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { register } from "../../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -20,9 +20,14 @@ function RegisterForm() {
     state: { error },
   } = useAuth();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    dispatch({
+      type: "CLEAR_ERROR",
+    });
+  }, [dispatch]);
   async function handleSubmit(e) {
     e.preventDefault();
+
     dispatch({
       type: "CLEAR_ERROR",
     });
@@ -94,7 +99,10 @@ function RegisterForm() {
                 type="text"
                 id="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -109,7 +117,10 @@ function RegisterForm() {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -144,7 +155,10 @@ function RegisterForm() {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -179,7 +193,10 @@ function RegisterForm() {
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />

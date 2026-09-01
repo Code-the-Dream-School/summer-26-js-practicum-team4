@@ -9,8 +9,8 @@ function GoogleBtn() {
   const { dispatch } = useAuth();
 
   async function handleGoogle(googleToken) {
-    dispatch({ type: "SET_LOADING" });
     try {
+      dispatch({ type: "SET_LOADING" });
       const response = await googleAuth(googleToken);
       dispatch({
         type: "LOGIN_SUCCESS",
