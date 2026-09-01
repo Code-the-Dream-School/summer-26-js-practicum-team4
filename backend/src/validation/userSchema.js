@@ -17,6 +17,7 @@ const userSchema = Joi.object({
   email: Joi.string().email().lowercase().trim().required(),
   password: passwordSchema.optional(),
   userProfileImgUrl: Joi.string().uri().optional(),
+  reCaptchaToken: Joi.string().required(),
 });
 
 const userUpdateSchema = Joi.object({
