@@ -100,7 +100,7 @@ function GeneratePage() {
             await saveNewPattern({
               patternName: "test",
               stitchWidth: generatedPattern.width,
-              stitchHeight: generatePattern.height,
+              stitchHeight: generatedPattern.height,
               grid: generatedPattern.grid,
               palette: generatedPattern.palette,
             });
