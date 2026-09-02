@@ -31,7 +31,7 @@ async function createPattern(req, res, next) {
       throw new BadRequestError("The input Pattern information is malformed.");
     }
 
-    // value contains: patternName, originalImgUrl, and patternImgUrl, and optional stitch width and height
+    // value contains: patternName, stitchWidth, stitchHeight, palette, grid
     const createdPattern = await prisma.pattern.create({
       data: {
         ...value,
@@ -40,8 +40,10 @@ async function createPattern(req, res, next) {
       select: {
         id: true,
         patternName: true,
-        originalImgUrl: true,
-        patternImgUrl: true,
+        stitchWidth: true,
+        stitchHeight: true,
+        palette: true,
+        grid: true,
         createdAt: true,
       },
     });
@@ -86,8 +88,10 @@ async function createMultiplePatterns(req, res, next) {
         select: {
           id: true,
           patternName: true,
-          originalImgUrl: true,
-          patternImgUrl: true,
+          stitchWidth: true,
+          stitchHeight: true,
+          palette: true,
+          grid: true,
           createdAt: true,
         },
       });
@@ -122,7 +126,10 @@ async function getPattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -160,7 +167,8 @@ async function deletePattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
       },
     });
 
@@ -207,7 +215,10 @@ async function updatePattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         updatedAt: true,
       },
     });
@@ -234,7 +245,10 @@ async function getAllUserPatterns(req, res, next) {
       select: {
         id: true,
         patternName: true,
-        patternImgUrl: true,
+        stitchHeight: true,
+        stitchWidth: true,
+        palette: true,
+        grid: true,
         createdAt: true,
         updatedAt: true,
         userId: true,
@@ -261,35 +275,7 @@ async function getAllUserPatterns(req, res, next) {
 }
 
 async function getAllPatterns(req, res, next) {
-  try {
-    const allPatterns = await prisma.pattern.findMany({
-      select: {
-        id: true,
-        patternName: true,
-        patternImgUrl: true,
-        createdAt: true,
-        updatedAt: true,
-        userId: true,
-        user: {
-          select: {
-            userName: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-
-    return res.status(StatusCodes.OK).json({
-      data: {
-        patterns: allPatterns,
-      },
-    });
-  } catch (error) {
-    // Send to global error handler
-    next(error);
-  }
+  return { message: "This endpoint is being discontinued. " };
 }
 
 async function generatePattern(req, res) {
