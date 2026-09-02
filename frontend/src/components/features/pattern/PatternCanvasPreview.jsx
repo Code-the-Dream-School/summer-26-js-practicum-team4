@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const LABEL_GUTTER = 0;
 
-function PatternCanvas({ pattern, cellSize }) {
+function PatternCanvasPreview({ pattern, cellSize, styling = "" }) {
   const canvasRef = useRef(null);
   const chartWidth = pattern.width * cellSize;
   const chartHeight = pattern.height * cellSize;
@@ -84,12 +84,12 @@ function PatternCanvas({ pattern, cellSize }) {
       height={canvasHeight}
       role="img"
       aria-label={`Cross-stitch pattern, ${pattern.width} by ${pattern.height} stitches, using ${pattern.palette.length} DMC colors`}
-      className="block w-full max-h-full p-8 object-contain"
+      className={`block w-full max-h-full p-8 object-contain ${styling}`}
     />
   );
 }
 
-PatternCanvas.propTypes = {
+PatternCanvasPreview.propTypes = {
   pattern: PropTypes.shape({
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
@@ -104,6 +104,7 @@ PatternCanvas.propTypes = {
     grid: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
   cellSize: PropTypes.number.isRequired,
+  styling: PropTypes.string,
 };
 
-export default PatternCanvas;
+export default PatternCanvasPreview;
