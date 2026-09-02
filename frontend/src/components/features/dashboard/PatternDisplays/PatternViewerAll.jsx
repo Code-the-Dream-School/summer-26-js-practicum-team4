@@ -6,18 +6,12 @@ import PropTypes from "prop-types";
 import DownloadPatternBtn from "../PatternManagementTools/DownloadPatternBtn";
 import DeletePatternBtn from "../PatternManagementTools/DeletePatternBtn";
 import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
+import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
 const pageOrigin = {
   dashboard: {
-    textStyle: "text-2xl ml-5",
-    subTextStyle: "ml-5",
-    patternInterface: "m-2 h-[45dvh]",
-    downloadAndDelete: "text-right mr-2 mt-2 object-contain",
-    image: "mx-auto p-5 h-[70%] object-contain",
-  },
-  gallery: {
     textStyle: "text-2xl ml-5",
     subTextStyle: "ml-5",
     patternInterface: "m-2 h-[45dvh]",
@@ -119,11 +113,7 @@ function PatternViewerAll({ pattern, page }) {
             <DownloadPatternBtn pattern={pattern} />
             <DeletePatternBtn pattern={pattern} /> : <></>
           </div>
-          <img
-            className={pageOrigin[page].image}
-            src={pattern.patternImgUrl}
-            alt={pattern.patternName}
-          />
+          <PatternCanvasPreview pattern={pattern} cellSize={16} />
         </div>
         {patternEditInterface()}
         <h3 className={pageOrigin[page].subTextStyle}>

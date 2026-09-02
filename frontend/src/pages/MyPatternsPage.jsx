@@ -16,11 +16,6 @@ import Loader from "../components/Loader/Loader";
 // Service Imports
 import { fetchCurrentUserPatterns } from "../services/patternService";
 
-// TEST IMPORTS TO REMOVE LATER
-import oldManJenkinsPat from "./../components/features/dashboard/dummyData/oldManJenkinsPat.json";
-import pikaChariPat from "./../components/features/dashboard/dummyData/pikaChariPat.json";
-import soapPat from "./../components/features/dashboard/dummyData/soapPat.json";
-
 // State Imports
 import {
   dashInitState,
@@ -38,10 +33,6 @@ function MyPatternsPage() {
 
       // Uncommented until schema changes have been finalized
       const userPatterns = await fetchCurrentUserPatterns();
-
-      // TO REMOVE
-      const userPatterns1 = [oldManJenkinsPat, pikaChariPat, soapPat];
-      console.log(userPatterns1);
 
       dispatch({ userPatterns, type: dashActions.setUserPatterns });
       dispatch({ type: dashActions.endFetch });

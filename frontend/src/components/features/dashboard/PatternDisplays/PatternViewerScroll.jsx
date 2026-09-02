@@ -5,17 +5,12 @@ import PropTypes from "prop-types";
 import DownloadPatternBtn from "../PatternManagementTools/DownloadPatternBtn";
 import DeletePatternBtn from "../PatternManagementTools/DeletePatternBtn";
 import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
+import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
 const pageOrigin = {
   dashboard: {
-    textStyle: "text-3xl mb-5",
-    patternInterface: "mx-auto h-[60dvh]",
-    downloadAndDelete: "flex justify-center gap-x-15 my-8",
-    image: "mx-auto p-10 h-full object-contain",
-  },
-  gallery: {
     textStyle: "text-3xl mb-5",
     patternInterface: "mx-auto h-[60dvh]",
     downloadAndDelete: "flex justify-center gap-x-15 my-8",
@@ -68,6 +63,7 @@ function PatternViewerScroll({ pattern, page }) {
         />
       );
     } else {
+      console.log(pattern);
       return (
         <div className="grid grid-cols-5 place-content-center">
           <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
@@ -85,15 +81,12 @@ function PatternViewerScroll({ pattern, page }) {
     <>
       <div className="container">
         {patternEditInterface()}
-
         <div
-          className={`pattern-interface bg-white border rounded-2xl border-gray-400 ${pageOrigin[page].patternInterface}`}
+          className={`pattern-interface container flex content-center justify-center mx-auto h-[60dvh] bg-white border rounded-2xl border-gray-400`}
+          tabIndex={0}
+          aria-label="Scrollable pattern chart"
         >
-          <img
-            className={pageOrigin[page].image}
-            src={pattern.patternImgUrl}
-            alt={pattern.patternName}
-          />
+          <PatternCanvasPreview pattern={pattern} cellSize={16} />
         </div>
         <div className={pageOrigin[page].downloadAndDelete}>
           <DownloadPatternBtn pattern={pattern} />

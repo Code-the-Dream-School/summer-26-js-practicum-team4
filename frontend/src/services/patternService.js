@@ -13,31 +13,25 @@ async function fetchCurrentUserPatterns() {
     }
 
     const { data } = await resp.json();
-    return data.patterns;
+
+    // For each retrieved pattern, recast stitchWidth and stitchHeight as width and height
+    // for compatibility with Pattern Generation code
+    const reformattedPatterns = [];
+    for (const pattern of data.patterns) {
+      reformattedPatterns.push({
+        ...pattern,
+        width: pattern.stitchWidth,
+        height: pattern.stitchHeight,
+      });
+    }
+    return reformattedPatterns;
   } catch (error) {
     console.error(error.message);
   }
 }
 
 async function fetchAllUserPatterns() {
-  try {
-    const resp = await fetch("/api/patterns/all", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-
-    if (!resp.ok) {
-      throw new Error(resp.message);
-    }
-
-    const { data } = await resp.json();
-    return data.patterns;
-  } catch (error) {
-    console.error(error.message);
-  }
+  return { message: "This function has been discontinued." };
 }
 
 async function deleteUserPattern(patternId) {
