@@ -22,8 +22,6 @@ async function createPattern(req, res, next) {
       req.body = {};
     }
 
-    console.log(req.body);
-
     // Use Joi Validation schema to ensure properly formed input
     const { error, value } = patternSchema.validate(req.body, {
       abortEarly: false,
@@ -204,8 +202,6 @@ async function updatePattern(req, res, next) {
     });
 
     if (error) {
-      console.log(req.body);
-      console.log(error.message);
       throw new BadRequestError("The input pattern data is malformed.");
     }
 
