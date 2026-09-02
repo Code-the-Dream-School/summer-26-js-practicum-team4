@@ -16,24 +16,6 @@ const {
   patternGenerationSchema,
 } = require("../validation/patternSchema");
 
-function jsonToParsed(patternData) {
-  // Returns three objects: original palette JSON, original grid JSON,
-  // and new patternData object where palette and grid have been parsed
-  return [
-    patternData.palette,
-    patternData.grid,
-    {
-      ...patternData,
-      palette: JSON.parse(patternData.palette),
-      grid: JSON.parse(patternData.grid),
-    },
-  ];
-}
-
-function parsedToJson(validatedData, patternJson, gridJson) {
-  return { ...validatedData, pattern: patternJson, grid: gridJson };
-}
-
 async function createPattern(req, res, next) {
   try {
     if (!req.body) {
@@ -222,6 +204,8 @@ async function updatePattern(req, res, next) {
     });
 
     if (error) {
+      console.log(req.body);
+      console.log(error.message);
       throw new BadRequestError("The input pattern data is malformed.");
     }
 
