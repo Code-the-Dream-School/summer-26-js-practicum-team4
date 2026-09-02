@@ -1,6 +1,9 @@
 export const initialState = {
   user: null,
   isAuthenticated: false,
+  isEditing: false,
+  isSaving: false,
+  isDeleting: false,
   loading: true,
   error: null,
 };
@@ -49,6 +52,34 @@ export const authReducer = (state, action) => {
         ...state,
         loading: true,
         error: null,
+      };
+    case "BEGIN_PATTERN_NAME_EDITING":
+      return {
+        ...state,
+        isEditing: true,
+      };
+    case "END_PATTERN_NAME_EDITING":
+      return {
+        ...state,
+        isEditing: false,
+      };
+
+    case "BEGIN_PATTERN_NAME_SAVING":
+      return { ...state, isSaving: true };
+
+    case "END_PATTERN_NAME_SAVING":
+      return { ...state, isSaving: false };
+
+    case "BEGIN_PATTERN_DELETING":
+      return {
+        ...state,
+        isDeleting: true,
+      };
+    case "END_PATTERN_DELETING":
+      return {
+        ...state,
+        scrollPatternIx: 0,
+        isDeleting: false,
       };
 
     default:

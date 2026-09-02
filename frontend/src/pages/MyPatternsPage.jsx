@@ -9,6 +9,7 @@ import CreateNewPatternIcon from "../components/features/dashboard/PatternDispla
 
 // Contexts
 import { DashContext } from "../state/dashboard/dashContext";
+import { useAuth } from "../state/auth/useAuth";
 
 // Loader
 import Loader from "../components/Loader/Loader";
@@ -25,6 +26,7 @@ import {
 
 function MyPatternsPage() {
   const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
+  const { state } = useAuth();
 
   // Retrieve user patterns when page loads
   useEffect(() => {
@@ -35,11 +37,15 @@ function MyPatternsPage() {
       const userPatterns = await fetchCurrentUserPatterns();
 
       dispatch({ userPatterns, type: dashActions.setUserPatterns });
+
+      // Check if pattern we were previously on still exists
+      dispatch({ type: dashActions.handleScrollPatternIx });
+
       dispatch({ type: dashActions.endFetch });
     }
 
     getPatterns();
-  }, [dashState.isDeleting, dashState.isSaving]);
+  }, [state.isDeleting, state.isSaving]);
 
   // Function that processes user's view choice into rendered component
   function userChosenView(patterns) {

@@ -2,10 +2,7 @@ const dashInitState = {
   view: "scroll",
   page: "dashboard",
   patterns: [],
-  isDeleting: false,
   isFetching: false,
-  isEditing: false,
-  isSaving: false,
   scrollPatternIx: 0,
 };
 
@@ -14,14 +11,9 @@ const dashActions = {
   setAllView: "setAllView",
   setUserPatterns: "setUserPatterns",
   setScrollPatternIx: "setScrollPatternIx",
-  beginDelete: "beginDelete",
-  endDelete: "endDelete",
+  handleScrollPatternIx: "handleScrollPatternIx",
   beginFetch: "beginFetch",
   endFetch: "endFetch",
-  beginEditing: "beginEditing",
-  endEditing: "endEditing",
-  beginSaving: "beginSaving",
-  endSaving: "endSaving",
   setPage: "setPage",
 };
 
@@ -58,17 +50,13 @@ function dashReducer(state, action) {
 
       return { ...state, scrollPatternIx: newScrollPatternIx };
     }
-    case dashActions.beginDelete:
-      return {
-        ...state,
-        isDeleting: true,
-      };
-    case dashActions.endDelete:
-      return {
-        ...state,
-        scrollPatternIx: 0,
-        isDeleting: false,
-      };
+
+    case dashActions.handleScrollPatternIx:
+      if (state.scrollPatternIx > state.patterns.length - 1) {
+        return { ...state, scrollPatternIx: 0 };
+      }
+
+      return state;
 
     case dashActions.beginFetch:
       return {
@@ -80,22 +68,6 @@ function dashReducer(state, action) {
         ...state,
         isFetching: false,
       };
-    case dashActions.beginEditing:
-      return {
-        ...state,
-        isEditing: true,
-      };
-    case dashActions.endEditing:
-      return {
-        ...state,
-        isEditing: false,
-      };
-
-    case dashActions.beginSaving:
-      return { ...state, isSaving: true };
-
-    case dashActions.endSaving:
-      return { ...state, isSaving: false };
 
     case dashActions.setPage:
       return { ...state, page: action.page };

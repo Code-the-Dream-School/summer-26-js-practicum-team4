@@ -2,19 +2,21 @@ import React, { useContext } from "react";
 
 // Component Imports
 import { DashContext } from "../../../../state/dashboard/dashContext";
+import { useAuth } from "../../../../state/auth/useAuth";
 
 import { deleteUserPattern } from "../../../../services/patternService";
 
 function DeletePatternBtn({ pattern }) {
-  const { dispatch, dashState, dashActions } = useContext(DashContext);
+  const { dashState } = useContext(DashContext);
+  const { dispatch } = useAuth();
 
   async function handleDelete() {
-    dispatch({ type: dashActions.beginDelete });
+    dispatch({ type: "BEGIN_PATTERN_DELETING" });
 
     const deletedPattern = await deleteUserPattern(pattern.id);
 
     // End delete status when pattern successfully deleted
-    dispatch({ type: dashActions.endDelete });
+    dispatch({ type: "END_PATTERN_DELETING" });
 
     return deletedPattern;
   }

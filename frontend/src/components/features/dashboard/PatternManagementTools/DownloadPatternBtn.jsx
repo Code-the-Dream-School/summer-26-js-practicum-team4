@@ -1,9 +1,22 @@
 import React, { useContext } from "react";
 
 import { DashContext } from "../../../../state/dashboard/dashContext";
+import PatternCanvas from "../../pattern/PatternCanvas";
 
-function DownloadPatternBtn({ pattern }) {
+function DownloadPatternBtn({ pattern, origin }) {
   const { dashState } = useContext(DashContext);
+
+  function downloadLink(origin) {
+    // Convert pattern into canvas, save as png, and generate URL to download
+    if (origin === "dashboard") {
+      const patternCanvasInstance = (
+        <PatternCanvas pattern={pattern} cellSize={8} />
+      );
+    } else if (origin === "generate") {
+      return 5;
+    }
+    let link = 5;
+  }
 
   return (
     <>

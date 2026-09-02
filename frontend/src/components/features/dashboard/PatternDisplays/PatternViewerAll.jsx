@@ -9,6 +9,7 @@ import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 
 import { DashContext } from "../../../../state/dashboard/dashContext";
+import { useAuth } from "../../../../state/auth/useAuth";
 
 const pageOrigin = {
   dashboard: {
@@ -48,7 +49,7 @@ function getDate(dateTimeStr) {
 
 function PatternViewerAll({ pattern, page }) {
   // Relevant states
-  const { dashState, dashActions, dispatch } = useContext(DashContext);
+  const { state, dispatch } = useAuth();
 
   const [editingThisPattern, setEditingThisPattern] = useState(false);
   const [currentPatternName, setCurrentPatternName] = useState(
@@ -62,23 +63,23 @@ function PatternViewerAll({ pattern, page }) {
     if (editFocus.current) {
       editFocus.current.focus();
     }
-  }, [dashState.isEditing]);
+  }, [state.isEditing]);
 
   function handleEdit() {
-    if (dashState.isEditing) {
+    if (state.isEditing) {
       return;
     }
 
     setCurrentPatternName(pattern.patternName);
     setEditingThisPattern(true);
 
-    dispatch({ type: dashActions.beginEditing });
+    dispatch({ type: "BEGIN_PATTERN_NAME_EDITING" });
 
     return;
   }
 
   function patternEditInterface() {
-    if (dashState.isEditing && editingThisPattern) {
+    if (state.isEditing && editingThisPattern) {
       return (
         <PatternNameEditInput
           patternId={pattern.id}
