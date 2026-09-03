@@ -9,7 +9,7 @@ async function fetchCurrentUserPatterns() {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
@@ -27,6 +27,7 @@ async function fetchCurrentUserPatterns() {
     return reformattedPatterns;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
@@ -45,13 +46,14 @@ async function deleteUserPattern(patternId) {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
@@ -67,13 +69,14 @@ async function saveNewPattern(patternObj) {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
@@ -91,13 +94,14 @@ async function saveNewPatternName(patternId, newPatternName) {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
