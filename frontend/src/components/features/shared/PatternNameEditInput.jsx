@@ -43,6 +43,7 @@ function PatternNameEditInput({
       await saveNewPatternName(patternId, currentPatternName);
     }
 
+    setCurrentPatternName(currentPatternName);
     dispatch({ type: "END_PATTERN_NAME_EDITING" });
     dispatch({ type: "END_PATTERN_NAME_SAVING" });
   }

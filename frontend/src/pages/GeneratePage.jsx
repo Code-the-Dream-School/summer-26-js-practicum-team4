@@ -19,6 +19,7 @@ function GeneratePage() {
   const [currentPatternName, setCurrentPatternName] = useState(
     "Give this pattern a name?",
   );
+  const [originalPatternName, setOriginalPatternName] = useState("");
 
   const canvasRef = useRef(null);
   const editFocus = useRef("");
@@ -42,9 +43,10 @@ function GeneratePage() {
     }
 
     setCurrentPatternName(
-      selectedFile?.name ? selectedFile?.name : "generated_pattern",
+      currentPatternName ? currentPatternName : "generated_pattern",
     );
     setEditingThisPattern(true);
+    setOriginalPatternName(currentPatternName);
 
     dispatch({ type: "BEGIN_PATTERN_NAME_EDITING" });
 
@@ -56,7 +58,7 @@ function GeneratePage() {
       return (
         <PatternNameEditInput
           patternId={null}
-          defaultPatternName={currentPatternName}
+          defaultPatternName={originalPatternName}
           currentPatternName={currentPatternName}
           setCurrentPatternName={setCurrentPatternName}
           setEditingThisPattern={setEditingThisPattern}

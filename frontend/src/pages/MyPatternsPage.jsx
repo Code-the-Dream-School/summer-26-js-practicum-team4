@@ -55,7 +55,7 @@ function MyPatternsPage() {
           <h3 className="ml-20 my-5">
             Welcome! Let us add your first pattern.{" "}
           </h3>
-          <CreateNewPatternIcon />
+          <CreateNewPatternIcon patternDisplayScaling="ml-8" />
         </div>
       );
     }
