@@ -7,75 +7,99 @@ import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextVie
 import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
 import CreateNewPatternIcon from "../components/features/dashboard/PatternDisplays/CreateNewPatternIcon";
 
-import { DashContext } from "../state/dashboard/dashContext";
+// Contexts
+import { DashGallContext } from "../state/dashboardGallery/dashGallContext";
+import { useAuth } from "../state/auth/useAuth";
 
+// Loader
 import Loader from "../components/Loader/Loader";
 
 // Service Imports
 import { fetchCurrentUserPatterns } from "../services/patternService";
 
-// State Import
+// State Imports
 import {
-  dashInitState,
-  dashReducer,
-  dashActions,
-} from "../state/dashboard/dashReducer";
+  dashGallInitState,
+  dashGallReducer,
+  dashGallActions,
+} from "../state/dashboardGallery/dashGallReducer";
 
 function MyPatternsPage() {
-  const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
+  const [dashGallState, dispatch] = useReducer(
+    dashGallReducer,
+    dashGallInitState,
+  );
+  const {
+    state: { user },
+  } = useAuth();
 
   // Retrieve user patterns when page loads
   useEffect(() => {
     async function getPatterns() {
-      dispatch({ type: dashActions.resetScrollPatternIx }); // reset scroll interface to display first image
-      dispatch({ type: dashActions.beginFetch }); // displays loader
+      dispatch({ type: dashGallActions.beginFetch }); // displays loader
 
       const userPatterns = await fetchCurrentUserPatterns();
 
-      dispatch({ type: dashActions.endFetch });
-      dispatch({ userPatterns, type: dashActions.setUserPatterns });
+      dispatch({ userPatterns, type: dashGallActions.setUserPatterns });
+      dispatch({ type: dashGallActions.endFetch });
     }
 
     getPatterns();
-  }, [dashState.isDeleting]);
+  }, [dashGallState.isDeleting, dashGallState.isSaving]);
 
   // Function that processes user's view choice into rendered component
   function userChosenView(patterns) {
     if (patterns.length === 0) {
       return (
-        <>
-          <h1>You have no patterns. </h1>
+        <div>
+          <h3 className="ml-20 my-5">
+            Welcome! Let's add your first pattern.{" "}
+          </h3>
           <CreateNewPatternIcon />
-        </>
+        </div>
       );
     }
-    if (dashState.view === "scroll") {
+    if (dashGallState.view === "scroll") {
       return <PrevNextView />;
-    } else if (dashState.view === "all") {
+    } else if (dashGallState.view === "all") {
       return <AllPatternView />;
     }
   }
 
   return (
     <>
-      <DashContext value={{ dashState, dispatch, dashActions }}>
-        <div>
-          <h1>My Patterns Page</h1>
-          <DisplayToggle
-            name="Scroll"
-            onClick={() => dispatch({ type: dashActions.setScrollView })}
-          />
-          <DisplayToggle
-            name="Show All"
-            onClick={() => dispatch({ type: dashActions.setAllView })}
-          />
-          {dashState.isFetching ? (
-            <Loader />
-          ) : (
-            userChosenView(dashState.patterns)
-          )}
+      <DashGallContext value={{ dashGallState, dispatch, dashGallActions }}>
+        <div className="bg-background">
+          <div className="flex flex-row-reverse mx-auto content-end">
+            {" "}
+            <DisplayToggle
+              name="Show All"
+              onClick={() => dispatch({ type: dashGallActions.setAllView })}
+              displayImagePath={"images/all-pattern-view-toggle.png"}
+            />
+            <DisplayToggle
+              name="Scroll"
+              onClick={() => dispatch({ type: dashGallActions.setScrollView })}
+              displayImagePath={"images/scroll-view-toggle.png"}
+            />
+          </div>
+          <h1 className="text-5xl font-heading ml-19">Dashboard</h1>
+          <div className="relative">
+            {dashGallState.isFetching ? (
+              <>
+                {" "}
+                <div className=" absolute h-full w-full bg-gray-300 opacity-70"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <Loader size="300" />
+                </div>
+              </>
+            ) : (
+              <div></div>
+            )}
+            {userChosenView(dashGallState.patterns)}
+          </div>
         </div>
-      </DashContext>
+      </DashGallContext>
     </>
   );
 }

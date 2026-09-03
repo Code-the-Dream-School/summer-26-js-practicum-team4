@@ -9,14 +9,20 @@ async function fetchCurrentUserPatterns() {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.patterns;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
+}
+
+async function fetchAllUserPatterns() {
+  // to be implemented later when implementing Gallery Page
+  return;
 }
 
 async function deleteUserPattern(patternId) {
@@ -30,27 +36,82 @@ async function deleteUserPattern(patternId) {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
-async function fetchAllUserPatterns() {
-  // to be implemented later when implementing Gallery Page
-  return;
+async function saveNewPattern(patternObj) {
+  try {
+    const resp = await fetch(`/api/patterns/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(patternObj),
+    });
+
+    if (!resp.ok) {
+      throw new Error("The server returned an invalid response.");
+    }
+
+    const { data } = await resp.json();
+    return data.pattern;
+  } catch (error) {
+    console.error(error.message);
+    return { message: `Error: ${error.message}` };
+  }
 }
 
-async function generatePattern({ image, width = 50, height = 50 }) {
+async function saveNewPatternName(patternId, newPatternName) {
+  try {
+    const resp = await fetch(`/api/patterns/${patternId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        patternName: newPatternName,
+      }),
+    });
+
+    if (!resp.ok) {
+      throw new Error("The server returned an invalid response.");
+    }
+
+    const { data } = await resp.json();
+    return data.pattern;
+  } catch (error) {
+    console.error(error.message);
+    return { message: `Error: ${error.message}` };
+  }
+}
+
+async function generatePattern({ image, width, height }) {
+  const hasWidth = width !== undefined && width !== null;
+  const hasHeight = height !== undefined && height !== null;
+
+  if (hasWidth === hasHeight) {
+    throw new Error("Provide exactly one pattern dimension.");
+  }
+
   const formData = new FormData();
 
   formData.append("image", image);
-  formData.append("width", String(width));
-  formData.append("height", String(height));
+
+  if (hasWidth) {
+    formData.append("width", String(width));
+  } else {
+    formData.append("height", String(height));
+  }
 
   const response = await fetch("/api/patterns/generate", {
     method: "POST",
@@ -71,12 +132,50 @@ async function generatePattern({ image, width = 50, height = 50 }) {
     throw new Error(message);
   }
 
-  return response.blob();
+  let responseData;
+
+  try {
+    responseData = await response.json();
+  } catch {
+    throw new Error("The server returned an invalid pattern.");
+  }
+
+  const pattern = responseData?.data?.pattern;
+
+  if (
+    !Number.isInteger(pattern?.width) ||
+    pattern.width <= 0 ||
+    !Number.isInteger(pattern?.height) ||
+    pattern.height <= 0 ||
+    !Array.isArray(pattern?.palette) ||
+    pattern.palette.length === 0 ||
+    !pattern.palette.every(
+      (color) =>
+        typeof color?.dmcCode === "string" &&
+        typeof color?.name === "string" &&
+        typeof color?.symbol === "string" &&
+        [color.r, color.g, color.b].every(Number.isInteger),
+    ) ||
+    !Array.isArray(pattern?.grid) ||
+    pattern.grid.length !== pattern.width * pattern.height ||
+    !pattern.grid.every(
+      (paletteIndex) =>
+        Number.isInteger(paletteIndex) &&
+        paletteIndex >= 0 &&
+        paletteIndex < pattern.palette.length,
+    )
+  ) {
+    throw new Error("The server returned an invalid pattern.");
+  }
+
+  return pattern;
 }
 
 export {
   fetchCurrentUserPatterns,
-  deleteUserPattern,
   fetchAllUserPatterns,
+  deleteUserPattern,
+  saveNewPattern,
+  saveNewPatternName,
   generatePattern,
 };

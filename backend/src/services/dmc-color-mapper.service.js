@@ -32,6 +32,7 @@ function validateReducedPattern(reducedPattern) {
   }
 }
 
+// Give green more influence because brightness differences are most visible there.
 function weightedRgbDistance(first, second) {
   const redDifference = first.r - second.r;
   const greenDifference = first.g - second.g;
@@ -66,6 +67,7 @@ function mapToDmc(reducedPattern) {
 
   const palette = [];
   const dmcIndexes = new Map();
+  // Reuse one palette entry when multiple reduced colors match the same DMC thread.
   const sourceToDmcIndex = reducedPattern.palette.map((color) => {
     const dmcColor = findClosestDmcColor(color);
     let dmcIndex = dmcIndexes.get(dmcColor.dmcCode);

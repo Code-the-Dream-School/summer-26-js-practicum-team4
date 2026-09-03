@@ -1,16 +1,21 @@
-async function register(username, email, password) {
+async function register(username, email, password, reCaptchaToken) {
   const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify({ userName: username, email, password }),
+    body: JSON.stringify({
+      userName: username,
+      email,
+      password,
+      reCaptchaToken,
+    }),
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Registration failed");
+    const error = await response.json();
+    throw new Error(error.message || "Registration failed");
   }
 
   return response.json();
@@ -26,8 +31,8 @@ async function login(email, password) {
     body: JSON.stringify({ email, password }),
   });
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Login failed");
+    const error = await response.json();
+    throw new Error(error.message || "Login failed");
   }
 
   return response.json();

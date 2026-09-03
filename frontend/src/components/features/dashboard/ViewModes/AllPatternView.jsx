@@ -1,18 +1,22 @@
 import React, { useContext } from "react";
 
-import PatternViewer from "../PatternDisplays/PatternViewer";
+import PatternViewerAll from "../../shared/PatternDisplays/PatternViewerAll";
 import CreateNewPatternIcon from "../PatternDisplays/CreateNewPatternIcon";
-import { DashContext } from "../../../../state/dashboard/dashContext";
+import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
 
 function AllPatternView() {
-  const { dashState } = useContext(DashContext);
+  const { dashGallState } = useContext(DashGallContext);
   return (
     <>
-      <div className="all-pattern-view">
-        {dashState.patterns.map((pattern) => (
-          <PatternViewer key={pattern.id} pattern={pattern} />
+      <div className="all-pattern-view mx-20 mt-10 grid grid-cols-3">
+        {dashGallState.patterns.map((pattern) => (
+          <PatternViewerAll
+            key={pattern.id}
+            pattern={pattern}
+            page="dashboard"
+          />
         ))}
-        <CreateNewPatternIcon />
+        <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />
       </div>
     </>
   );
