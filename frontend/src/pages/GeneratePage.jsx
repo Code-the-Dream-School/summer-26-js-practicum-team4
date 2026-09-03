@@ -66,7 +66,7 @@ function GeneratePage() {
       );
     } else {
       return (
-        <div className="grid grid-cols-5 place-content-center">
+        <div className="flex gap-5 place-content-center">
           <h2 className={"text-3xl mb-5"}>{currentPatternName}</h2>
           <button className="col-start-6" onClick={handleEdit}>
             <img
@@ -154,27 +154,36 @@ function GeneratePage() {
   if (generatedPattern) {
     return (
       <>
-        {patternEditInterface()}
-        <button
-          onClick={async () => {
-            await saveNewPattern({
-              patternName: currentPatternName,
-              stitchWidth: generatedPattern.width,
-              stitchHeight: generatedPattern.height,
-              grid: generatedPattern.grid,
-              palette: generatedPattern.palette,
-            });
-            return;
-          }}
-        >
-          Save
-        </button>
-        <DownloadPatternBtn
-          origin="generatePg"
-          pattern={generatedPattern}
-          canvasRef={canvasRef}
-          patternName={currentPatternName}
-        />
+        <div className="bg-background px-4 pt-8 lg:px-8">
+          <div className="mx-auto max-w-[1600px] space-y-6">
+            <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7">
+              <div>{patternEditInterface()}</div>{" "}
+              <div className="flex flex-col gap-2 sm:items-end">
+                <button
+                  onClick={async () => {
+                    await saveNewPattern({
+                      patternName: currentPatternName,
+                      stitchWidth: generatedPattern.width,
+                      stitchHeight: generatedPattern.height,
+                      grid: generatedPattern.grid,
+                      palette: generatedPattern.palette,
+                    });
+                    return;
+                  }}
+                  className="rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
+                >
+                  Save Pattern
+                </button>
+                <DownloadPatternBtn
+                  origin="generatePg"
+                  pattern={generatedPattern}
+                  canvasRef={canvasRef}
+                  patternName={currentPatternName}
+                />
+              </div>
+            </div>{" "}
+          </div>{" "}
+        </div>
         <PatternResult
           pattern={generatedPattern}
           previewUrl={previewUrl}

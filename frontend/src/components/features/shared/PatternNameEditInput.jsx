@@ -60,11 +60,11 @@ function PatternNameEditInput({
               setCurrentPatternName(event.target.value);
             }}
             ref={ref}
-            className={`${textStyle} bg-white rounded-xl p-1 border mb-5 col-span-4`}
+            className={`${textStyle} bg-white rounded-xl p-1 border mb-5 col-span-5`}
           ></input>
-          <div className="col-start-6">
+          <div className="col-start-6 mt-1">
             <button
-              className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto mr-1 p-1"
+              className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto mr-1 ml-4 p-1"
               onClick={handleSave}
             >
               Save

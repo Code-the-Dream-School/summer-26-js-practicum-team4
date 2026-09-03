@@ -54,11 +54,11 @@ function DownloadPatternBtn({ origin, pattern, canvasRef, patternName = "" }) {
 
     if (origin === "generatePg") {
       return (
-        <button onClick={handleDownload}>
-          <img
-            src="images/all-pattern-download.png"
-            className="max-w-10 hover:bg-gray-300"
-          />
+        <button
+          onClick={handleDownload}
+          className="rounded-lg border border-border bg-surface px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+        >
+          Download Pattern
         </button>
       );
     }
