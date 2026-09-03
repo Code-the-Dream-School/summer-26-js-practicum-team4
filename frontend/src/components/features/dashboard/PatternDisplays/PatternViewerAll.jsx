@@ -56,7 +56,9 @@ function PatternViewerAll({ pattern, page }) {
     pattern.patternName,
   );
 
+  // Refs
   const editFocus = useRef("");
+  const canvasRef = useRef(null);
 
   // Focus on editing field if useRef has a non-empty reference
   useEffect(() => {
@@ -117,7 +119,7 @@ function PatternViewerAll({ pattern, page }) {
             styling="absolute top-0 left-0 w-full h-full"
           />
           <div className={pageOrigin[page].downloadAndDelete}>
-            <DownloadPatternBtn pattern={pattern} origin="dashboard" />
+            <DownloadPatternBtn pattern={pattern} canvasRef={canvasRef} />
             <DeletePatternBtn pattern={pattern} /> : <></>
           </div>
         </div>

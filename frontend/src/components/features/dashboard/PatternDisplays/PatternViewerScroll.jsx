@@ -28,6 +28,7 @@ function PatternViewerScroll({ pattern, page }) {
   );
 
   const editFocus = useRef("");
+  const canvasRef = useRef(null);
 
   // Focus on editing field if useRef has a non-empty reference
   useEffect(() => {
@@ -89,7 +90,7 @@ function PatternViewerScroll({ pattern, page }) {
           <PatternCanvasPreview pattern={pattern} cellSize={16} />
         </div>
         <div className={pageOrigin[page].downloadAndDelete}>
-          <DownloadPatternBtn pattern={pattern} origin="dashboard" />
+          <DownloadPatternBtn pattern={pattern} canvasRef={canvasRef} />
           <DeletePatternBtn pattern={pattern} />
         </div>
       </div>
