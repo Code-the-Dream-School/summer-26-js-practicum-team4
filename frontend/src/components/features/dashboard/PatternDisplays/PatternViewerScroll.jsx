@@ -13,7 +13,8 @@ const pageOrigin = {
   dashboard: {
     textStyle: "text-3xl mb-5",
     patternInterface: "mx-auto h-[60dvh]",
-    downloadAndDelete: "flex justify-center gap-x-15 my-8",
+    downloadAndDelete:
+      "grid grid-cols-[25%_1%_25%] justify-center gap-x-5 my-8",
     image: "mx-auto p-10 h-full object-contain",
   },
 };
@@ -64,7 +65,6 @@ function PatternViewerScroll({ pattern, page }) {
         />
       );
     } else {
-      console.log(pattern);
       return (
         <div className="grid grid-cols-5 place-content-center">
           <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
@@ -90,7 +90,11 @@ function PatternViewerScroll({ pattern, page }) {
           <PatternCanvasPreview pattern={pattern} cellSize={16} />
         </div>
         <div className={pageOrigin[page].downloadAndDelete}>
-          <DownloadPatternBtn pattern={pattern} canvasRef={canvasRef} />
+          <DownloadPatternBtn
+            origin="dashScroll"
+            pattern={pattern}
+            canvasRef={canvasRef}
+          />
           <DeletePatternBtn pattern={pattern} />
         </div>
       </div>

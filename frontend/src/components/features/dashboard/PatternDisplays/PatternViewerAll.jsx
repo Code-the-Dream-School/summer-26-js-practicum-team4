@@ -17,7 +17,7 @@ const pageOrigin = {
     subTextStyle: "ml-5",
     patternInterface: "m-2 h-[45dvh]",
     downloadAndDelete:
-      "absolute top-0 right-0 text-right mr-2 mt-2 object-contain",
+      "absolute top-0 right-0 text-right mr-2 mt-2 object-contain grid grid-cols-[25%_15%_25%]",
     image: "mx-auto p-5 h-[70%] object-contain",
   },
 };
@@ -119,8 +119,12 @@ function PatternViewerAll({ pattern, page }) {
             styling="absolute top-0 left-0 w-full h-full"
           />
           <div className={pageOrigin[page].downloadAndDelete}>
-            <DownloadPatternBtn pattern={pattern} canvasRef={canvasRef} />
             <DeletePatternBtn pattern={pattern} /> : <></>
+            <DownloadPatternBtn
+              origin="dashAll"
+              pattern={pattern}
+              canvasRef={canvasRef}
+            />
           </div>
         </div>
         {patternEditInterface()}

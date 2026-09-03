@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { generatePattern, saveNewPattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
+import DownloadPatternBtn from "../components/features/dashboard/PatternManagementTools/DownloadPatternBtn";
+
 function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -97,7 +99,6 @@ function GeneratePage() {
       <>
         <button
           onClick={async () => {
-            console.log(generatedPattern);
             await saveNewPattern({
               patternName: "test",
               stitchWidth: generatedPattern.width,
@@ -110,6 +111,11 @@ function GeneratePage() {
         >
           Save
         </button>
+        <DownloadPatternBtn
+          origin="generatePg"
+          pattern={generatedPattern}
+          canvasRef={canvasRef}
+        />
         <PatternResult
           pattern={generatedPattern}
           previewUrl={previewUrl}
