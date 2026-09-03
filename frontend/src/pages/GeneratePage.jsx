@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { generatePattern, saveNewPattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
-import DownloadPatternBtn from "../components/features/dashboard/PatternManagementTools/DownloadPatternBtn";
+import DownloadPatternBtn from "../components/features/shared/DownloadPatternBtn";
 
 function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState(null);

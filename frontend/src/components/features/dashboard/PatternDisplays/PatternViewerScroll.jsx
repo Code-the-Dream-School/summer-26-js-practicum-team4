@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // Component Imports
-import DownloadPatternBtn from "../PatternManagementTools/DownloadPatternBtn";
-import DeletePatternBtn from "../PatternManagementTools/DeletePatternBtn";
-import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
+import DownloadPatternBtn from "../../shared/DownloadPatternBtn";
+import DeletePatternBtn from "../../shared/DeletePatternBtn";
+import PatternNameEditInput from "../../shared/PatternNameEditInput";
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 
 import { useAuth } from "../../../../state/auth/useAuth";
@@ -95,7 +95,7 @@ function PatternViewerScroll({ pattern, page }) {
             pattern={pattern}
             canvasRef={canvasRef}
           />
-          <DeletePatternBtn pattern={pattern} />
+          <DeletePatternBtn origin="dashScroll" pattern={pattern} />
         </div>
       </div>
     </>

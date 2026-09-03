@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 // Component Imports
 
-import DownloadPatternBtn from "../PatternManagementTools/DownloadPatternBtn";
-import DeletePatternBtn from "../PatternManagementTools/DeletePatternBtn";
-import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
+import DownloadPatternBtn from "../../shared/DownloadPatternBtn";
+import DeletePatternBtn from "../../shared/DeletePatternBtn";
+import PatternNameEditInput from "../../shared/PatternNameEditInput";
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 
 import { useAuth } from "../../../../state/auth/useAuth";
@@ -118,7 +118,7 @@ function PatternViewerAll({ pattern, page }) {
             styling="absolute top-0 left-0 w-full h-full"
           />
           <div className={pageOrigin[page].downloadAndDelete}>
-            <DeletePatternBtn pattern={pattern} /> : <></>
+            <DeletePatternBtn origin="dashAll" pattern={pattern} /> : <></>
             <DownloadPatternBtn
               origin="dashAll"
               pattern={pattern}

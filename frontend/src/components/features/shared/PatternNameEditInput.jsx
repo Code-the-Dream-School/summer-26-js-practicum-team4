@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // Import components
-import { useAuth } from "../../../../state/auth/useAuth";
+import { useAuth } from "../../../state/auth/useAuth";
 
-import { saveNewPatternName } from "../../../../services/patternService";
+import { saveNewPatternName } from "../../../services/patternService";
 
 function PatternNameEditInput({
   patternId,

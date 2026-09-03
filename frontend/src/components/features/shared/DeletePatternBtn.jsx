@@ -1,14 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 // Component Imports
-import { DashContext } from "../../../../state/dashboard/dashContext";
-import { useAuth } from "../../../../state/auth/useAuth";
+import { useAuth } from "../../../state/auth/useAuth";
 
-import { deleteUserPattern } from "../../../../services/patternService";
+import { deleteUserPattern } from "../../../services/patternService";
 
-function DeletePatternBtn({ pattern }) {
-  const { dashState } = useContext(DashContext);
+function DeletePatternBtn({ origin, pattern }) {
   const { dispatch } = useAuth();
 
   async function handleDelete() {
@@ -23,7 +21,7 @@ function DeletePatternBtn({ pattern }) {
   }
 
   // Customize button icon according to display
-  if (dashState.view === "scroll") {
+  if (origin === "dashScroll") {
     return (
       <button
         onClick={handleDelete}
@@ -32,7 +30,7 @@ function DeletePatternBtn({ pattern }) {
         Delete
       </button>
     );
-  } else if (dashState.view === "all") {
+  } else if (origin === "dashAll") {
     return (
       <button onClick={handleDelete}>
         <img
@@ -45,6 +43,7 @@ function DeletePatternBtn({ pattern }) {
 }
 
 DeletePatternBtn.propTypes = {
+  origin: PropTypes.string.isRequired,
   pattern: PropTypes.shape({
     id: PropTypes.number.isRequired,
     patternName: PropTypes.string.isRequired,
