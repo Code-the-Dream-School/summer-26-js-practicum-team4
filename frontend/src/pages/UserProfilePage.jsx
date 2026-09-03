@@ -1,5 +1,4 @@
-import React, { useRef, useState,useEffect } from "react";
-import "./UserProfilePage.css";
+import React, { useRef, useState, useEffect } from "react";
 import { getUser, updateUser, deleteUser } from "../services/userService";
 import PropTypes from "prop-types";
 import LogoutBtn from "../components/features/auth/LogoutBtn";
@@ -197,35 +196,30 @@ function UserProfilePage() {
 
   const fileInputRef = useRef(null);
 
-  function setUserProfileData(data){
-   const { userName, email, userProfileImgUrl,createdAt, hasPassword } = data;
+  function setUserProfileData(data) {
+    const { userName, email, userProfileImgUrl, createdAt, hasPassword } = data;
 
-       const convertedDate = `${new Date(createdAt).toLocaleString(
-            "en-US",
-            {
-              month: "long",
-            },
-          )} ${new Date(createdAt).getFullYear()}`;
+    const convertedDate = `${new Date(createdAt).toLocaleString("en-US", {
+      month: "long",
+    })} ${new Date(createdAt).getFullYear()}`;
 
-       
-          setUser({
-            fullName: userName,
-            email,
-            memberSince: convertedDate,
-            profilePhoto: userProfileImgUrl,
-            patternsGenerated: data._count.patterns,
-            hasPassword,
-          });
+    setUser({
+      fullName: userName,
+      email,
+      memberSince: convertedDate,
+      profilePhoto: userProfileImgUrl,
+      patternsGenerated: data._count.patterns ? data._count.patterns : 0,
+      hasPassword,
+    });
   }
 
   useEffect(() => {
-   async function getUserData() {
-       setMessage("");    
-    try {
+    async function getUserData() {
+      setMessage("");
+      try {
         const userData = await getUser();
-
         if (userData) {
-       setUserProfileData(userData);
+          setUserProfileData(userData);
         }
       } catch (error) {
         setMessage(error.message);
@@ -234,17 +228,17 @@ function UserProfilePage() {
     getUserData();
   }, []);
 
-
-  async function updateUserData(formData) {
-
+  async function updateUserData(userData) {
     setMessage("");
     try {
-      const updatedData = await updateUser(formData);
+      const updatedData = await updateUser(userData);
       if (updatedData) {
-    setUserProfileData(updatedData);
-      setMessage("Profile updated successfully.");}
+        setUserProfileData(updatedData);
+      }
+      return true;
     } catch (error) {
       setMessage(error.message);
+      return false;
     }
   }
   const handleEditProfile = () => {
@@ -271,9 +265,8 @@ function UserProfilePage() {
       setMessage("Full name is required.");
       return;
     }
-    await updateUserData({userName:formData.fullName});   
-    setIsEditing(false);
-   
+    const updateSuccess = await updateUserData({ userName: formData.fullName });
+    if (updateSuccess) setIsEditing(false);
   };
 
   const handleCancelEdit = () => {
@@ -338,12 +331,17 @@ function UserProfilePage() {
     }));
   };
 
-  const handlePasswordSubmit = (event) => {
+  const handlePasswordSubmit = async (event) => {
     event.preventDefault();
 
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (user.hasPassword && !currentPassword) {
+      setMessage("Current password is required.");
+      return;
+    }
+
+    if (!newPassword || !confirmPassword) {
       setMessage("Please complete all password fields.");
       return;
     }
@@ -358,15 +356,40 @@ function UserProfilePage() {
       return;
     }
 
-    setMessage(
-      "Password form is ready. Backend password update will be connected next.",
+    if (!/[0-9]/.test(newPassword)) {
+      setMessage("Password must include a number.");
+      return;
+    }
+
+    if (!/[A-Z]/.test(newPassword)) {
+      setMessage("Password must include an uppercase letter.");
+      return;
+    }
+
+    if (!/[^A-Za-z0-9]/.test(newPassword)) {
+      setMessage("Password must include a special character.");
+      return;
+    }
+
+    const isPasswordChanged = await updateUserData(
+      user.hasPassword
+        ? {
+            oldPassword: currentPassword,
+            newPassword: newPassword,
+          }
+        : {
+            newPassword: newPassword,
+          },
     );
 
-    setPasswordData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
+    if (isPasswordChanged) {
+      setMessage("Password updated successfully.");
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    }
   };
 
   async function handleDeleteAccount() {
@@ -475,7 +498,7 @@ function UserProfilePage() {
                         id="fullName"
                         name="fullName"
                         type="text"
-                        value={formData.fullName}
+                        value={formData.fullName ? formData.fullName : ""}
                         onChange={handleInputChange}
                         className="w-full rounded-xl border border-[#decdbb] bg-[#fffdf9] px-4 py-3 text-lg outline-none focus:border-[#b44d28]"
                         required
@@ -569,7 +592,7 @@ function UserProfilePage() {
         <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
           <div className="mb-7">
             <h2 className="font-heading text-3xl font-bold text-[#10263f]">
-              Change Password
+              {user.hasPassword ? "Change Password" : "Set Password"}
             </h2>
 
             <div className="mt-3 flex items-center gap-3 text-[#b44d28]">
@@ -585,16 +608,18 @@ function UserProfilePage() {
           >
             {/* Password Fields */}
             <div className="space-y-4">
-              <PasswordField
-                id="currentPassword"
-                name="currentPassword"
-                placeholder="Current Password"
-                value={passwordData.currentPassword}
-                onChange={handlePasswordInputChange}
-                visible={visiblePasswords.currentPassword}
-                onToggle={() => togglePasswordVisibility("currentPassword")}
-                autoComplete="current-password"
-              />
+              {user.hasPassword && (
+                <PasswordField
+                  id="currentPassword"
+                  name="currentPassword"
+                  placeholder="Current Password"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordInputChange}
+                  visible={visiblePasswords.currentPassword}
+                  onToggle={() => togglePasswordVisibility("currentPassword")}
+                  autoComplete="current-password"
+                />
+              )}
 
               <PasswordField
                 id="newPassword"
@@ -715,5 +740,3 @@ function UserProfilePage() {
 }
 
 export default UserProfilePage;
-
-

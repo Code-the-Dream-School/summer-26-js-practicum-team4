@@ -29,7 +29,7 @@ const getUser = async (req, res, next) => {
 
     const safeUser = { ...user, hasPassword };
 
-    return res.status(StatusCodes.OK).json({ safeUser });
+    return res.status(StatusCodes.OK).json({ user: safeUser });
   } catch (error) {
     next(error);
   }
@@ -107,7 +107,7 @@ const updateUser = async (req, res, next) => {
     const hasPassword = updatedUser.hashedPassword ? true : false;
     delete updatedUser.hashedPassword;
     const safeUser = { ...updatedUser, hasPassword };
-    return res.status(StatusCodes.OK).json({ safeUser });
+    return res.status(StatusCodes.OK).json({ user: safeUser });
   } catch (error) {
     next(error);
   }
