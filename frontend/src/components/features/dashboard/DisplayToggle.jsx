@@ -1,6 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-function DisplayToggle({ name, onClick, displayImagePath }) {
+function DisplayToggle({ onClick, displayImagePath }) {
   // view determines pattern layout (i.e. full dashboard vs. scroll), iconImgUrl determines the image for icon
   return (
     <div>
@@ -10,5 +11,10 @@ function DisplayToggle({ name, onClick, displayImagePath }) {
     </div>
   );
 }
+
+DisplayToggle.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  displayImagePath: PropTypes.string.isRequired,
+};
 
 export default DisplayToggle;

@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 // Import components
-import { DashContext } from "../../../../state/dashboard/dashContext";
 import { useAuth } from "../../../../state/auth/useAuth";
 
 import { saveNewPatternName } from "../../../../services/patternService";
@@ -39,6 +39,7 @@ function PatternNameEditInput({
     dispatch({ type: "END_PATTERN_NAME_EDITING" });
     dispatch({ type: "END_PATTERN_NAME_SAVING" });
   }
+
   return (
     <div>
       <form onSubmit={handleSave}>
@@ -73,5 +74,15 @@ function PatternNameEditInput({
     </div>
   );
 }
+
+PatternNameEditInput.propTypes = {
+  patternId: PropTypes.string.isRequired,
+  defaultPatternName: PropTypes.string.isRequired,
+  currentPatternName: PropTypes.string.isRequired,
+  setCurrentPatternName: PropTypes.func.isRequired,
+  textStyle: PropTypes.string.isRequired,
+  ref: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  setEditingThisPattern: PropTypes.func.isRequired,
+};
 
 export default PatternNameEditInput;

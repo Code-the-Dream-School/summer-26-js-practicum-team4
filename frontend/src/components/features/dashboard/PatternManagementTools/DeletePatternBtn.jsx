@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 
 // Component Imports
 import { DashContext } from "../../../../state/dashboard/dashContext";
@@ -42,5 +43,24 @@ function DeletePatternBtn({ pattern }) {
     );
   }
 }
+
+DeletePatternBtn.propTypes = {
+  pattern: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    patternName: PropTypes.string.isRequired,
+    stitchWidth: PropTypes.number.isRequired,
+    stitchHeight: PropTypes.number.isRequired,
+    palette: PropTypes.arrayOf(
+      PropTypes.shape({
+        r: PropTypes.number.isRequired,
+        g: PropTypes.number.isRequired,
+        b: PropTypes.number.isRequired,
+        symbol: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+    grid: PropTypes.arrayOf(PropTypes.number).isRequired,
+    createdAt: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default DeletePatternBtn;

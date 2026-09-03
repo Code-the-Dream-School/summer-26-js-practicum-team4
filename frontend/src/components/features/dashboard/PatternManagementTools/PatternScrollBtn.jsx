@@ -1,4 +1,6 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
+
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
 function PatternScrollBtn({ imgSrc, direction }) {
@@ -18,5 +20,10 @@ function PatternScrollBtn({ imgSrc, direction }) {
     </button>
   );
 }
+
+PatternScrollBtn.propTypes = {
+  imgSrc: PropTypes.string.isRequired,
+  direction: PropTypes.string.isRequired,
+};
 
 export default PatternScrollBtn;

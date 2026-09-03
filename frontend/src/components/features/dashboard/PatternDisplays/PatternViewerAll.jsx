@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // Component Imports
@@ -8,7 +8,6 @@ import DeletePatternBtn from "../PatternManagementTools/DeletePatternBtn";
 import PatternNameEditInput from "../PatternManagementTools/PatternNameEditInput";
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 
-import { DashContext } from "../../../../state/dashboard/dashContext";
 import { useAuth } from "../../../../state/auth/useAuth";
 
 const pageOrigin = {
@@ -142,8 +141,15 @@ PatternViewerAll.propTypes = {
     patternName: PropTypes.string.isRequired,
     stitchWidth: PropTypes.number.isRequired,
     stitchHeight: PropTypes.number.isRequired,
-    palette: PropTypes.string.isRequired,
-    grid: PropTypes.string.isRequired,
+    palette: PropTypes.arrayOf(
+      PropTypes.shape({
+        r: PropTypes.number.isRequired,
+        g: PropTypes.number.isRequired,
+        b: PropTypes.number.isRequired,
+        symbol: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+    grid: PropTypes.arrayOf(PropTypes.number).isRequired,
     createdAt: PropTypes.string.isRequired,
   }).isRequired,
   page: PropTypes.string.isRequired,

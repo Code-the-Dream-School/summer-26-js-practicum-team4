@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 import PatternCanvas from "../../pattern/PatternCanvas";
 
@@ -67,5 +68,26 @@ function DownloadPatternBtn({ origin, pattern, canvasRef }) {
     </>
   );
 }
+
+DownloadPatternBtn.propTypes = {
+  origin: PropTypes.string.isRequired,
+  pattern: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    patternName: PropTypes.string.isRequired,
+    stitchWidth: PropTypes.number.isRequired,
+    stitchHeight: PropTypes.number.isRequired,
+    palette: PropTypes.arrayOf(
+      PropTypes.shape({
+        r: PropTypes.number.isRequired,
+        g: PropTypes.number.isRequired,
+        b: PropTypes.number.isRequired,
+        symbol: PropTypes.string.isRequired,
+      }),
+    ).isRequired,
+    grid: PropTypes.arrayOf(PropTypes.number).isRequired,
+    createdAt: PropTypes.string.isRequired,
+  }).isRequired,
+  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+};
 
 export default DownloadPatternBtn;
