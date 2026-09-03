@@ -209,7 +209,6 @@ function RegisterForm() {
             )}
 
             <ReCAPTCHA
-              className="flex justify-center max-w-full "
               sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               onChange={(token) => setReCaptchaToken(token)}
               onExpired={() => setReCaptchaToken(null)}
