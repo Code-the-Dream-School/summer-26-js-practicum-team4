@@ -19,7 +19,7 @@ function PatternCanvasPreview({ pattern, cellSize, styling = "" }) {
     }
 
     context.clearRect(0, 0, canvasWidth, canvasHeight);
-    context.fillStyle = "#fafafa";
+    context.fillStyle = "#ffffff";
     context.fillRect(0, 0, canvasWidth, canvasHeight);
     context.imageSmoothingEnabled = false;
     context.font = `600 ${Math.max(8, Math.floor(cellSize * 0.55))}px sans-serif`;
@@ -62,18 +62,41 @@ function PatternCanvasPreview({ pattern, cellSize, styling = "" }) {
     context.stroke();
     context.beginPath();
     context.strokeStyle = "rgba(5, 21, 42, 0.8)";
-    context.lineWidth = 1;
+    context.lineWidth = 2;
 
-    for (let column = 0; column <= pattern.width; column += 1) {
+    for (let column = 0; column <= pattern.width; column += 10) {
       const x = LABEL_GUTTER + column * cellSize;
       context.moveTo(x, LABEL_GUTTER);
       context.lineTo(x, LABEL_GUTTER + chartHeight);
     }
 
-    for (let row = 0; row <= pattern.height; row += 1) {
+    for (let row = 0; row <= pattern.height; row += 10) {
       const y = LABEL_GUTTER + row * cellSize;
       context.moveTo(LABEL_GUTTER, y);
       context.lineTo(LABEL_GUTTER + chartWidth, y);
+    }
+
+    context.stroke();
+    context.fillStyle = "#05152a";
+    context.font = "600 11px sans-serif";
+    context.textBaseline = "middle";
+
+    for (let column = 10; column <= pattern.width; column += 10) {
+      context.textAlign = "center";
+      context.fillText(
+        String(column),
+        LABEL_GUTTER + column * cellSize,
+        LABEL_GUTTER / 2,
+      );
+    }
+
+    for (let row = 10; row <= pattern.height; row += 10) {
+      context.textAlign = "right";
+      context.fillText(
+        String(row),
+        LABEL_GUTTER - 7,
+        LABEL_GUTTER + row * cellSize,
+      );
     }
   }, [canvasHeight, canvasWidth, cellSize, chartHeight, chartWidth, pattern]);
 

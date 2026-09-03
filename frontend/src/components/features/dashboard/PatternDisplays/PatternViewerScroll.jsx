@@ -89,7 +89,7 @@ function PatternViewerScroll({ pattern, page }) {
           <PatternCanvasPreview pattern={pattern} cellSize={16} />
         </div>
         <div className={pageOrigin[page].downloadAndDelete}>
-          <DownloadPatternBtn pattern={pattern} />
+          <DownloadPatternBtn pattern={pattern} origin="dashboard" />
           <DeletePatternBtn pattern={pattern} />
         </div>
       </div>

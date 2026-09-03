@@ -117,7 +117,7 @@ function PatternViewerAll({ pattern, page }) {
             styling="absolute top-0 left-0 w-full h-full"
           />
           <div className={pageOrigin[page].downloadAndDelete}>
-            <DownloadPatternBtn pattern={pattern} />
+            <DownloadPatternBtn pattern={pattern} origin="dashboard" />
             <DeletePatternBtn pattern={pattern} /> : <></>
           </div>
         </div>

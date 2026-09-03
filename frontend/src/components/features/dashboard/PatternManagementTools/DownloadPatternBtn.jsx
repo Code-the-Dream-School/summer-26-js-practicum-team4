@@ -6,21 +6,27 @@ import PatternCanvas from "../../pattern/PatternCanvas";
 function DownloadPatternBtn({ pattern, origin }) {
   const { dashState } = useContext(DashContext);
 
-  function downloadLink(origin) {
+  async function downloadLink(origin) {
     // Convert pattern into canvas, save as png, and generate URL to download
     if (origin === "dashboard") {
       const patternCanvasInstance = (
         <PatternCanvas pattern={pattern} cellSize={8} />
       );
+
+      let patternImgUrl = "";
+      await patternCanvasInstance.toBlob((blob) => {
+        patternImgUrl = URL.createObjectURL(blob);
+      }, "image/png");
+
+      return patternImgUrl;
     } else if (origin === "generate") {
-      return 5;
+      return "Not implemented yet.";
     }
-    let link = 5;
   }
 
   return (
     <>
-      <a href={pattern.patternImgUrl} target="_blank" rel="noreferrer" download>
+      <a href={downloadLink(origin)} target="_blank" rel="noreferrer" download>
         {dashState.view === "scroll" ? (
           <button className="bg-primary text-white px-10 py-2 border border-black rounded-md hover:bg-accent">
             Download
