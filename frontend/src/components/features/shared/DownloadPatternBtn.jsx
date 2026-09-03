@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import PatternCanvas from "../pattern/PatternCanvas";
 
-function DownloadPatternBtn({ origin, pattern, canvasRef }) {
+function DownloadPatternBtn({ origin, pattern, canvasRef, patternName = "" }) {
   // Relevant states
   const [refStatus, setRefStatus] = useState(false);
 
@@ -19,7 +19,10 @@ function DownloadPatternBtn({ origin, pattern, canvasRef }) {
 
   function handleDownload() {
     let downloadLink = document.createElement("a");
-    downloadLink.download = "frunk.png";
+
+    const downloadName = patternName ? patternName : pattern.patternName;
+
+    downloadLink.download = `${downloadName}.png`;
 
     canvasRef.current.toBlob((blob) => {
       downloadLink.href = URL.createObjectURL(blob);
@@ -88,6 +91,7 @@ DownloadPatternBtn.propTypes = {
     createdAt: PropTypes.string.isRequired,
   }).isRequired,
   canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  patternName: PropTypes.string,
 };
 
 export default DownloadPatternBtn;

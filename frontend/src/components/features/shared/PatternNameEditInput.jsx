@@ -4,7 +4,10 @@ import PropTypes from "prop-types";
 // Import components
 import { useAuth } from "../../../state/auth/useAuth";
 
-import { saveNewPatternName } from "../../../services/patternService";
+import {
+  saveNewPatternName,
+  validateNewPatternName,
+} from "../../../services/patternService";
 
 function PatternNameEditInput({
   patternId,
@@ -29,11 +32,15 @@ function PatternNameEditInput({
     event.preventDefault();
 
     dispatch({ type: "BEGIN_PATTERN_NAME_SAVING" });
-    await saveNewPatternName(patternId, currentPatternName);
 
-    // if editing pattern in all patterns view
-    if (setEditingThisPattern) {
-      setEditingThisPattern(false);
+    if (!validateNewPatternName(currentPatternName)) {
+      // invalid pattern name, end saving
+      dispatch({ type: "END_PATTERN_NAME_SAVING" });
+    }
+
+    // patternId can be null if triggered from newly generated pattern page
+    if (patternId) {
+      await saveNewPatternName(patternId, currentPatternName);
     }
 
     dispatch({ type: "END_PATTERN_NAME_EDITING" });

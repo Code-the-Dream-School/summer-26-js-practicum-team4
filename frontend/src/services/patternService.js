@@ -105,6 +105,11 @@ async function saveNewPatternName(patternId, newPatternName) {
   }
 }
 
+function validateNewPatternName(patternName) {
+  // may be implemented later if time permits
+  return { name: patternName };
+}
+
 async function generatePattern({ image, width, height }) {
   const hasWidth = width !== undefined && width !== null;
   const hasHeight = height !== undefined && height !== null;
@@ -187,5 +192,6 @@ export {
   deleteUserPattern,
   saveNewPattern,
   saveNewPatternName,
+  validateNewPatternName,
   generatePattern,
 };

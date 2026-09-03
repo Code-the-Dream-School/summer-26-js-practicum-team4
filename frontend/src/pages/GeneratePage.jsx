@@ -3,6 +3,9 @@ import { generatePattern, saveNewPattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
 import DownloadPatternBtn from "../components/features/shared/DownloadPatternBtn";
+import PatternNameEditInput from "../components/features/shared/PatternNameEditInput";
+
+import { useAuth } from "../state/auth/useAuth";
 
 function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -12,15 +15,69 @@ function GeneratePage() {
   const [generatedPattern, setGeneratedPattern] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [editingThisPattern, setEditingThisPattern] = useState(false);
+  const [currentPatternName, setCurrentPatternName] = useState(
+    "Give this pattern a name?",
+  );
+
   const canvasRef = useRef(null);
+  const editFocus = useRef("");
+
+  const { state, dispatch } = useAuth();
 
   useEffect(() => {
+    if (editFocus.current) {
+      editFocus.current.focus();
+    }
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
     };
   }, [previewUrl]);
+
+  function handleEdit() {
+    if (state.isEditing) {
+      return;
+    }
+
+    setCurrentPatternName(
+      selectedFile?.name ? selectedFile?.name : "generated_pattern",
+    );
+    setEditingThisPattern(true);
+
+    dispatch({ type: "BEGIN_PATTERN_NAME_EDITING" });
+
+    return;
+  }
+
+  function patternEditInterface() {
+    if (state.isEditing && editingThisPattern) {
+      return (
+        <PatternNameEditInput
+          patternId={null}
+          defaultPatternName={currentPatternName}
+          currentPatternName={currentPatternName}
+          setCurrentPatternName={setCurrentPatternName}
+          setEditingThisPattern={setEditingThisPattern}
+          ref={editFocus}
+          textStyle="text-3xl mb-5"
+        />
+      );
+    } else {
+      return (
+        <div className="grid grid-cols-5 place-content-center">
+          <h2 className={"text-3xl mb-5"}>{currentPatternName}</h2>
+          <button className="col-start-6" onClick={handleEdit}>
+            <img
+              src="images/edit.png"
+              className="hover:bg-gray-300 mb-5 w-10"
+            />
+          </button>
+        </div>
+      );
+    }
+  }
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
@@ -97,10 +154,11 @@ function GeneratePage() {
   if (generatedPattern) {
     return (
       <>
+        {patternEditInterface()}
         <button
           onClick={async () => {
             await saveNewPattern({
-              patternName: "test",
+              patternName: currentPatternName,
               stitchWidth: generatedPattern.width,
               stitchHeight: generatedPattern.height,
               grid: generatedPattern.grid,
@@ -115,6 +173,7 @@ function GeneratePage() {
           origin="generatePg"
           pattern={generatedPattern}
           canvasRef={canvasRef}
+          patternName={currentPatternName}
         />
         <PatternResult
           pattern={generatedPattern}
