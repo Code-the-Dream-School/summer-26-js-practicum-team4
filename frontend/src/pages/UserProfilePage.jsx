@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import "./UserProfilePage.css";
-import { getUser, deleteUser } from "../services/userService";
+import { getUser, updateUser, deleteUser } from "../services/userService";
 import LogoutBtn from "../components/features/auth/LogoutBtn";
 import { useAuth } from "../state/auth/useAuth";
-import { useEffect } from "react";
 
 function UserProfilePage() {
   const {
@@ -18,26 +17,35 @@ function UserProfilePage() {
 
   const fileInputRef = useRef(null);
 
-  useEffect(() => {
-    async function getUserData() {
-      try {
-        const userData = await getUser();
+  function setUserProfileData(data){
+   const { userName, email, userProfileImgUrl,createdAt, hasPassword } = data;
 
-        if (userData) {
-          const convertedDate = `${new Date(userData.createdAt).toLocaleString(
+       const convertedDate = `${new Date(createdAt).toLocaleString(
             "en-US",
             {
               month: "long",
             },
-          )} ${new Date(userData.createdAt).getFullYear()}`;
+          )} ${new Date(createdAt).getFullYear()}`;
 
+       
           setUser({
-            fullName: userData.userName,
-            email: userData.email,
+            fullName: userName,
+            email,
             memberSince: convertedDate,
-            profilePhoto: userData.userProfileImgUrl,
-            patterns: userData._count.patterns,
+            profilePhoto: userProfileImgUrl,
+            patternGenerated: data._count.patterns,
+            hasPassword,
           });
+  }
+
+  useEffect(() => {
+   async function getUserData() {
+       setMessage("");    
+    try {
+        const userData = await getUser();
+
+        if (userData) {
+       setUserProfileData(userData);
         }
       } catch (error) {
         setMessage(error.message);
@@ -46,6 +54,19 @@ function UserProfilePage() {
     getUserData();
   }, []);
 
+
+  async function updateUserData(formData) {
+
+    setMessage("");
+    try {
+      const updatedData = await updateUser(formData);
+      if (updatedData) {
+    setUserProfileData(updatedData);
+      setMessage("Profile updated successfully.");}
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
   const handleEditProfile = () => {
     setFormData(user);
     setIsEditing(true);
@@ -53,6 +74,7 @@ function UserProfilePage() {
   };
 
   const handleInputChange = (event) => {
+    setMessage("");
     const { name, value } = event.target;
 
     setFormData((previousData) => ({
@@ -61,17 +83,18 @@ function UserProfilePage() {
     }));
   };
 
-  const handleSaveProfile = (event) => {
+  const handleSaveProfile = async (event) => {
+    setMessage("");
     event.preventDefault();
 
-    if (!formData.fullName.trim() || !formData.email.trim()) {
-      setMessage("Full name and email are required.");
+    if (!formData.fullName.trim()) {
+      setMessage("Full name is required.");
       return;
     }
 
-    setUser(formData);
+    await updateUserData({userName:formData.fullName});   
     setIsEditing(false);
-    setMessage("Profile updated successfully.");
+   
   };
 
   const handleCancelEdit = () => {
@@ -289,3 +312,5 @@ function UserProfilePage() {
 }
 
 export default UserProfilePage;
+
+

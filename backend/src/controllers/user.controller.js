@@ -13,6 +13,7 @@ const getUser = async (req, res, next) => {
         userName: true,
         email: true,
         userProfileImgUrl: true,
+        hashedPassword: true,
         createdAt: true,
         _count: {
           select: { patterns: true },
@@ -23,7 +24,12 @@ const getUser = async (req, res, next) => {
     if (!user) {
       throw new UnauthenticatedError("User profile not found");
     }
-    return res.status(StatusCodes.OK).json({ user });
+    const hasPassword = user.hashedPassword ? true : false;
+    delete user.hashedPassword;
+
+    const safeUser = { ...user, hasPassword };
+
+    return res.status(StatusCodes.OK).json({ safeUser });
   } catch (error) {
     next(error);
   }
@@ -31,6 +37,15 @@ const getUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.userId },
+      select: { hashedPassword: true },
+    });
+
+    if (!user) {
+      throw new UnauthenticatedError("User profile not found");
+    }
+
     const { error, value } = userUpdateSchema.validate(req.body, {
       abortEarly: false,
     });
@@ -39,13 +54,11 @@ const updateUser = async (req, res, next) => {
       throw new BadRequestError(error.message);
     }
 
-    if (value.oldPassword && value.newPassword) {
+    // Password update logic for users with existing passwords
+    if (user.hashedPassword && value.oldPassword && value.newPassword) {
       if (value.oldPassword === value.newPassword) {
         throw new BadRequestError("Old and new password should be different");
       }
-      const user = await prisma.user.findUnique({
-        where: { id: req.user.userId },
-      });
 
       const passwordMatches = await bcrypt.compare(
         value.oldPassword,
@@ -60,10 +73,21 @@ const updateUser = async (req, res, next) => {
         delete value.oldPassword;
         delete value.newPassword;
       }
-    } else if (value.oldPassword || value.newPassword) {
+    } else if (
+      user.hashedPassword &&
+      (value.oldPassword || value.newPassword)
+    ) {
       throw new BadRequestError("Both passwords are required");
     }
 
+    //  Password create logic for Google users without a password
+    if (!user.hashedPassword && value.newPassword) {
+      const hashedPassword = await bcrypt.hash(value.newPassword, 10);
+      value.hashedPassword = hashedPassword;
+      delete value.newPassword;
+    }
+
+    // Update user in the database
     const updatedUser = await prisma.user.update({
       where: { id: req.user.userId },
       data: { ...value },
@@ -73,12 +97,17 @@ const updateUser = async (req, res, next) => {
         email: true,
         userProfileImgUrl: true,
         createdAt: true,
+        hashedPassword: true,
         _count: {
           select: { patterns: true },
         },
       },
     });
-    return res.status(StatusCodes.OK).json({ user: updatedUser });
+
+    const hasPassword = updatedUser.hashedPassword ? true : false;
+    delete updatedUser.hashedPassword;
+    const safeUser = { ...updatedUser, hasPassword };
+    return res.status(StatusCodes.OK).json({ safeUser });
   } catch (error) {
     next(error);
   }
