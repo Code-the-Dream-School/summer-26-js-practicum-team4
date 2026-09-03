@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { generatePattern, saveNewPattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
@@ -10,6 +10,7 @@ function GeneratePage() {
   const [generatedPattern, setGeneratedPattern] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const canvasRef = useRef(null);
 
   useEffect(() => {
     return () => {
@@ -113,6 +114,7 @@ function GeneratePage() {
           pattern={generatedPattern}
           previewUrl={previewUrl}
           fileName={selectedFile?.name || "Selected image"}
+          canvasRef={canvasRef}
           onBack={handleBackToGenerator}
           onUploadNew={handleUploadNewImage}
         />

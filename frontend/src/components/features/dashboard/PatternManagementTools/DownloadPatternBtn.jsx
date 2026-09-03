@@ -9,16 +9,14 @@ function DownloadPatternBtn({ pattern, origin }) {
   async function downloadLink(origin) {
     // Convert pattern into canvas, save as png, and generate URL to download
     if (origin === "dashboard") {
-      const patternCanvasInstance = (
-        <PatternCanvas pattern={pattern} cellSize={8} />
-      );
-
-      let patternImgUrl = "";
-      await patternCanvasInstance.toBlob((blob) => {
-        patternImgUrl = URL.createObjectURL(blob);
-      }, "image/png");
-
-      return patternImgUrl;
+      // const patternCanvasInstance = (
+      //   <PatternCanvas pattern={pattern} cellSize={8} />
+      // );
+      // let patternImgUrl = "";
+      // await patternCanvasInstance.toBlob((blob) => {
+      //   patternImgUrl = URL.createObjectURL(blob);
+      // }, "image/png");
+      // return patternImgUrl;
     } else if (origin === "generate") {
       return "Not implemented yet.";
     }

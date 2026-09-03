@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
 const LABEL_GUTTER = 38;
@@ -8,8 +8,7 @@ function getSymbolColor({ r, g, b }) {
   return brightness > 155 ? "#05152a" : "#ffffff";
 }
 
-function PatternCanvas({ pattern, cellSize }) {
-  const canvasRef = useRef(null);
+function PatternCanvas({ pattern, cellSize, canvasRef }) {
   const chartWidth = pattern.width * cellSize;
   const chartHeight = pattern.height * cellSize;
   const canvasWidth = LABEL_GUTTER + chartWidth + 1;
@@ -111,7 +110,15 @@ function PatternCanvas({ pattern, cellSize }) {
         LABEL_GUTTER + row * cellSize,
       );
     }
-  }, [canvasHeight, canvasWidth, cellSize, chartHeight, chartWidth, pattern]);
+  }, [
+    canvasHeight,
+    canvasWidth,
+    cellSize,
+    chartHeight,
+    chartWidth,
+    pattern,
+    canvasRef,
+  ]);
 
   return (
     <div
@@ -146,6 +153,7 @@ PatternCanvas.propTypes = {
     grid: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
   cellSize: PropTypes.number.isRequired,
+  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
 };
 
 export default PatternCanvas;

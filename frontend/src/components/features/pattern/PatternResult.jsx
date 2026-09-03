@@ -11,7 +11,14 @@ const ZOOM_LEVELS = [
   { label: "150%", cellSize: 24 },
 ];
 
-function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
+function PatternResult({
+  pattern,
+  previewUrl,
+  fileName,
+  canvasRef,
+  onBack,
+  onUploadNew,
+}) {
   const [zoomIndex, setZoomIndex] = useState(2);
   const zoom = ZOOM_LEVELS[zoomIndex];
   const totalStitches = pattern.width * pattern.height;
@@ -76,7 +83,11 @@ function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
               </p>
             </div>
 
-            <PatternCanvas pattern={pattern} cellSize={zoom.cellSize} />
+            <PatternCanvas
+              pattern={pattern}
+              cellSize={zoom.cellSize}
+              canvasRef={canvasRef}
+            />
           </section>
 
           <aside className="space-y-5">
@@ -183,6 +194,7 @@ PatternResult.propTypes = {
   }).isRequired,
   previewUrl: PropTypes.string.isRequired,
   fileName: PropTypes.string.isRequired,
+  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   onBack: PropTypes.func.isRequired,
   onUploadNew: PropTypes.func.isRequired,
 };
