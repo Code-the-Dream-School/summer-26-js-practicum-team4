@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { generatePattern } from "../services/patternService";
+import { generatePattern, saveNewPattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
 function GeneratePage() {
@@ -93,13 +93,30 @@ function GeneratePage() {
 
   if (generatedPattern) {
     return (
-      <PatternResult
-        pattern={generatedPattern}
-        previewUrl={previewUrl}
-        fileName={selectedFile?.name || "Selected image"}
-        onBack={handleBackToGenerator}
-        onUploadNew={handleUploadNewImage}
-      />
+      <>
+        <button
+          onClick={async () => {
+            console.log(generatedPattern);
+            await saveNewPattern({
+              patternName: "test",
+              stitchWidth: generatedPattern.width,
+              stitchHeight: generatedPattern.height,
+              grid: generatedPattern.grid,
+              palette: generatedPattern.palette,
+            });
+            return;
+          }}
+        >
+          Save
+        </button>
+        <PatternResult
+          pattern={generatedPattern}
+          previewUrl={previewUrl}
+          fileName={selectedFile?.name || "Selected image"}
+          onBack={handleBackToGenerator}
+          onUploadNew={handleUploadNewImage}
+        />
+      </>
     );
   }
 

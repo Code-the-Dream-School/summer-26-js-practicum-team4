@@ -9,13 +9,14 @@ async function fetchCurrentUserPatterns() {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.patterns;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
@@ -35,13 +36,37 @@ async function deleteUserPattern(patternId) {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
+  }
+}
+
+async function saveNewPattern(patternObj) {
+  try {
+    const resp = await fetch(`/api/patterns/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(patternObj),
+    });
+
+    if (!resp.ok) {
+      throw new Error("The server returned an invalid response.");
+    }
+
+    const { data } = await resp.json();
+    return data.pattern;
+  } catch (error) {
+    console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
@@ -59,13 +84,14 @@ async function saveNewPatternName(patternId, newPatternName) {
     });
 
     if (!resp.ok) {
-      throw new Error(resp.message);
+      throw new Error("The server returned an invalid response.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
+    return { message: `Error: ${error.message}` };
   }
 }
 
@@ -149,6 +175,7 @@ export {
   fetchCurrentUserPatterns,
   fetchAllUserPatterns,
   deleteUserPattern,
+  saveNewPattern,
   saveNewPatternName,
   generatePattern,
 };

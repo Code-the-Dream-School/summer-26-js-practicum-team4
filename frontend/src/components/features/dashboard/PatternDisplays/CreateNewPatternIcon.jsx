@@ -1,15 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function CreateNewPatternIcon() {
+function CreateNewPatternIcon({ patternDisplayScaling = "" }) {
   return (
     <>
       <div>
-        <div className="m-2 bg-white border rounded-2xl border-gray-400">
+        <div
+          className={`container grid place-content-center m-2 bg-white border rounded-2xl border-gray-400 ${patternDisplayScaling}`}
+        >
           <Link to="/generate">
             <img
               src="images/new-project-icon.png"
-              className="mx-auto p-5 object-contain w-70"
+              className="p-5 object-contain w-70"
               alt="create new pattern"
             />
           </Link>

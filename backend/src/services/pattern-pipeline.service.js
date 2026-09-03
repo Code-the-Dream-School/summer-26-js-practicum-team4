@@ -1,3 +1,5 @@
+const sharp = require("sharp");
+
 const {
   preprocessImage,
   reduceColors,
