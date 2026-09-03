@@ -28,9 +28,6 @@ async function generatePattern(imageBuffer, options = {}) {
   const preview = await renderPatternPreview(pattern);
   const chart = await renderPatternChart(pattern);
 
-  await sharp(preview.buffer).png().toFile("aPreview.png");
-  await sharp(chart.buffer).png().toFile("aChart.png");
-
   return { pattern, preview, chart };
 }
 
