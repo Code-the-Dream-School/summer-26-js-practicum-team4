@@ -207,14 +207,20 @@ function RegisterForm() {
                 {error}
               </p>
             )}
-
-            <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-              onChange={(token) => setReCaptchaToken(token)}
-              onExpired={() => setReCaptchaToken(null)}
-              size="normal"
-              hl="en"
-            />
+            <div className="flex w-full justify-center items-center py-2">
+              <div className="inline-block mx-auto">
+                <ReCAPTCHA
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  onChange={(token) => {
+                    setReCaptchaToken(token);
+                    dispatch({ type: "CLEAR_ERROR" });
+                  }}
+                  onExpired={() => setReCaptchaToken(null)}
+                  size="normal"
+                  hl="en"
+                />
+              </div>
+            </div>
 
             <button
               type="submit"
