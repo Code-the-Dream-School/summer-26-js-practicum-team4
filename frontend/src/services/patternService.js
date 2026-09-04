@@ -9,7 +9,7 @@ async function fetchCurrentUserPatterns() {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("Your user patterns were unable to be retrieved.");
     }
 
     const { data } = await resp.json();
@@ -27,7 +27,7 @@ async function fetchCurrentUserPatterns() {
     return reformattedPatterns;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
 }
 
@@ -46,14 +46,14 @@ async function deleteUserPattern(patternId) {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("The selected pattern could not be deleted.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
 }
 
@@ -69,14 +69,14 @@ async function saveNewPattern(patternObj) {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("This generated pattern was not able to be saved.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
 }
 
@@ -94,14 +94,14 @@ async function saveNewPatternName(patternId, newPatternName) {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("The selected pattern name was unable to be saved.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
 }
 

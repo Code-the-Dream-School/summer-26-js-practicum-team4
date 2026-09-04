@@ -14,6 +14,10 @@ function DeletePatternBtn({ origin, pattern }) {
 
     const deletedPattern = await deleteUserPattern(pattern.id);
 
+    if (deletedPattern.error.message) {
+      dispatch({ type: "SET_ERROR", payload: deletedPattern.error.message });
+    }
+
     // End delete status when pattern successfully deleted
     dispatch({ type: "END_PATTERN_DELETING" });
 

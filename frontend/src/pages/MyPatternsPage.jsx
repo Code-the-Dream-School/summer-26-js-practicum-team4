@@ -95,6 +95,11 @@ function MyPatternsPage() {
               <div></div>
             )}
             {userChosenView(dashState.patterns)}
+            {state.error && (
+              <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+                {state.error}
+              </p>
+            )}
           </div>
         </div>
       </DashContext>
