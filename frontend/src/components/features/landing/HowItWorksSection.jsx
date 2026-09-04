@@ -29,8 +29,7 @@ function HowItWorksSection() {
           />
           <h3 className="mt-6 text-3xl font-semibold">2. Adjust</h3>
           <p className="mt-4 text-xl">
-            Adjust the dimensions to create
-            your perfect pattern.
+            Adjust the dimensions to create your perfect pattern.
           </p>
         </div>
 

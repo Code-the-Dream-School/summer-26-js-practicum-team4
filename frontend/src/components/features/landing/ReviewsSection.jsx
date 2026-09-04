@@ -18,8 +18,8 @@ function ReviewsSection() {
           <div className="absolute right-0 top-full z-10 mt-2 hidden w-80 rounded-lg bg-white p-4 text-left shadow-lg group-hover:block">
             <p className="font-semibold text-primary">About these reviews:</p>
             <p className="mt-1 text-md text-gray-600">
-              These are sample testimonials created for the X-Stitch demo and are
-              not from real users.
+              These are sample testimonials created for the X-Stitch demo and
+              are not from real users.
             </p>
           </div>
         </div>
