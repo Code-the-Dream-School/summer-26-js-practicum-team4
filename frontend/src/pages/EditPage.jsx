@@ -1,13 +1,11 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import PatternCanvas from "../components/features/pattern/PatternCanvas";
 import PatternLegend from "../components/features/pattern/PatternLegend";
 
-import {
-  fetchPattern,
-  updatePattern,
-} from "../services/patternService";
+import { fetchPattern, updatePattern } from "../services/patternService";
 
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
@@ -43,7 +41,7 @@ function EditPage() {
         setNameDraft(fetchedPattern.patternName);
         setWidthDraft(String(fetchedPattern.stitchWidth));
         setHeightDraft(String(fetchedPattern.stitchHeight));
-      } catch (error) {
+      } catch {
         setErrorMessage("Unable to load pattern.");
       }
     }
@@ -85,9 +83,7 @@ function EditPage() {
       height < 10 ||
       height > 200
     ) {
-      setErrorMessage(
-        "Width and height must be integers between 10 and 200.",
-      );
+      setErrorMessage("Width and height must be integers between 10 and 200.");
       return;
     }
 
@@ -113,7 +109,7 @@ function EditPage() {
       setHeightDraft(String(updatedPattern.stitchHeight));
 
       setIsEditing(false);
-    } catch (error) {
+    } catch {
       setErrorMessage("Unable to update pattern.");
     } finally {
       setIsSaving(false);
@@ -125,9 +121,7 @@ function EditPage() {
   };
 
   const zoomIn = () => {
-    setZoomIndex((current) =>
-      Math.min(ZOOM_LEVELS.length - 1, current + 1),
-    );
+    setZoomIndex((current) => Math.min(ZOOM_LEVELS.length - 1, current + 1));
   };
 
   if (!pattern) {
@@ -154,11 +148,9 @@ function EditPage() {
   return (
     <main className="min-h-screen bg-background px-4 py-8 lg:px-8">
       <div className="mx-auto max-w-[1600px] space-y-6">
-
         <header className="rounded-2xl border border-border bg-surface p-5 shadow-sm md:p-7">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-
               <p className="mb-1 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
                 Edit Pattern
               </p>
@@ -167,9 +159,7 @@ function EditPage() {
                 <input
                   type="text"
                   value={nameDraft}
-                  onChange={(event) =>
-                    setNameDraft(event.target.value)
-                  }
+                  onChange={(event) => setNameDraft(event.target.value)}
                   autoFocus
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-3xl font-bold text-secondary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 md:text-4xl"
                 />
@@ -220,14 +210,11 @@ function EditPage() {
           </div>
 
           {errorMessage && (
-            <p className="mt-4 text-sm text-red-600">
-              {errorMessage}
-            </p>
+            <p className="mt-4 text-sm text-red-600">{errorMessage}</p>
           )}
         </header>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
-
           <section className="min-w-0 rounded-2xl border border-border bg-surface p-4 shadow-sm md:p-6">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -252,18 +239,14 @@ function EditPage() {
           </section>
 
           <aside className="space-y-5">
-
             <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
               <h2 className="mb-3 text-xl font-semibold text-secondary">
                 Pattern Details
               </h2>
 
               <dl className="space-y-3">
-
                 <div className="border-b border-border pb-3">
-                  <dt className="mb-2 text-text-secondary">
-                    Dimensions
-                  </dt>
+                  <dt className="mb-2 text-text-secondary">Dimensions</dt>
 
                   {isEditing ? (
                     <div className="grid grid-cols-2 gap-2">
@@ -317,9 +300,7 @@ function EditPage() {
                 </div>
 
                 <div className="flex justify-between gap-4 border-b border-border pb-2">
-                  <dt className="text-text-secondary">
-                    Total stitches
-                  </dt>
+                  <dt className="text-text-secondary">Total stitches</dt>
 
                   <dd className="font-semibold text-secondary">
                     {totalStitches.toLocaleString()}
@@ -327,15 +308,12 @@ function EditPage() {
                 </div>
 
                 <div className="flex justify-between gap-4">
-                  <dt className="text-text-secondary">
-                    DMC colors
-                  </dt>
+                  <dt className="text-text-secondary">DMC colors</dt>
 
                   <dd className="font-semibold text-secondary">
                     {pattern.palette.length}
                   </dd>
                 </div>
-
               </dl>
             </section>
 
@@ -345,7 +323,6 @@ function EditPage() {
               </h2>
 
               <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2">
-
                 <button
                   type="button"
                   onClick={zoomOut}
@@ -369,7 +346,6 @@ function EditPage() {
                 >
                   +
                 </button>
-
               </div>
 
               <button
@@ -381,14 +357,10 @@ function EditPage() {
                 Reset Zoom
               </button>
             </section>
-
           </aside>
         </div>
 
-        <PatternLegend
-          palette={pattern.palette}
-          grid={pattern.grid}
-        />
+        <PatternLegend palette={pattern.palette} grid={pattern.grid} />
       </div>
     </main>
   );
