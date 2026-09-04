@@ -35,7 +35,7 @@ function GeneratePage() {
         URL.revokeObjectURL(previewUrl);
       }
     };
-  }, [previewUrl]);
+  }, [previewUrl, state.isEditing]);
 
   function handleEdit() {
     if (state.isEditing) {
