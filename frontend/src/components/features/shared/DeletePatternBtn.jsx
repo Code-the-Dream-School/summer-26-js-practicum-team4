@@ -14,7 +14,7 @@ function DeletePatternBtn({ origin, pattern }) {
 
     const deletedPattern = await deleteUserPattern(pattern.id);
 
-    if (deletedPattern.error.message) {
+    if (deletedPattern?.error?.message) {
       dispatch({ type: "SET_ERROR", payload: deletedPattern.error.message });
     }
 

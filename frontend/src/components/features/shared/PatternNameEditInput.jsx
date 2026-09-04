@@ -40,7 +40,15 @@ function PatternNameEditInput({
 
     // patternId can be null if triggered from newly generated pattern page
     if (patternId) {
-      await saveNewPatternName(patternId, currentPatternName);
+      const newPatName = await saveNewPatternName(
+        patternId,
+        currentPatternName,
+      );
+
+      console.log(newPatName);
+      if (newPatName?.error?.message) {
+        dispatch({ type: "SET_ERROR", payload: newPatName.error.message });
+      }
     }
 
     setCurrentPatternName(currentPatternName);
