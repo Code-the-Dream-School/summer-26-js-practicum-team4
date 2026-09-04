@@ -172,15 +172,12 @@ function DecorativeStitches() {
 }
 
 function UserProfilePage() {
-  const {
-    dispatch,
-    state: { loading },
-  } = useAuth();
+  const { dispatch, state } = useAuth();
 
   const [user, setUser] = useState({});
   const [formData, setFormData] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ text: "", error: false });
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -215,21 +212,22 @@ function UserProfilePage() {
 
   useEffect(() => {
     async function getUserData() {
-      setMessage("");
+      setMessage({ text: "", error: false });
       try {
         const userData = await getUser();
+
         if (userData) {
           setUserProfileData(userData);
         }
       } catch (error) {
-        setMessage(error.message);
+        setMessage({ text: error.message, error: true });
       }
     }
     getUserData();
   }, []);
 
   async function updateUserData(userData) {
-    setMessage("");
+    setMessage({ text: "", error: false });
     try {
       const updatedData = await updateUser(userData);
       if (updatedData) {
@@ -237,18 +235,18 @@ function UserProfilePage() {
       }
       return true;
     } catch (error) {
-      setMessage(error.message);
+      setMessage({ text: error.message, error: true });
       return false;
     }
   }
   const handleEditProfile = () => {
     setFormData(user);
     setIsEditing(true);
-    setMessage("");
+    setMessage({ text: "", error: false });
   };
 
   const handleInputChange = (event) => {
-    setMessage("");
+    setMessage({ text: "", error: false });
     const { name, value } = event.target;
 
     setFormData((previousData) => ({
@@ -258,21 +256,37 @@ function UserProfilePage() {
   };
 
   const handleSaveProfile = async (event) => {
-    setMessage("");
+    setMessage({ text: "", error: false });
     event.preventDefault();
 
     if (!formData.fullName.trim()) {
-      setMessage("Full name is required.");
+      setMessage({ text: "Full name is required.", error: true });
+      return;
+    } else if (formData.fullName.length < 3) {
+      setMessage({
+        text: "Full name must be at least 3 characters.",
+        error: true,
+      });
       return;
     }
+
     const updateSuccess = await updateUserData({ userName: formData.fullName });
-    if (updateSuccess) setIsEditing(false);
+    if (updateSuccess) {
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          ...state.user,
+          userName: formData.fullName,
+        },
+      });
+      setIsEditing(false);
+    }
   };
 
   const handleCancelEdit = () => {
     setFormData(user);
     setIsEditing(false);
-    setMessage("");
+    setMessage({ text: "", error: false });
   };
 
   const handlePhotoClick = () => {
@@ -285,14 +299,17 @@ function UserProfilePage() {
     if (!selectedFile) return;
 
     if (!selectedFile.type.startsWith("image/")) {
-      setMessage("Please select an image file.");
+      setMessage({ text: "Please select an image file.", error: true });
       return;
     }
 
     const maximumFileSize = 2 * 1024 * 1024;
 
     if (selectedFile.size > maximumFileSize) {
-      setMessage("Profile photo must be smaller than 2 MB.");
+      setMessage({
+        text: "Profile photo must be smaller than 2 MB.",
+        error: true,
+      });
       return;
     }
 
@@ -308,7 +325,7 @@ function UserProfilePage() {
       profilePhoto: imagePreviewUrl,
     }));
 
-    setMessage("Profile photo selected.");
+    setMessage({ text: "Profile photo selected.", error: false });
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -337,37 +354,46 @@ function UserProfilePage() {
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
     if (user.hasPassword && !currentPassword) {
-      setMessage("Current password is required.");
+      setMessage({ text: "Current password is required.", error: true });
       return;
     }
 
     if (!newPassword || !confirmPassword) {
-      setMessage("Please complete all password fields.");
+      setMessage({ text: "Please complete all password fields.", error: true });
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setMessage("New passwords do not match.");
+      setMessage({ text: "New passwords do not match.", error: true });
       return;
     }
 
     if (newPassword.length < 8) {
-      setMessage("New password must be at least 8 characters.");
+      setMessage({
+        text: "New password must be at least 8 characters.",
+        error: true,
+      });
       return;
     }
 
     if (!/[0-9]/.test(newPassword)) {
-      setMessage("Password must include a number.");
+      setMessage({ text: "Password must include a number.", error: true });
       return;
     }
 
     if (!/[A-Z]/.test(newPassword)) {
-      setMessage("Password must include an uppercase letter.");
+      setMessage({
+        text: "Password must include an uppercase letter.",
+        error: true,
+      });
       return;
     }
 
     if (!/[^A-Za-z0-9]/.test(newPassword)) {
-      setMessage("Password must include a special character.");
+      setMessage({
+        text: "Password must include a special character.",
+        error: true,
+      });
       return;
     }
 
@@ -383,7 +409,7 @@ function UserProfilePage() {
     );
 
     if (isPasswordChanged) {
-      setMessage("Password updated successfully.");
+      setMessage({ text: "Password updated successfully.", error: false });
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -433,16 +459,6 @@ function UserProfilePage() {
             Manage your account and update your profile.
           </p>
         </header>
-
-        {/* Status Message */}
-        {message && (
-          <div
-            role="status"
-            className="mb-5 rounded-xl border border-[#decdbb] bg-white px-5 py-3 text-center font-medium text-[#10263f] shadow-sm"
-          >
-            {message}
-          </div>
-        )}
 
         {/* Profile Card */}
         <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
@@ -588,6 +604,16 @@ function UserProfilePage() {
           </div>
         </section>
 
+        {/* Status Message */}
+        {message.text && (
+          <div
+            role="status"
+            className={`mb-5 rounded-xl border ${message.error ? "border-[#b44d28] text-red-700" : "border-[#decdbb] text-[#10263f]"} bg-white px-5 py-3 text-center font-medium shadow-sm`}
+          >
+            {message.text}
+          </div>
+        )}
+
         {/* Change Password Card */}
         <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
           <div className="mb-7">
@@ -690,7 +716,7 @@ function UserProfilePage() {
             {/* Delete Account */}
             <button
               type="button"
-              disabled={loading}
+              disabled={state.loading}
               onClick={handleDeleteAccount}
               className="flex items-center justify-between px-5 py-4 text-left md:border-r md:border-[#eadfd3]"
             >
