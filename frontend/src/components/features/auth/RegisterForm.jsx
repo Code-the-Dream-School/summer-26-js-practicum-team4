@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { register } from "../../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../state/auth/useAuth";
 import ReCAPTCHA from "react-google-recaptcha";
+import GoogleBtn from "./GoogleBtn";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -19,9 +20,14 @@ function RegisterForm() {
     state: { error },
   } = useAuth();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    dispatch({
+      type: "CLEAR_ERROR",
+    });
+  }, [dispatch]);
   async function handleSubmit(e) {
     e.preventDefault();
+
     dispatch({
       type: "CLEAR_ERROR",
     });
@@ -93,7 +99,10 @@ function RegisterForm() {
                 type="text"
                 id="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -108,7 +117,10 @@ function RegisterForm() {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -143,7 +155,10 @@ function RegisterForm() {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -178,7 +193,10 @@ function RegisterForm() {
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -189,19 +207,20 @@ function RegisterForm() {
                 {error}
               </p>
             )}
-
-            <ReCAPTCHA
-              className="flex justify-center max-w-full "
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-              onChange={(token) => setReCaptchaToken(token)}
-              onExpired={() => setReCaptchaToken(null)}
-              size="normal"
-              hl="en"
-            />
-
-            {error && (
-              <p className="text-center text-sm text-red-500">{error}</p>
-            )}
+            <div className="flex w-full justify-center items-center py-2">
+              <div className="inline-block mx-auto">
+                <ReCAPTCHA
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  onChange={(token) => {
+                    setReCaptchaToken(token);
+                    dispatch({ type: "CLEAR_ERROR" });
+                  }}
+                  onExpired={() => setReCaptchaToken(null)}
+                  size="normal"
+                  hl="en"
+                />
+              </div>
+            </div>
 
             <button
               type="submit"
@@ -209,6 +228,10 @@ function RegisterForm() {
             >
               Create Account
             </button>
+            <div className="flex items-center justify-center">
+              <span className="text-sm text-gray-500">OR</span>
+            </div>
+            <GoogleBtn />
           </form>
 
           <p className="mt-8 text-center">
