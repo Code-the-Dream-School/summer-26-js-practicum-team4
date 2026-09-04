@@ -12,6 +12,9 @@ import GalleryPage from "./pages/GalleryPage";
 import PublicRoutes from "./routes/PublicRoutes";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import UserProfilePage from "./pages/UserProfilePage";
+import PrivacyPage from "./pages/PrivacyPage";
+import TermsPage from "./pages/TermsPage";
+import HelpPage from "./pages/HelpPage";
 import NotFoundPage from "./pages/NotFound";
 import { useAuth } from "./state/auth/useAuth";
 
@@ -38,6 +41,10 @@ function App() {
               )
             }
           />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/help" element={<HelpPage />} />
+
           <Route element={<PublicRoutes />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
