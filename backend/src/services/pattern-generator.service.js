@@ -55,8 +55,14 @@ async function preprocessImage(imageBuffer, options = {}) {
     ? suppliedDimension
     : Math.round(suppliedDimension * (source.height / source.width));
 
-  validateStitchDimension("resolved width", resolvedWidth);
-  validateStitchDimension("resolved height", resolvedHeight);
+  try {
+    validateStitchDimension("resolved width", resolvedWidth);
+    validateStitchDimension("resolved height", resolvedHeight);
+  } catch (error) {
+    error.code = "PATTERN_DIMENSION_OUT_OF_RANGE";
+    error.suppliedDimensionName = suppliedDimensionName;
+    throw error;
+  }
 
   const resizeOptions = hasWidth
     ? { width: resolvedWidth }

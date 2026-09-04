@@ -15,6 +15,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import PrivacyPage from "./pages/PrivacyPage";
 import TermsPage from "./pages/TermsPage";
 import HelpPage from "./pages/HelpPage";
+import NotFoundPage from "./pages/NotFound";
 import { useAuth } from "./state/auth/useAuth";
 
 function App() {
@@ -25,10 +26,10 @@ function App() {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       {!isAuthPage && (state.isAuthenticated ? <Navbar /> : <PublicNavbar />)}
 
-      <main className="main-content">
+      <main className="main-content flex flex-1 flex-col ">
         <Routes>
           <Route
             path="/"
@@ -55,6 +56,7 @@ function App() {
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/profile" element={<UserProfilePage />} />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 

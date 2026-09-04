@@ -116,4 +116,23 @@ describe("generatePattern controller", () => {
       message: "Unable to generate the pattern.",
     });
   });
+
+  test("returns a helpful message when the calculated dimension is unsupported", async () => {
+    const dimensionError = new Error(
+      "resolved width must be an integer between 10 and 200.",
+    );
+    dimensionError.code = "PATTERN_DIMENSION_OUT_OF_RANGE";
+    dimensionError.suppliedDimensionName = "height";
+    generatePatternPipeline.mockRejectedValue(dimensionError);
+    const req = createRequest({ height: "10" });
+    const res = createResponse();
+
+    await waitForRouteHandler(generatePatternController, req, res);
+
+    expect(res.statusCode).toBe(422);
+    expect(res._getJSONData()).toEqual({
+      message:
+        "This size is too small for this image. Try increasing the height for a clearer, better-proportioned pattern.",
+    });
+  });
 });

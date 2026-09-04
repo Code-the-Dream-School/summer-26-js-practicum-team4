@@ -25,11 +25,12 @@ model User {
 model Pattern {
   id             Int      @id @default(autoincrement())
   patternName    String   @map("pattern_name") @db.VarChar(30)
-  originalImgUrl String   @map("original_img_url")
-  patternImgUrl  String   @map("pattern_img_url")
-  stitchWidth    Int?     @map("stitch_width")
-  stitchHeight   Int?     @map("stitch_height")
-  maxColors      Int?     @map("max_colors")
+  originalImgUrl String?  @map("original_img_url")
+  patternImgUrl  String?  @map("pattern_img_url")
+  stitchWidth    Int      @map("stitch_width")
+  stitchHeight   Int      @map("stitch_height")
+  palette        Json
+  grid           Json
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
   userId         Int      @map("user_id")
