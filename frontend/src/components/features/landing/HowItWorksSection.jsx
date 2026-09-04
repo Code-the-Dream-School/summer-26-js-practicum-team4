@@ -17,7 +17,7 @@ function HowItWorksSection() {
           <h3 className="mt-6 text-3xl font-semibold">1. Upload</h3>
           <p className="mt-4 text-xl">
             Drop your favorite photo or illustration. We support JPEG, PNG, and
-            WEBP files up to 20MB.
+            WEBP files.
           </p>
         </div>
 
@@ -29,7 +29,7 @@ function HowItWorksSection() {
           />
           <h3 className="mt-6 text-3xl font-semibold">2. Adjust</h3>
           <p className="mt-4 text-xl">
-            Adjust the dimensions, color palette, and reassign symbols to create
+            Adjust the dimensions to create
             your perfect pattern.
           </p>
         </div>
@@ -43,7 +43,7 @@ function HowItWorksSection() {
           <h3 className="mt-6 text-3xl font-semibold">3. Stitch</h3>
           <p className="mt-4 text-xl">
             Download your interactive chart and color coded thread list to start
-            stitching your masterpiece!
+            stitching!
           </p>
         </div>
       </div>

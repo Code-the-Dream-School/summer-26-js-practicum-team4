@@ -12,7 +12,7 @@ function HeroSection() {
 
           <p className="mt-8 text-xl italic">
             Transform any memory into a beautiful cross-stitch chart in seconds.
-            Custom grid density, color palette, and printable PDF.
+            Custom grid density and printable PDF.
           </p>
           <Link to="/register">
             <button className="mt-8 rounded-lg bg-primary px-12 py-4 text-lg text-white hover:opacity-90">
