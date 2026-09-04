@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
+import EditPage from "./pages/EditPage";
 import GalleryPage from "./pages/GalleryPage";
 import PublicRoutes from "./routes/PublicRoutes";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
@@ -46,6 +47,7 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route path="/generate" element={<GeneratePage />} />
             <Route path="/mypatterns" element={<MyPatternsPage />} />
+            <Route path="/edit/:patternId" element={<EditPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/profile" element={<UserProfilePage />} />
           </Route>
