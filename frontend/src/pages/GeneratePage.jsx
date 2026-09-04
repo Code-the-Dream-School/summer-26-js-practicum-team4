@@ -163,13 +163,21 @@ function GeneratePage() {
               <div className="flex flex-col gap-2 sm:items-end">
                 <button
                   onClick={async () => {
-                    await saveNewPattern({
+                    const savedPattern = await saveNewPattern({
                       patternName: currentPatternName,
                       stitchWidth: generatedPattern.width,
                       stitchHeight: generatedPattern.height,
                       grid: generatedPattern.grid,
                       palette: generatedPattern.palette,
                     });
+
+                    if (savedPattern?.error?.message) {
+                      dispatch({
+                        type: "SET_ERROR",
+                        payload: savedPattern.error.message,
+                      });
+                    }
+
                     return;
                   }}
                   className="rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"

@@ -33,11 +33,12 @@ function MyPatternsPage() {
     async function getPatterns() {
       dispatch({ type: dashActions.beginFetch }); // displays loader
 
-      // Uncommented until schema changes have been finalized
       const userPatterns = await fetchCurrentUserPatterns();
-
-      dispatch({ userPatterns, type: dashActions.setUserPatterns });
-
+      if (userPatterns?.error?.message) {
+        dispatch({ type: "SET_ERROR", payload: userPatterns.error.message });
+      } else {
+        dispatch({ userPatterns, type: dashActions.setUserPatterns });
+      }
       // Check if pattern we were previously on still exists
       dispatch({ type: dashActions.handleScrollPatternIx });
 
