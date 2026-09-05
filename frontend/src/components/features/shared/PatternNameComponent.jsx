@@ -139,7 +139,7 @@ function PatternNameComponent({
   function normalPageText() {
     return (
       <div className="grid grid-cols-5 place-content-center">
-        <h2 className={textStyle}>
+        <h2 className={textStyle} onClick={handleEdit}>
           {pattern?.patternName ? pattern.patternName : currentLocalPatternName}
         </h2>
         <button className="col-start-6" onClick={handleEdit}>
