@@ -38,6 +38,9 @@ async function createPattern(req, res, next) {
       data: {
         ...value,
         userId: req.user.userId,
+        ogStitchWidth: value.stitchWidth,
+        ogStitchHeight: value.stitchHeight,
+        originalGrid: value.grid,
       },
       select: {
         id: true,
@@ -79,7 +82,13 @@ async function createMultiplePatterns(req, res, next) {
         );
       }
 
-      allValidatedPatterns.push({ ...value, userId: req.user.userId });
+      allValidatedPatterns.push({ 
+        ...value, 
+        userId: req.user.userId,
+        ogStitchWidth: value.stitchWidth,
+        ogStitchHeight: value.stitchHeight,
+        originalGrid: value.grid, 
+      });
     }
 
     // create each pattern individually so that createdAt can reliably sort patterns
@@ -216,6 +225,9 @@ async function updatePattern(req, res, next) {
         stitchWidth: true,
         stitchHeight: true,
         grid: true,
+        ogStitchWidth: true,
+        ogStitchHeight: true,
+        originalGrid: true,
       },
     });
 
@@ -233,9 +245,9 @@ async function updatePattern(req, res, next) {
 
     if (dimensionsChanged) {
       value.grid = resizeStitchGrid(
-        existingPattern.grid,
-        existingPattern.stitchWidth,
-        existingPattern.stitchHeight,
+        existingPattern.originalGrid,
+        existingPattern.ogStitchWidth,
+        existingPattern.ogStitchHeight,
         value.stitchWidth,
         value.stitchHeight,
       );
