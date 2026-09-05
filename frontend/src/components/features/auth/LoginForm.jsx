@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "../../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../state/auth/useAuth";
+import GoogleBtn from "./GoogleBtn";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -12,15 +13,24 @@ function LoginForm() {
   const { state, dispatch } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch({
+      type: "CLEAR_ERROR",
+    });
+  }, [dispatch]);
+
   async function handleSubmit(e) {
     e.preventDefault();
-
+    dispatch({
+      type: "CLEAR_ERROR",
+    });
     try {
       const response = await login(email, password);
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: response.user,
       });
+
       navigate("/generate");
     } catch (error) {
       dispatch({
@@ -62,7 +72,10 @@ function LoginForm() {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -97,7 +110,10 @@ function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  dispatch({ type: "CLEAR_ERROR" });
+                }}
                 required
                 className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
@@ -115,6 +131,10 @@ function LoginForm() {
             >
               Login
             </button>
+            <div className="flex items-center justify-center">
+              <span className="text-sm text-gray-500">OR</span>
+            </div>
+            <GoogleBtn />
           </form>
 
           <p className="mt-8 text-center">

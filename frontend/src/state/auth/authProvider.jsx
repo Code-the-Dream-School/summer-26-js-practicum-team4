@@ -12,7 +12,6 @@ export const AuthProvider = ({ children }) => {
         const user = await getCurrentUser();
         dispatch({ type: "LOGIN_SUCCESS", payload: user });
       } catch (error) {
-        console.error("Current user check failed:", error);
         if (error.status === 401) {
           dispatch({ type: "LOGOUT" });
         } else {
