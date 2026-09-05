@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import PatternCanvas from "./PatternCanvas";
 import PatternLegend from "./PatternLegend";
+
+import generateImgBlob from "../../../services/generateImgBlob";
+
+import SavePatternBtn from "../generate/SavePatternBtn";
+import DownloadPatternBtn from "../shared/DownloadPatternBtn";
+import PatternNameComponent from "../shared/PatternNameComponent";
 
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
@@ -11,11 +17,20 @@ const ZOOM_LEVELS = [
   { label: "150%", cellSize: 24 },
 ];
 
-function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
+function PatternResult({
+  pattern,
+  previewUrl,
+  fileName,
+  canvasRef,
+  onBack,
+  onUploadNew,
+}) {
   const [zoomIndex, setZoomIndex] = useState(2);
-  const zoom = ZOOM_LEVELS[zoomIndex];
-  const totalStitches = pattern.width * pattern.height;
+  const [imgBlob, setImgBlob] = useState(null);
+  const [currentPatternName, setCurrentPatternName] = useState("");
 
+  // Zoom Controls
+  const zoom = ZOOM_LEVELS[zoomIndex];
   const zoomOut = () => {
     setZoomIndex((current) => Math.max(0, current - 1));
   };
@@ -24,17 +39,46 @@ function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
     setZoomIndex((current) => Math.min(ZOOM_LEVELS.length - 1, current + 1));
   };
 
+  const totalStitches = pattern.width * pattern.height;
+
+  // Creating Image
+  useEffect(() => {
+    async function createPatternPng() {
+      generateImgBlob(canvasRef, setImgBlob);
+      return;
+    }
+
+    createPatternPng();
+  }, [canvasRef, pattern]);
+
+  function createPatternPng() {
+    let patternImg = <div></div>;
+
+    if (imgBlob) {
+      const patternImgSrc = URL.createObjectURL(imgBlob);
+      patternImg = (
+        <img
+          src={patternImgSrc}
+          className="hidden print:block max-h-[75dvh] break-after-page"
+        />
+      );
+    }
+    return patternImg;
+  }
+
   return (
     <main className="min-h-screen bg-background px-4 py-8 lg:px-8">
       <div className="mx-auto max-w-[1600px] space-y-6">
-        <header className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7">
+        <header className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7 print:hidden">
           <div>
             <p className="mb-1 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               Pattern ready
             </p>
-            <h1 className="text-3xl font-bold text-secondary md:text-4xl">
-              Your Cross-Stitch Pattern
-            </h1>
+            <PatternNameComponent
+              pattern={pattern}
+              textStyle={"text-3xl font-bold text-secondary md:text-4xl"}
+              setCurrentPatternName={setCurrentPatternName}
+            />
             <p className="mt-2 text-text-secondary">
               {pattern.width} × {pattern.height} stitches ·{" "}
               {totalStitches.toLocaleString()} total · {pattern.palette.length}{" "}
@@ -50,18 +94,23 @@ function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
             >
               Back to Generator
             </button>
-            <button
-              type="button"
-              onClick={onUploadNew}
-              className="rounded-lg border border-border bg-surface px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
-            >
-              Upload New Image
-            </button>
+            <SavePatternBtn
+              pattern={{
+                patternName: currentPatternName,
+                stitchWidth: pattern.width,
+                stitchHeight: pattern.height,
+                grid: pattern.grid,
+                palette: pattern.palette,
+              }}
+              textStyle={
+                "rounded-lg border border-border bg-surface px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+              }
+            />
           </div>
         </header>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
-          <section className="min-w-0 rounded-2xl border border-border bg-surface p-4 shadow-sm md:p-6">
+          <section className="canvas-object min-w-0 rounded-2xl border border-border bg-surface p-4 shadow-sm md:p-6">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-2xl font-semibold text-secondary">
@@ -76,11 +125,17 @@ function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
               </p>
             </div>
 
-            <PatternCanvas pattern={pattern} cellSize={zoom.cellSize} />
+            <PatternCanvas
+              pattern={pattern}
+              cellSize={zoom.cellSize}
+              canvasRef={canvasRef}
+            />
+
+            {createPatternPng()}
           </section>
 
           <aside className="space-y-5">
-            <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+            <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm print: hidden">
               <h2 className="mb-3 text-xl font-semibold text-secondary">
                 Original Image
               </h2>
@@ -120,7 +175,7 @@ function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
               </dl>
             </section>
 
-            <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm">
+            <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm print:hidden">
               <h2 className="mb-3 text-xl font-semibold text-secondary">
                 Zoom
               </h2>
@@ -156,6 +211,15 @@ function PatternResult({ pattern, previewUrl, fileName, onBack, onUploadNew }) {
                 Reset Zoom
               </button>
             </section>
+            <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm print:hidden">
+              <div className="grid grid-cols-[auto_1fr_auto] items-center justify-self-center">
+                <DownloadPatternBtn
+                  origin="generatePg"
+                  pattern={pattern}
+                  canvasRef={canvasRef}
+                />
+              </div>
+            </section>
           </aside>
         </div>
 
@@ -183,6 +247,7 @@ PatternResult.propTypes = {
   }).isRequired,
   previewUrl: PropTypes.string.isRequired,
   fileName: PropTypes.string.isRequired,
+  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   onBack: PropTypes.func.isRequired,
   onUploadNew: PropTypes.func.isRequired,
 };

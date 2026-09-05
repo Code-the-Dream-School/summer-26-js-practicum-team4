@@ -9,20 +9,30 @@ async function fetchCurrentUserPatterns() {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("Your user patterns were unable to be retrieved.");
     }
 
     const { data } = await resp.json();
-    return data.patterns;
+
+    // For each retrieved pattern, recast stitchWidth and stitchHeight as width and height
+    // for compatibility with Pattern Generation code
+    const reformattedPatterns = [];
+    for (const pattern of data.patterns) {
+      reformattedPatterns.push({
+        ...pattern,
+        width: pattern.stitchWidth,
+        height: pattern.stitchHeight,
+      });
+    }
+    return reformattedPatterns;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
 }
 
 async function fetchAllUserPatterns() {
-  // to be implemented later when implementing Gallery Page
-  return;
+  return { message: "This function has been discontinued." };
 }
 
 async function deleteUserPattern(patternId) {
@@ -36,14 +46,14 @@ async function deleteUserPattern(patternId) {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("The selected pattern could not be deleted.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
 }
 
@@ -59,14 +69,14 @@ async function saveNewPattern(patternObj) {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("This generated pattern was not able to be saved.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
 }
 
@@ -84,15 +94,20 @@ async function saveNewPatternName(patternId, newPatternName) {
     });
 
     if (!resp.ok) {
-      throw new Error("The server returned an invalid response.");
+      throw new Error("The selected pattern name was unable to be saved.");
     }
 
     const { data } = await resp.json();
     return data.pattern;
   } catch (error) {
     console.error(error.message);
-    return { message: `Error: ${error.message}` };
+    return { error: { message: error.message } };
   }
+}
+
+function validateNewPatternName(patternName) {
+  // may be implemented later if time permits
+  return { name: patternName };
 }
 
 async function generatePattern({ image, width, height }) {
@@ -177,5 +192,6 @@ export {
   deleteUserPattern,
   saveNewPattern,
   saveNewPatternName,
+  validateNewPatternName,
   generatePattern,
 };

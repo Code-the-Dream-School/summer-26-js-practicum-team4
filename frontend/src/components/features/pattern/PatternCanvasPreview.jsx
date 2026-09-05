@@ -1,14 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
-const LABEL_GUTTER = 38;
+const LABEL_GUTTER = 0;
 
-function getSymbolColor({ r, g, b }) {
-  const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
-  return brightness > 155 ? "#05152a" : "#ffffff";
-}
-
-function PatternCanvas({ pattern, cellSize, canvasRef }) {
+function PatternCanvasPreview({ pattern, cellSize, styling = "" }) {
+  const canvasRef = useRef(null);
   const chartWidth = pattern.width * cellSize;
   const chartHeight = pattern.height * cellSize;
   const canvasWidth = LABEL_GUTTER + chartWidth + 1;
@@ -44,14 +40,6 @@ function PatternCanvas({ pattern, cellSize, canvasRef }) {
 
         context.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
         context.fillRect(x, y, cellSize, cellSize);
-
-        context.fillStyle = getSymbolColor(color);
-        context.fillText(
-          String(color.symbol),
-          x + cellSize / 2,
-          y + cellSize / 2,
-          cellSize - 2,
-        );
       }
     }
 
@@ -110,35 +98,21 @@ function PatternCanvas({ pattern, cellSize, canvasRef }) {
         LABEL_GUTTER + row * cellSize,
       );
     }
-  }, [
-    canvasHeight,
-    canvasWidth,
-    cellSize,
-    chartHeight,
-    chartWidth,
-    pattern,
-    canvasRef,
-  ]);
+  }, [canvasHeight, canvasWidth, cellSize, chartHeight, chartWidth, pattern]);
 
   return (
-    <div
-      className="max-h-[70vh] overflow-auto rounded-lg border border-border bg-white print:hidden"
-      tabIndex={0}
-      aria-label="Scrollable pattern chart"
-    >
-      <canvas
-        ref={canvasRef}
-        width={canvasWidth}
-        height={canvasHeight}
-        role="img"
-        aria-label={`Cross-stitch pattern, ${pattern.width} by ${pattern.height} stitches, using ${pattern.palette.length} DMC colors`}
-        className="block max-w-none"
-      />
-    </div>
+    <canvas
+      ref={canvasRef}
+      width={canvasWidth}
+      height={canvasHeight}
+      role="img"
+      aria-label={`Cross-stitch pattern, ${pattern.width} by ${pattern.height} stitches, using ${pattern.palette.length} DMC colors`}
+      className={`block w-full max-h-full p-8 object-contain ${styling}`}
+    />
   );
 }
 
-PatternCanvas.propTypes = {
+PatternCanvasPreview.propTypes = {
   pattern: PropTypes.shape({
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
@@ -153,7 +127,7 @@ PatternCanvas.propTypes = {
     grid: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
   cellSize: PropTypes.number.isRequired,
-  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  styling: PropTypes.string,
 };
 
-export default PatternCanvas;
+export default PatternCanvasPreview;
