@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import PatternCanvas from "./PatternCanvas";
 import PatternLegend from "./PatternLegend";
 
-import generateImgBlob from "./generateImgBlob";
+import generateImgBlob from "../../../services/generateImgBlob";
 
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
