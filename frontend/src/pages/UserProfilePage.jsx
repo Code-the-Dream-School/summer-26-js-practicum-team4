@@ -3,6 +3,7 @@ import { getUser, updateUser, deleteUser } from "../services/userService";
 import PropTypes from "prop-types";
 import LogoutBtn from "../components/features/auth/LogoutBtn";
 import { useAuth } from "../state/auth/useAuth";
+import { uploadPhoto, deletePhoto } from "../services/profileImageService";
 
 function StitchAvatar() {
   const stitches = [
@@ -194,13 +195,15 @@ function UserProfilePage() {
   const fileInputRef = useRef(null);
 
   function setUserProfileData(data) {
-    const { userName, email, userProfileImgUrl, createdAt, hasPassword } = data;
+    const { id, userName, email, userProfileImgUrl, createdAt, hasPassword } =
+      data;
 
     const convertedDate = `${new Date(createdAt).toLocaleString("en-US", {
       month: "long",
     })} ${new Date(createdAt).getFullYear()}`;
 
     setUser({
+      id,
       fullName: userName,
       email,
       memberSince: convertedDate,
@@ -219,8 +222,8 @@ function UserProfilePage() {
         if (userData) {
           setUserProfileData(userData);
         }
-      } catch (error) {
-        setMessage({ text: error.message, error: true });
+      } catch {
+        setMessage({ text: "Failed to fetch user data.", error: true });
       }
     }
     getUserData();
@@ -234,8 +237,8 @@ function UserProfilePage() {
         setUserProfileData(updatedData);
       }
       return true;
-    } catch (error) {
-      setMessage({ text: error.message, error: true });
+    } catch {
+      setMessage({ text: "Failed to update user data.", error: true });
       return false;
     }
   }
@@ -293,7 +296,7 @@ function UserProfilePage() {
     fileInputRef.current?.click();
   };
 
-  const handlePhotoChange = (event) => {
+  const handlePhotoChange = async (event) => {
     const selectedFile = event.target.files?.[0];
 
     if (!selectedFile) return;
@@ -313,19 +316,22 @@ function UserProfilePage() {
       return;
     }
 
-    const imagePreviewUrl = URL.createObjectURL(selectedFile);
+    try {
+      const uploadedImageUrl = await uploadPhoto(selectedFile, user.email);
 
-    setUser((previousUser) => ({
-      ...previousUser,
-      profilePhoto: imagePreviewUrl,
-    }));
+      const updateSuccess = await updateUserData({
+        userProfileImgUrl: uploadedImageUrl,
+      });
 
-    setFormData((previousData) => ({
-      ...previousData,
-      profilePhoto: imagePreviewUrl,
-    }));
-
-    setMessage({ text: "Profile photo selected.", error: false });
+      if (updateSuccess) {
+        setMessage({
+          text: "Profile photo updated successfully.",
+          error: false,
+        });
+      }
+    } catch {
+      setMessage({ text: "Failed to update profile photo.", error: true });
+    }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -429,12 +435,14 @@ function UserProfilePage() {
 
     try {
       await deleteUser();
+      await deletePhoto(user.email);
       dispatch({ type: "LOGOUT" });
     } catch (error) {
       dispatch({
         type: "SET_ERROR",
         payload: error.message,
       });
+      setMessage({ text: "Failed to delete account.", error: true });
     }
   }
 
@@ -480,7 +488,7 @@ function UserProfilePage() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/webp"
+                accept="image/png,image/jpeg,image/webp,image/jpg"
                 className="hidden"
                 onChange={handlePhotoChange}
               />
@@ -494,7 +502,7 @@ function UserProfilePage() {
               </button>
 
               <p className="mt-3 text-center text-sm leading-5 text-[#6d6d6d]">
-                JPG, PNG or WEBP.
+                JPG,JPEG, PNG or WEBP.
                 <br />
                 Maximum 2 MB.
               </p>
