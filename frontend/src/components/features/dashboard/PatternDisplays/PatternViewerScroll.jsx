@@ -11,8 +11,7 @@ const pageOrigin = {
   dashboard: {
     textStyle: "text-3xl mb-5",
     patternInterface: "mx-auto h-[60dvh]",
-    downloadAndDelete:
-      "grid grid-cols-[25%_1%_25%] justify-center gap-x-5 my-8",
+    downloadAndDelete: "grid grid-cols-[25%_25%] justify-center gap-x-5 my-8",
     image: "mx-auto p-10 h-full object-contain",
   },
 };

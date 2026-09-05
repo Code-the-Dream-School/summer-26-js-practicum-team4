@@ -21,10 +21,19 @@ function DownloadPatternBtn({
     }
   }, [origin, pattern, setPatternToPrint, canvasRef]);
 
-  function handleDownload() {
-    setPatternToPrint(pattern);
+  async function handleDownload() {
+    if (
+      setPatternToPrint &&
+      (origin === "dashAll" || origin === "dashScroll")
+    ) {
+      setPatternToPrint(pattern);
+    }
     dispatch({ type: "BEGIN_DOWNLOADING" });
-    window.print();
+
+    setTimeout(() => {
+      window.print();
+    }, 500);
+
     dispatch({ type: "END_DOWNLOADING" });
   }
 
