@@ -7,7 +7,7 @@ function Navbar() {
   const { state } = useAuth();
 
   return (
-    <nav className="flex flex-col bg-background px-20 py-6">
+    <nav className="flex flex-col bg-background px-20 py-6 print:hidden">
       <div className="flex items-center justify-between border-b border-gray-300 pb-4">
         <Link to="/" className="text-2xl font-bold text-primary">
           <img

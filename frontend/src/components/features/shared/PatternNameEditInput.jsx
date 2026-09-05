@@ -45,7 +45,6 @@ function PatternNameEditInput({
         currentPatternName,
       );
 
-      console.log(newPatName);
       if (newPatName?.error?.message) {
         dispatch({ type: "SET_ERROR", payload: newPatName.error.message });
       }

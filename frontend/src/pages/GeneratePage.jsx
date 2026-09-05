@@ -156,7 +156,7 @@ function GeneratePage() {
   if (generatedPattern) {
     return (
       <>
-        <div className="bg-background px-4 pt-8 lg:px-8">
+        <div className="bg-background px-4 pt-8 lg:px-8 print:hidden">
           <div className="mx-auto max-w-[1600px] space-y-6">
             <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7">
               <div>{patternEditInterface()}</div>{" "}

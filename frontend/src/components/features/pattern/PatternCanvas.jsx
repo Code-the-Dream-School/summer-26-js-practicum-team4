@@ -122,7 +122,7 @@ function PatternCanvas({ pattern, cellSize, canvasRef }) {
 
   return (
     <div
-      className="max-h-[70vh] overflow-auto rounded-lg border border-border bg-white"
+      className="max-h-[70vh] overflow-auto rounded-lg border border-border bg-white print:hidden"
       tabIndex={0}
       aria-label="Scrollable pattern chart"
     >
