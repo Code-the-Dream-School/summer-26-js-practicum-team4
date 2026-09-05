@@ -2,12 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { generatePattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
-import DownloadPatternBtn from "../components/features/shared/DownloadPatternBtn";
-import SavePatternBtn from "../components/features/generate/SavePatternBtn";
-import PatternNameComponent from "../components/features/shared/PatternNameComponent";
-
-import { useAuth } from "../state/auth/useAuth";
-
 function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -16,11 +10,8 @@ function GeneratePage() {
   const [generatedPattern, setGeneratedPattern] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [currentPatternName, setCurrentPatternName] = useState("");
 
   const canvasRef = useRef(null);
-
-  const { state } = useAuth();
 
   useEffect(() => {
     return () => {
