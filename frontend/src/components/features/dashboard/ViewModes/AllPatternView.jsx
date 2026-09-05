@@ -4,7 +4,7 @@ import PatternViewerAll from "../PatternDisplays/PatternViewerAll";
 import CreateNewPatternIcon from "../PatternDisplays/CreateNewPatternIcon";
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
-function AllPatternView() {
+function AllPatternView({ setPatternToPrint, canvasRef }) {
   const { dashState } = useContext(DashContext);
   return (
     <>
@@ -14,6 +14,8 @@ function AllPatternView() {
             key={pattern.id}
             pattern={pattern}
             page={dashState.page}
+            setPatternToPrint={setPatternToPrint}
+            canvasRef={canvasRef}
           />
         ))}
         <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />

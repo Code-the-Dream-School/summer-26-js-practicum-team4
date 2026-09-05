@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useRef, useReducer, useState } from "react";
 
 // Component Imports
 import DisplayToggle from "../components/features/dashboard/DisplayToggle";
@@ -6,6 +6,8 @@ import DisplayToggle from "../components/features/dashboard/DisplayToggle";
 import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextView";
 import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
 import CreateNewPatternIcon from "../components/features/dashboard/PatternDisplays/CreateNewPatternIcon";
+
+import PatternResult from "../components/features/pattern/PatternResult";
 
 // Contexts
 import { DashContext } from "../state/dashboard/dashContext";
@@ -26,7 +28,10 @@ import {
 
 function MyPatternsPage() {
   const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
+  const [patternToPrint, setPatternToPrint] = useState("");
   const { state } = useAuth();
+
+  const canvasRef = useRef(null);
 
   // Retrieve user patterns when page loads
   useEffect(() => {
@@ -61,9 +66,19 @@ function MyPatternsPage() {
       );
     }
     if (dashState.view === "scroll") {
-      return <PrevNextView />;
+      return (
+        <PrevNextView
+          setPatternToPrint={setPatternToPrint}
+          canvasRef={canvasRef}
+        />
+      );
     } else if (dashState.view === "all") {
-      return <AllPatternView />;
+      return (
+        <AllPatternView
+          setPatternToPrint={setPatternToPrint}
+          canvasRef={canvasRef}
+        />
+      );
     }
   }
 
@@ -71,7 +86,18 @@ function MyPatternsPage() {
     <>
       <DashContext value={{ dashState, dispatch, dashActions }}>
         <div className="bg-background">
-          <div className="flex flex-row-reverse mx-auto content-end">
+          <div className={"hidden print:flex"}>
+            {patternToPrint ? (
+              <PatternResult
+                pattern={patternToPrint}
+                fileName={"generated_pattern"}
+                canvasRef={canvasRef}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <div className="flex flex-row-reverse mx-auto content-end print:hidden">
             {" "}
             <DisplayToggle
               onClick={() => dispatch({ type: dashActions.setAllView })}
@@ -82,8 +108,10 @@ function MyPatternsPage() {
               displayImagePath={"images/scroll-view-toggle.png"}
             />
           </div>
-          <h1 className="text-5xl font-heading ml-19">Dashboard</h1>
-          <div className="relative">
+          <h1 className="text-5xl font-heading ml-19 print:hidden">
+            Dashboard
+          </h1>
+          <div className="relative print:hidden">
             {dashState.isFetching ? (
               <>
                 {" "}

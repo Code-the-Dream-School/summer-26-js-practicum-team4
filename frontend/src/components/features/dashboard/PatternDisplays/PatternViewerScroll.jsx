@@ -19,7 +19,7 @@ const pageOrigin = {
   },
 };
 
-function PatternViewerScroll({ pattern, page }) {
+function PatternViewerScroll({ pattern, page, setPatternToPrint, canvasRef }) {
   // Relevant states
   const { state, dispatch } = useAuth();
 
@@ -29,7 +29,6 @@ function PatternViewerScroll({ pattern, page }) {
   );
 
   const editFocus = useRef("");
-  const canvasRef = useRef(null);
 
   // Focus on editing field if useRef has a non-empty reference
   useEffect(() => {
@@ -94,6 +93,7 @@ function PatternViewerScroll({ pattern, page }) {
             origin="dashScroll"
             pattern={pattern}
             canvasRef={canvasRef}
+            setPatternToPrint={setPatternToPrint}
           />
           <DeletePatternBtn origin="dashScroll" pattern={pattern} />
         </div>

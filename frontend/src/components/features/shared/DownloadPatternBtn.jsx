@@ -2,32 +2,31 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import PatternCanvas from "../pattern/PatternCanvas";
+import PatternResult from "../pattern/PatternResult";
 
-function DownloadPatternBtn({ origin, pattern, canvasRef, patternName = "" }) {
+function DownloadPatternBtn({
+  origin,
+  pattern,
+  canvasRef,
+  patternName = "",
+  previewUrl = "",
+  onBack = () => {},
+  onUploadNew = () => {},
+  setPatternToPrint = "",
+}) {
   // Relevant states
-  const [refStatus, setRefStatus] = useState(false);
 
-  useEffect(() => {}, [refStatus, setRefStatus, canvasRef, origin]);
-
-  function renderCanvas() {
-    return (
-      <div className={"invisible max-h-0 max-w-0"}>
-        <PatternCanvas pattern={pattern} cellSize={8} canvasRef={canvasRef} />
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (
+      setPatternToPrint &&
+      (origin === "dashAll" || origin === "dashScroll")
+    ) {
+      setPatternToPrint(pattern);
+    }
+  }, [origin, pattern, setPatternToPrint, canvasRef]);
 
   function handleDownload() {
-    let downloadLink = document.createElement("a");
-
-    const downloadName = patternName ? patternName : pattern.patternName;
-
-    downloadLink.download = `${downloadName}.png`;
-
-    canvasRef.current.toBlob((blob) => {
-      downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.click();
-    }, "image/png");
+    window.print();
   }
 
   function requestOrigin() {
@@ -64,12 +63,7 @@ function DownloadPatternBtn({ origin, pattern, canvasRef, patternName = "" }) {
     }
     return { message: "No view selected." };
   }
-  return (
-    <>
-      {requestOrigin()}
-      {origin === "dashAll" || origin === "dashScroll" ? renderCanvas() : <></>}
-    </>
-  );
+  return <>{requestOrigin()}</>;
 }
 
 DownloadPatternBtn.propTypes = {
@@ -92,6 +86,7 @@ DownloadPatternBtn.propTypes = {
   }).isRequired,
   canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   patternName: PropTypes.string,
+  setPatternToPrint: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 };
 
 export default DownloadPatternBtn;

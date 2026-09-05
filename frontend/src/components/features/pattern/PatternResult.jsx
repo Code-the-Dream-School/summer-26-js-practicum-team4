@@ -55,6 +55,7 @@ function PatternResult({
         />
       );
     }
+    console.log(patternImg);
     return patternImg;
   }
 

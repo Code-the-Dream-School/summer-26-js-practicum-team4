@@ -46,7 +46,7 @@ function getDate(dateTimeStr) {
   return [monthStr, dayStr, yearStr].join(" ");
 }
 
-function PatternViewerAll({ pattern, page }) {
+function PatternViewerAll({ pattern, page, setPatternToPrint, canvasRef }) {
   // Relevant states
   const { state, dispatch } = useAuth();
 
@@ -57,7 +57,6 @@ function PatternViewerAll({ pattern, page }) {
 
   // Refs
   const editFocus = useRef("");
-  const canvasRef = useRef(null);
 
   // Focus on editing field if useRef has a non-empty reference
   useEffect(() => {
@@ -123,6 +122,7 @@ function PatternViewerAll({ pattern, page }) {
               origin="dashAll"
               pattern={pattern}
               canvasRef={canvasRef}
+              setPatternToPrint={setPatternToPrint}
             />
           </div>
         </div>

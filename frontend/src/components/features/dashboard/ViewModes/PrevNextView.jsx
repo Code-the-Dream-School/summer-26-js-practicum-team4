@@ -5,7 +5,7 @@ import PatternViewerScroll from "../PatternDisplays/PatternViewerScroll";
 import PatternScrollBtn from "../PatternManagementTools/PatternScrollBtn";
 import { DashContext } from "../../../../state/dashboard/dashContext";
 
-function PrevNextView() {
+function PrevNextView({ setPatternToPrint, canvasRef }) {
   const { dashState } = useContext(DashContext);
   return (
     <div className="scroll-view grid grid-cols-[7%_86%_7%] place-items-center mt-10 mx-10 gap-x-2">
@@ -13,6 +13,8 @@ function PrevNextView() {
       <PatternViewerScroll
         pattern={dashState.patterns[dashState.scrollPatternIx]}
         page={dashState.page}
+        setPatternToPrint={setPatternToPrint}
+        canvasRef={canvasRef}
       />
       <PatternScrollBtn imgSrc="images/scroll-right.png" direction="+" />
     </div>
