@@ -96,6 +96,8 @@ PatternViewerAll.propTypes = {
     createdAt: PropTypes.string.isRequired,
   }).isRequired,
   page: PropTypes.string.isRequired,
+  setPatternToPrint: PropTypes.func,
+  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
 };
 
 export default PatternViewerAll;

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 
 import PatternViewerAll from "../PatternDisplays/PatternViewerAll";
 import CreateNewPatternIcon from "../PatternDisplays/CreateNewPatternIcon";
@@ -23,5 +24,10 @@ function AllPatternView({ setPatternToPrint, canvasRef }) {
     </>
   );
 }
+
+AllPatternView.propTypes = {
+  setPatternToPrint: PropTypes.func,
+  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+};
 
 export default AllPatternView;

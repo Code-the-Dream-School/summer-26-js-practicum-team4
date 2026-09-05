@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import PropTypes from "prop-types";
 
 // Component Imports
 import PatternViewerScroll from "../PatternDisplays/PatternViewerScroll";
@@ -20,5 +21,10 @@ function PrevNextView({ setPatternToPrint, canvasRef }) {
     </div>
   );
 }
+
+PrevNextView.propTypes = {
+  setPatternToPrint: PropTypes.func,
+  canvasRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+};
 
 export default PrevNextView;

@@ -4,7 +4,6 @@ import PatternCanvas from "./PatternCanvas";
 import PatternLegend from "./PatternLegend";
 
 import generateImgBlob from "../../../services/generateImgBlob";
-import { useAuth } from "../../../state/auth/useAuth";
 
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
