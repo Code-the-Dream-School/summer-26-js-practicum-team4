@@ -18,20 +18,16 @@ function GeneratePage() {
   const [currentPatternName, setCurrentPatternName] = useState("");
 
   const canvasRef = useRef(null);
-  const editFocus = useRef("");
 
   const { state, dispatch } = useAuth();
 
   useEffect(() => {
-    if (editFocus.current) {
-      editFocus.current.focus();
-    }
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
     };
-  }, [previewUrl, state.isEditing]);
+  }, [previewUrl]);
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
