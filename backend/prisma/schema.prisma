@@ -33,7 +33,7 @@ model Pattern {
   ogStitchHeight Int      @map("og_stitch_height")
   palette        Json
   grid           Json
-  originalGrid   Json?    @map("original_grid")
+  originalGrid   Json     @map("original_grid")
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamp(6)
   userId         Int      @map("user_id")
