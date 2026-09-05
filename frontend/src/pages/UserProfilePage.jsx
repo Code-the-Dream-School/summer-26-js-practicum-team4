@@ -340,12 +340,12 @@ function UserProfilePage() {
 
   const handlePhotoDelete = async () => {
     try {
-      await deletePhoto(user.email);
       const updateSuccess = await updateUserData({
         userProfileImgUrl: null,
       });
 
       if (updateSuccess) {
+        await deletePhoto(user.email);
         setMessage({
           text: "Profile photo deleted successfully.",
           error: false,
