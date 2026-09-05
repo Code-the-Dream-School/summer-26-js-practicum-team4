@@ -1,5 +1,5 @@
 const dashInitState = {
-  view: "scroll",
+  view: "all",
   page: "dashboard",
   patterns: [],
   isFetching: false,

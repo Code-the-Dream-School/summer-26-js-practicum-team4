@@ -104,12 +104,12 @@ function MyPatternsPage() {
           <div className="flex flex-row-reverse mx-auto content-end print:hidden">
             {" "}
             <DisplayToggle
-              onClick={() => dispatch({ type: dashActions.setAllView })}
-              displayImagePath={"images/all-pattern-view-toggle.png"}
-            />
-            <DisplayToggle
               onClick={() => dispatch({ type: dashActions.setScrollView })}
               displayImagePath={"images/scroll-view-toggle.png"}
+            />
+            <DisplayToggle
+              onClick={() => dispatch({ type: dashActions.setAllView })}
+              displayImagePath={"images/all-pattern-view-toggle.png"}
             />
           </div>
           <h1 className="text-5xl font-heading ml-19 print:hidden">
