@@ -171,11 +171,47 @@ async function generatePattern({ image, width, height }) {
   return pattern;
 }
 
+async function fetchPattern(patternId) {
+  const resp = await fetch(`/api/patterns/${patternId}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const { data } = await resp.json();
+
+  return data.pattern;
+}
+
+async function updatePattern(patternId, updates) {
+  try {
+    const resp = await fetch(`/api/patterns/${patternId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(updates),
+    });
+
+    if (!resp.ok) {
+      throw new Error("The server returned an invalid response.");
+    }
+
+    const { data } = await resp.json();
+    return data.pattern;
+  } catch (error) {
+    console.error(error.message);
+    return { message: `Error: ${error.message}` };
+  }
+}
+
 export {
   fetchCurrentUserPatterns,
   fetchAllUserPatterns,
+  fetchPattern,
   deleteUserPattern,
   saveNewPattern,
   saveNewPatternName,
   generatePattern,
+  updatePattern,
 };
