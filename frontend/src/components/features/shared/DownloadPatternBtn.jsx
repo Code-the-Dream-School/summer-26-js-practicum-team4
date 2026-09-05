@@ -1,23 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
-import PatternCanvas from "../pattern/PatternCanvas";
-import PatternResult from "../pattern/PatternResult";
 import { useAuth } from "../../../state/auth/useAuth";
 
 function DownloadPatternBtn({
   origin,
   pattern,
   canvasRef,
-  patternName = "",
-  previewUrl = "",
-  onBack = () => {},
-  onUploadNew = () => {},
   setPatternToPrint = "",
 }) {
   // Relevant states
   const { dispatch } = useAuth();
-  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     if (
@@ -29,6 +22,7 @@ function DownloadPatternBtn({
   }, [origin, pattern, setPatternToPrint, canvasRef]);
 
   function handleDownload() {
+    setPatternToPrint(pattern);
     dispatch({ type: "BEGIN_DOWNLOADING" });
     window.print();
     dispatch({ type: "END_DOWNLOADING" });

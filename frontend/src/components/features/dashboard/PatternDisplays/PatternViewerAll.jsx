@@ -63,10 +63,10 @@ function PatternViewerAll({ pattern, page, setPatternToPrint, canvasRef }) {
     if (editFocus.current) {
       editFocus.current.focus();
     }
-  }, [state.isEditing]);
+  }, [state.isEditing, editingThisPattern]);
 
   function handleEdit() {
-    if (state.isEditing) {
+    if (state.isEditing || editingThisPattern) {
       return;
     }
 

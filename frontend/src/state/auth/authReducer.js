@@ -4,6 +4,7 @@ export const initialState = {
   isEditing: false,
   isSaving: false,
   isDeleting: false,
+  isDownloading: false,
   loading: true,
   error: null,
 };
@@ -81,7 +82,10 @@ export const authReducer = (state, action) => {
         scrollPatternIx: 0,
         isDeleting: false,
       };
-
+    case "BEGIN_DOWNLOADING":
+      return { ...state, isDownloading: true };
+    case "END_DOWNLOADING":
+      return { ...state, isDownloading: false };
     default:
       return state;
   }

@@ -33,8 +33,6 @@ function MyPatternsPage() {
 
   const canvasRef = useRef(null);
 
-  const [imgSrcToDisplay, setImgSrcToDisplay] = useState("");
-
   // Retrieve user patterns when page loads
   useEffect(() => {
     async function getPatterns() {
@@ -84,9 +82,12 @@ function MyPatternsPage() {
     }
   }
 
+  if (patternToPrint) {
+    console.log(patternToPrint);
+  }
+
   return (
     <>
-      {imgSrcToDisplay ? <img src={imgSrcToDisplay} /> : <></>}
       <DashContext value={{ dashState, dispatch, dashActions }}>
         <div className="bg-background">
           <div className={"hidden print:flex"}>

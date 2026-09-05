@@ -29,7 +29,6 @@ function PatternViewerScroll({ pattern, page, setPatternToPrint, canvasRef }) {
   );
 
   const editFocus = useRef("");
-  const canvasRef2 = useRef(null);
 
   // Focus on editing field if useRef has a non-empty reference
   useEffect(() => {

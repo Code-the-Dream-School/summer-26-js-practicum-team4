@@ -51,6 +51,7 @@ function PatternNameEditInput({
     }
 
     setCurrentPatternName(currentPatternName);
+    setEditingThisPattern(false);
     dispatch({ type: "END_PATTERN_NAME_EDITING" });
     dispatch({ type: "END_PATTERN_NAME_SAVING" });
   }

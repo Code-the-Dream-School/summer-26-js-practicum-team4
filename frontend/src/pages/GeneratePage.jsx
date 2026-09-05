@@ -188,7 +188,6 @@ function GeneratePage() {
                   origin="generatePg"
                   pattern={generatedPattern}
                   canvasRef={canvasRef}
-                  patternName={currentPatternName}
                 />
               </div>
             </div>{" "}

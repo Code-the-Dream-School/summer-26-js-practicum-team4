@@ -45,7 +45,7 @@ function PatternResult({
     }
 
     createPatternPng();
-  }, [canvasRef]);
+  }, [canvasRef, pattern]);
 
   function createPatternPng() {
     let patternImg = <div></div>;
@@ -59,7 +59,6 @@ function PatternResult({
         />
       );
     }
-    console.log(patternImg);
     return patternImg;
   }
 
