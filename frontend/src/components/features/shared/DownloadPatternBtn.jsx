@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import PatternCanvas from "../pattern/PatternCanvas";
 import PatternResult from "../pattern/PatternResult";
+import { useAuth } from "../../../state/auth/useAuth";
 
 function DownloadPatternBtn({
   origin,
@@ -15,6 +16,8 @@ function DownloadPatternBtn({
   setPatternToPrint = "",
 }) {
   // Relevant states
+  const { dispatch } = useAuth();
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     if (
@@ -26,7 +29,9 @@ function DownloadPatternBtn({
   }, [origin, pattern, setPatternToPrint, canvasRef]);
 
   function handleDownload() {
+    dispatch({ type: "BEGIN_DOWNLOADING" });
     window.print();
+    dispatch({ type: "END_DOWNLOADING" });
   }
 
   function requestOrigin() {

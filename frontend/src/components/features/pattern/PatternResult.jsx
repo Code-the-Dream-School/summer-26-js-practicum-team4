@@ -4,6 +4,7 @@ import PatternCanvas from "./PatternCanvas";
 import PatternLegend from "./PatternLegend";
 
 import generateImgBlob from "../../../services/generateImgBlob";
+import { useAuth } from "../../../state/auth/useAuth";
 
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
@@ -22,6 +23,9 @@ function PatternResult({
   onUploadNew,
 }) {
   const [zoomIndex, setZoomIndex] = useState(2);
+  const [imgBlob, setImgBlob] = useState(null);
+
+  // Zoom Controls
   const zoom = ZOOM_LEVELS[zoomIndex];
   const zoomOut = () => {
     setZoomIndex((current) => Math.max(0, current - 1));
@@ -31,9 +35,9 @@ function PatternResult({
     setZoomIndex((current) => Math.min(ZOOM_LEVELS.length - 1, current + 1));
   };
 
-  const [imgBlob, setImgBlob] = useState(null);
   const totalStitches = pattern.width * pattern.height;
 
+  // Creating Image
   useEffect(() => {
     async function createPatternPng() {
       generateImgBlob(canvasRef, setImgBlob);
