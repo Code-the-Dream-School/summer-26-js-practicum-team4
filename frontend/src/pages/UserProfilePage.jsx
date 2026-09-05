@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { getUser, updateUser, deleteUser } from "../services/userService";
 import PropTypes from "prop-types";
 import LogoutBtn from "../components/features/auth/LogoutBtn";
-import { deleteUser } from "../services/userService";
 import { useAuth } from "../state/auth/useAuth";
+import { uploadPhoto, deletePhoto } from "../services/profileImageService";
 
 function StitchAvatar() {
   const stitches = [
@@ -172,22 +173,12 @@ function DecorativeStitches() {
 }
 
 function UserProfilePage() {
-  const {
-    dispatch,
-    state: { loading },
-  } = useAuth();
+  const { dispatch, state } = useAuth();
 
-  const [user, setUser] = useState({
-    fullName: "Millicent Traylor",
-    email: "millicent@email.com",
-    memberSince: "July 2026",
-    patternsGenerated: 0,
-    profilePhoto: "",
-  });
-
+  const [user, setUser] = useState({});
   const [formData, setFormData] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState({ text: "", error: false });
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -203,13 +194,62 @@ function UserProfilePage() {
 
   const fileInputRef = useRef(null);
 
+  function setUserProfileData(data) {
+    const { id, userName, email, userProfileImgUrl, createdAt, hasPassword } =
+      data;
+
+    const convertedDate = `${new Date(createdAt).toLocaleString("en-US", {
+      month: "long",
+    })} ${new Date(createdAt).getFullYear()}`;
+
+    setUser({
+      id,
+      fullName: userName,
+      email,
+      memberSince: convertedDate,
+      profilePhoto: userProfileImgUrl,
+      patternsGenerated: data._count.patterns ? data._count.patterns : 0,
+      hasPassword,
+    });
+  }
+
+  useEffect(() => {
+    async function getUserData() {
+      setMessage({ text: "", error: false });
+      try {
+        const userData = await getUser();
+
+        if (userData) {
+          setUserProfileData(userData);
+        }
+      } catch {
+        setMessage({ text: "Failed to fetch user data.", error: true });
+      }
+    }
+    getUserData();
+  }, []);
+
+  async function updateUserData(userData) {
+    setMessage({ text: "", error: false });
+    try {
+      const updatedData = await updateUser(userData);
+      if (updatedData) {
+        setUserProfileData(updatedData);
+      }
+      return true;
+    } catch {
+      setMessage({ text: "Failed to update user data.", error: true });
+      return false;
+    }
+  }
   const handleEditProfile = () => {
     setFormData(user);
     setIsEditing(true);
-    setMessage("");
+    setMessage({ text: "", error: false });
   };
 
   const handleInputChange = (event) => {
+    setMessage({ text: "", error: false });
     const { name, value } = event.target;
 
     setFormData((previousData) => ({
@@ -218,66 +258,101 @@ function UserProfilePage() {
     }));
   };
 
-  const handleSaveProfile = (event) => {
+  const handleSaveProfile = async (event) => {
+    setMessage({ text: "", error: false });
     event.preventDefault();
 
     if (!formData.fullName.trim()) {
-      setMessage("Full name is required.");
+      setMessage({ text: "Full name is required.", error: true });
+      return;
+    } else if (formData.fullName.length < 3) {
+      setMessage({
+        text: "Full name must be at least 3 characters.",
+        error: true,
+      });
       return;
     }
 
-    setUser((previousUser) => ({
-      ...previousUser,
-      fullName: formData.fullName,
-    }));
-
-    setIsEditing(false);
-    setMessage("Profile updated successfully.");
+    const updateSuccess = await updateUserData({ userName: formData.fullName });
+    if (updateSuccess) {
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          ...state.user,
+          userName: formData.fullName,
+        },
+      });
+      setIsEditing(false);
+    }
   };
 
   const handleCancelEdit = () => {
     setFormData(user);
     setIsEditing(false);
-    setMessage("");
+    setMessage({ text: "", error: false });
   };
 
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
   };
 
-  const handlePhotoChange = (event) => {
+  const handlePhotoChange = async (event) => {
     const selectedFile = event.target.files?.[0];
 
     if (!selectedFile) return;
 
     if (!selectedFile.type.startsWith("image/")) {
-      setMessage("Please select an image file.");
+      setMessage({ text: "Please select an image file.", error: true });
       return;
     }
 
     const maximumFileSize = 2 * 1024 * 1024;
 
     if (selectedFile.size > maximumFileSize) {
-      setMessage("Profile photo must be smaller than 2 MB.");
+      setMessage({
+        text: "Profile photo must be smaller than 2 MB.",
+        error: true,
+      });
       return;
     }
 
-    const imagePreviewUrl = URL.createObjectURL(selectedFile);
+    try {
+      const uploadedImageUrl = await uploadPhoto(selectedFile, user.email);
 
-    setUser((previousUser) => ({
-      ...previousUser,
-      profilePhoto: imagePreviewUrl,
-    }));
+      const updateSuccess = await updateUserData({
+        userProfileImgUrl: uploadedImageUrl,
+      });
 
-    setFormData((previousData) => ({
-      ...previousData,
-      profilePhoto: imagePreviewUrl,
-    }));
-
-    setMessage("Profile photo selected.");
+      if (updateSuccess) {
+        setMessage({
+          text: "Profile photo updated successfully.",
+          error: false,
+        });
+      }
+    } catch {
+      setMessage({ text: "Failed to update profile photo.", error: true });
+    }
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
+    }
+  };
+
+  const handlePhotoDelete = async () => {
+    try {
+      const updateSuccess = await updateUserData({
+        userProfileImgUrl: null,
+      });
+
+      if (updateSuccess) {
+        await deletePhoto(user.email);
+        setMessage({
+          text: "Profile photo deleted successfully.",
+          error: false,
+        });
+      }
+    } catch {
+      setMessage({ text: "Failed to delete profile photo.", error: true });
     }
   };
 
@@ -297,35 +372,74 @@ function UserProfilePage() {
     }));
   };
 
-  const handlePasswordSubmit = (event) => {
+  const handlePasswordSubmit = async (event) => {
     event.preventDefault();
 
     const { currentPassword, newPassword, confirmPassword } = passwordData;
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setMessage("Please complete all password fields.");
+    if (user.hasPassword && !currentPassword) {
+      setMessage({ text: "Current password is required.", error: true });
+      return;
+    }
+
+    if (!newPassword || !confirmPassword) {
+      setMessage({ text: "Please complete all password fields.", error: true });
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setMessage("New passwords do not match.");
+      setMessage({ text: "New passwords do not match.", error: true });
       return;
     }
 
     if (newPassword.length < 8) {
-      setMessage("New password must be at least 8 characters.");
+      setMessage({
+        text: "New password must be at least 8 characters.",
+        error: true,
+      });
       return;
     }
 
-    setMessage(
-      "Password form is ready. Backend password update will be connected next.",
+    if (!/[0-9]/.test(newPassword)) {
+      setMessage({ text: "Password must include a number.", error: true });
+      return;
+    }
+
+    if (!/[A-Z]/.test(newPassword)) {
+      setMessage({
+        text: "Password must include an uppercase letter.",
+        error: true,
+      });
+      return;
+    }
+
+    if (!/[^A-Za-z0-9]/.test(newPassword)) {
+      setMessage({
+        text: "Password must include a special character.",
+        error: true,
+      });
+      return;
+    }
+
+    const isPasswordChanged = await updateUserData(
+      user.hasPassword
+        ? {
+            oldPassword: currentPassword,
+            newPassword: newPassword,
+          }
+        : {
+            newPassword: newPassword,
+          },
     );
 
-    setPasswordData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
+    if (isPasswordChanged) {
+      setMessage({ text: "Password updated successfully.", error: false });
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    }
   };
 
   async function handleDeleteAccount() {
@@ -339,12 +453,14 @@ function UserProfilePage() {
 
     try {
       await deleteUser();
+      await deletePhoto(user.email);
       dispatch({ type: "LOGOUT" });
     } catch (error) {
       dispatch({
         type: "SET_ERROR",
         payload: error.message,
       });
+      setMessage({ text: "Failed to delete account.", error: true });
     }
   }
 
@@ -370,16 +486,6 @@ function UserProfilePage() {
           </p>
         </header>
 
-        {/* Status Message */}
-        {message && (
-          <div
-            role="status"
-            className="mb-5 rounded-xl border border-[#decdbb] bg-white px-5 py-3 text-center font-medium text-[#10263f] shadow-sm"
-          >
-            {message}
-          </div>
-        )}
-
         {/* Profile Card */}
         <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
           <div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
@@ -400,7 +506,7 @@ function UserProfilePage() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/webp"
+                accept="image/png,image/jpeg,image/webp,image/jpg"
                 className="hidden"
                 onChange={handlePhotoChange}
               />
@@ -408,13 +514,23 @@ function UserProfilePage() {
               <button
                 type="button"
                 onClick={handlePhotoClick}
-                className="mt-4 rounded-lg bg-[#b44d28] px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
+                className="mt-4  w-full rounded-lg bg-[#b44d28] px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
               >
                 📷 Upload Photo
               </button>
 
+              {user.profilePhoto && (
+                <button
+                  type="button"
+                  onClick={handlePhotoDelete}
+                  className="mt-2  w-full rounded-lg border border-[#b44d28] px-7 py-3 text-lg font-semibold text-[#b44d28] transition hover:bg-[#fbf7f1]"
+                >
+                  🗑 Delete Photo
+                </button>
+              )}
+
               <p className="mt-3 text-center text-sm leading-5 text-[#6d6d6d]">
-                JPG, PNG or WEBP.
+                JPG,JPEG, PNG or WEBP.
                 <br />
                 Maximum 2 MB.
               </p>
@@ -434,7 +550,7 @@ function UserProfilePage() {
                         id="fullName"
                         name="fullName"
                         type="text"
-                        value={formData.fullName}
+                        value={formData.fullName ? formData.fullName : ""}
                         onChange={handleInputChange}
                         className="w-full rounded-xl border border-[#decdbb] bg-[#fffdf9] px-4 py-3 text-lg outline-none focus:border-[#b44d28]"
                         required
@@ -524,11 +640,21 @@ function UserProfilePage() {
           </div>
         </section>
 
+        {/* Status Message */}
+        {message.text && (
+          <div
+            role="status"
+            className={`mb-5 rounded-xl border ${message.error ? "border-[#b44d28] text-red-700" : "border-[#decdbb] text-[#10263f]"} bg-white px-5 py-3 text-center font-medium shadow-sm`}
+          >
+            {message.text}
+          </div>
+        )}
+
         {/* Change Password Card */}
         <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
           <div className="mb-7">
             <h2 className="font-heading text-3xl font-bold text-[#10263f]">
-              Change Password
+              {user.hasPassword ? "Change Password" : "Set Password"}
             </h2>
 
             <div className="mt-3 flex items-center gap-3 text-[#b44d28]">
@@ -544,16 +670,18 @@ function UserProfilePage() {
           >
             {/* Password Fields */}
             <div className="space-y-4">
-              <PasswordField
-                id="currentPassword"
-                name="currentPassword"
-                placeholder="Current Password"
-                value={passwordData.currentPassword}
-                onChange={handlePasswordInputChange}
-                visible={visiblePasswords.currentPassword}
-                onToggle={() => togglePasswordVisibility("currentPassword")}
-                autoComplete="current-password"
-              />
+              {user.hasPassword && (
+                <PasswordField
+                  id="currentPassword"
+                  name="currentPassword"
+                  placeholder="Current Password"
+                  value={passwordData.currentPassword}
+                  onChange={handlePasswordInputChange}
+                  visible={visiblePasswords.currentPassword}
+                  onToggle={() => togglePasswordVisibility("currentPassword")}
+                  autoComplete="current-password"
+                />
+              )}
 
               <PasswordField
                 id="newPassword"
@@ -624,7 +752,7 @@ function UserProfilePage() {
             {/* Delete Account */}
             <button
               type="button"
-              disabled={loading}
+              disabled={state.loading}
               onClick={handleDeleteAccount}
               className="flex items-center justify-between px-5 py-4 text-left md:border-r md:border-[#eadfd3]"
             >
