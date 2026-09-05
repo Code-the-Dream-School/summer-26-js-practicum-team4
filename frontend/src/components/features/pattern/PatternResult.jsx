@@ -5,6 +5,10 @@ import PatternLegend from "./PatternLegend";
 
 import generateImgBlob from "../../../services/generateImgBlob";
 
+import SavePatternBtn from "../generate/SavePatternBtn";
+import DownloadPatternBtn from "../shared/DownloadPatternBtn";
+import PatternNameComponent from "../shared/PatternNameComponent";
+
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
   { label: "75%", cellSize: 12 },
@@ -23,6 +27,7 @@ function PatternResult({
 }) {
   const [zoomIndex, setZoomIndex] = useState(2);
   const [imgBlob, setImgBlob] = useState(null);
+  const [currentPatternName, setCurrentPatternName] = useState("");
 
   // Zoom Controls
   const zoom = ZOOM_LEVELS[zoomIndex];
@@ -69,9 +74,11 @@ function PatternResult({
             <p className="mb-1 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               Pattern ready
             </p>
-            <h1 className="text-3xl font-bold text-secondary md:text-4xl">
-              Your Cross-Stitch Pattern
-            </h1>
+            <PatternNameComponent
+              pattern={pattern}
+              textStyle={"text-3xl font-bold text-secondary md:text-4xl"}
+              setCurrentPatternName={setCurrentPatternName}
+            />
             <p className="mt-2 text-text-secondary">
               {pattern.width} × {pattern.height} stitches ·{" "}
               {totalStitches.toLocaleString()} total · {pattern.palette.length}{" "}
@@ -87,13 +94,18 @@ function PatternResult({
             >
               Back to Generator
             </button>
-            <button
-              type="button"
-              onClick={onUploadNew}
-              className="rounded-lg border border-border bg-surface px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
-            >
-              Upload New Image
-            </button>
+            <SavePatternBtn
+              pattern={{
+                patternName: currentPatternName,
+                stitchWidth: pattern.width,
+                stitchHeight: pattern.height,
+                grid: pattern.grid,
+                palette: pattern.palette,
+              }}
+              textStyle={
+                "rounded-lg border border-border bg-surface px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+              }
+            />
           </div>
         </header>
 
@@ -198,6 +210,15 @@ function PatternResult({
               >
                 Reset Zoom
               </button>
+            </section>
+            <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm print:hidden">
+              <div className="grid grid-cols-[auto_1fr_auto] items-center justify-self-center">
+                <DownloadPatternBtn
+                  origin="generatePg"
+                  pattern={pattern}
+                  canvasRef={canvasRef}
+                />
+              </div>
             </section>
           </aside>
         </div>

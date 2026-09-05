@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { generatePattern, saveNewPattern } from "../services/patternService";
+import { generatePattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
 import DownloadPatternBtn from "../components/features/shared/DownloadPatternBtn";
+import SavePatternBtn from "../components/features/generate/SavePatternBtn";
 import PatternNameComponent from "../components/features/shared/PatternNameComponent";
 
 import { useAuth } from "../state/auth/useAuth";
@@ -19,7 +20,7 @@ function GeneratePage() {
 
   const canvasRef = useRef(null);
 
-  const { state, dispatch } = useAuth();
+  const { state } = useAuth();
 
   useEffect(() => {
     return () => {
@@ -104,52 +105,6 @@ function GeneratePage() {
   if (generatedPattern) {
     return (
       <>
-        <div className="bg-background px-4 pt-8 lg:px-8 print:hidden">
-          <div className="mx-auto max-w-[1600px] space-y-6">
-            <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7">
-              <PatternNameComponent
-                pattern={generatedPattern}
-                textStyle={"text-3xl mb-5"}
-                setCurrentPatternName={setCurrentPatternName}
-              />
-              <div className="flex flex-col gap-2 sm:items-end">
-                <button
-                  onClick={async () => {
-                    const savedPattern = await saveNewPattern({
-                      patternName: currentPatternName,
-                      stitchWidth: generatedPattern.width,
-                      stitchHeight: generatedPattern.height,
-                      grid: generatedPattern.grid,
-                      palette: generatedPattern.palette,
-                    });
-
-                    if (savedPattern?.error?.message) {
-                      dispatch({
-                        type: "SET_ERROR",
-                        payload: savedPattern.error.message,
-                      });
-                    }
-
-                    return;
-                  }}
-                  className="rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
-                >
-                  Save Pattern
-                </button>
-                <DownloadPatternBtn
-                  origin="generatePg"
-                  pattern={generatedPattern}
-                  canvasRef={canvasRef}
-                />
-              </div>
-            </div>{" "}
-            {state.error && (
-              <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
-                {state.error}
-              </p>
-            )}
-          </div>{" "}
-        </div>
         <PatternResult
           pattern={generatedPattern}
           previewUrl={previewUrl}
