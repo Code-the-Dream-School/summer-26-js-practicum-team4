@@ -1,14 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 // Component Imports
 
 import DownloadPatternBtn from "../../shared/DownloadPatternBtn";
 import DeletePatternBtn from "../../shared/DeletePatternBtn";
-import PatternNameEditInput from "../../shared/PatternNameEditInput";
+import PatternNameComponent from "../../shared/PatternNameComponent";
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
-
-import { useAuth } from "../../../../state/auth/useAuth";
 
 const pageOrigin = {
   dashboard: {
@@ -47,64 +45,6 @@ function getDate(dateTimeStr) {
 }
 
 function PatternViewerAll({ pattern, page, setPatternToPrint, canvasRef }) {
-  // Relevant states
-  const { state, dispatch } = useAuth();
-
-  const [editingThisPattern, setEditingThisPattern] = useState(false);
-  const [currentPatternName, setCurrentPatternName] = useState(
-    pattern.patternName,
-  );
-
-  // Refs
-  const editFocus = useRef("");
-
-  // Focus on editing field if useRef has a non-empty reference
-  useEffect(() => {
-    if (editFocus.current) {
-      editFocus.current.focus();
-    }
-  }, [state.isEditing, editingThisPattern]);
-
-  function handleEdit() {
-    if (state.isEditing || editingThisPattern) {
-      return;
-    }
-
-    setCurrentPatternName(pattern.patternName);
-    setEditingThisPattern(true);
-
-    dispatch({ type: "BEGIN_PATTERN_NAME_EDITING" });
-
-    return;
-  }
-
-  function patternEditInterface() {
-    if (state.isEditing && editingThisPattern) {
-      return (
-        <PatternNameEditInput
-          patternId={pattern.id}
-          defaultPatternName={pattern.patternName}
-          currentPatternName={currentPatternName}
-          setCurrentPatternName={setCurrentPatternName}
-          setEditingThisPattern={setEditingThisPattern}
-          ref={editFocus}
-          textStyle={pageOrigin[page].textStyle}
-        />
-      );
-    } else {
-      return (
-        <div className="grid grid-cols-5 place-content-center">
-          <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
-          <button className="col-start-6" onClick={handleEdit}>
-            <img
-              src="images/edit.png"
-              className="hover:bg-gray-300 mb-5 w-10"
-            />
-          </button>
-        </div>
-      );
-    }
-  }
   return (
     <>
       <div className="container">
@@ -126,7 +66,10 @@ function PatternViewerAll({ pattern, page, setPatternToPrint, canvasRef }) {
             />
           </div>
         </div>
-        {patternEditInterface()}
+        <PatternNameComponent
+          pattern={pattern}
+          textStyle={pageOrigin[page].textStyle}
+        />
         <h3 className={pageOrigin[page].subTextStyle}>
           Created {getDate(pattern.createdAt)}
         </h3>

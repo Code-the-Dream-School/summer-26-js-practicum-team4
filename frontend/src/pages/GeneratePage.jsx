@@ -3,7 +3,7 @@ import { generatePattern, saveNewPattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
 
 import DownloadPatternBtn from "../components/features/shared/DownloadPatternBtn";
-import PatternNameEditInput from "../components/features/shared/PatternNameEditInput";
+import PatternNameComponent from "../components/features/shared/PatternNameComponent";
 
 import { useAuth } from "../state/auth/useAuth";
 
@@ -15,11 +15,7 @@ function GeneratePage() {
   const [generatedPattern, setGeneratedPattern] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [editingThisPattern, setEditingThisPattern] = useState(false);
-  const [currentPatternName, setCurrentPatternName] = useState(
-    "Give this pattern a name?",
-  );
-  const [originalPatternName, setOriginalPatternName] = useState("");
+  const [currentPatternName, setCurrentPatternName] = useState("");
 
   const canvasRef = useRef(null);
   const editFocus = useRef("");
@@ -36,50 +32,6 @@ function GeneratePage() {
       }
     };
   }, [previewUrl, state.isEditing]);
-
-  function handleEdit() {
-    if (state.isEditing) {
-      return;
-    }
-
-    setCurrentPatternName(
-      currentPatternName ? currentPatternName : "generated_pattern",
-    );
-    setEditingThisPattern(true);
-    setOriginalPatternName(currentPatternName);
-
-    dispatch({ type: "BEGIN_PATTERN_NAME_EDITING" });
-
-    return;
-  }
-
-  function patternEditInterface() {
-    if (state.isEditing && editingThisPattern) {
-      return (
-        <PatternNameEditInput
-          patternId={null}
-          defaultPatternName={originalPatternName}
-          currentPatternName={currentPatternName}
-          setCurrentPatternName={setCurrentPatternName}
-          setEditingThisPattern={setEditingThisPattern}
-          ref={editFocus}
-          textStyle="text-3xl mb-5"
-        />
-      );
-    } else {
-      return (
-        <div className="flex gap-5 place-content-center">
-          <h2 className={"text-3xl mb-5"}>{currentPatternName}</h2>
-          <button className="col-start-6" onClick={handleEdit}>
-            <img
-              src="images/edit.png"
-              className="hover:bg-gray-300 mb-5 w-10"
-            />
-          </button>
-        </div>
-      );
-    }
-  }
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
@@ -159,7 +111,11 @@ function GeneratePage() {
         <div className="bg-background px-4 pt-8 lg:px-8 print:hidden">
           <div className="mx-auto max-w-[1600px] space-y-6">
             <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7">
-              <div>{patternEditInterface()}</div>{" "}
+              <PatternNameComponent
+                pattern={generatedPattern}
+                textStyle={"text-3xl mb-5"}
+                setCurrentPatternName={setCurrentPatternName}
+              />
               <div className="flex flex-col gap-2 sm:items-end">
                 <button
                   onClick={async () => {

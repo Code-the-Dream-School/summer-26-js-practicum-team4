@@ -1,13 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 // Component Imports
 import DownloadPatternBtn from "../../shared/DownloadPatternBtn";
 import DeletePatternBtn from "../../shared/DeletePatternBtn";
-import PatternNameEditInput from "../../shared/PatternNameEditInput";
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
-
-import { useAuth } from "../../../../state/auth/useAuth";
+import PatternNameComponent from "../../shared/PatternNameComponent";
 
 const pageOrigin = {
   dashboard: {
@@ -20,67 +18,13 @@ const pageOrigin = {
 };
 
 function PatternViewerScroll({ pattern, page, setPatternToPrint, canvasRef }) {
-  // Relevant states
-  const { state, dispatch } = useAuth();
-
-  const [editingThisPattern, setEditingThisPattern] = useState(false);
-  const [currentPatternName, setCurrentPatternName] = useState(
-    pattern.patternName,
-  );
-
-  const editFocus = useRef("");
-
-  // Focus on editing field if useRef has a non-empty reference
-  useEffect(() => {
-    if (editFocus.current) {
-      editFocus.current.focus();
-    }
-  }, [state.isEditing]);
-
-  function handleEdit() {
-    if (state.isEditing) {
-      return;
-    }
-
-    setCurrentPatternName(pattern.patternName);
-    setEditingThisPattern(true);
-
-    dispatch({ type: "BEGIN_PATTERN_NAME_EDITING" });
-
-    return;
-  }
-
-  function patternEditInterface() {
-    if (state.isEditing && editingThisPattern) {
-      return (
-        <PatternNameEditInput
-          patternId={pattern.id}
-          defaultPatternName={pattern.patternName}
-          currentPatternName={currentPatternName}
-          setCurrentPatternName={setCurrentPatternName}
-          setEditingThisPattern={setEditingThisPattern}
-          ref={editFocus}
-          textStyle={pageOrigin[page].textStyle}
-        />
-      );
-    } else {
-      return (
-        <div className="grid grid-cols-5 place-content-center">
-          <h2 className={pageOrigin[page].textStyle}>{pattern.patternName}</h2>
-          <button className="col-start-6" onClick={handleEdit}>
-            <img
-              src="images/edit.png"
-              className="hover:bg-gray-300 mb-5 w-10"
-            />
-          </button>
-        </div>
-      );
-    }
-  }
   return (
     <>
       <div className="container">
-        {patternEditInterface()}
+        <PatternNameComponent
+          pattern={pattern}
+          textStyle={pageOrigin[page].textStyle}
+        />
         <div
           className={`pattern-interface container flex content-center justify-center mx-auto h-[60dvh] bg-white border rounded-2xl border-gray-400`}
           tabIndex={0}
