@@ -24,7 +24,7 @@ const userUpdateSchema = Joi.object({
   userName: Joi.string().trim().min(3).max(30),
   oldPassword: passwordSchema,
   newPassword: passwordSchema,
-  userProfileImgUrl: Joi.string().uri(),
+  userProfileImgUrl: Joi.string().uri().allow(null),
 })
   .min(1)
   .messages({

@@ -338,6 +338,24 @@ function UserProfilePage() {
     }
   };
 
+  const handlePhotoDelete = async () => {
+    try {
+      await deletePhoto(user.email);
+      const updateSuccess = await updateUserData({
+        userProfileImgUrl: null,
+      });
+
+      if (updateSuccess) {
+        setMessage({
+          text: "Profile photo deleted successfully.",
+          error: false,
+        });
+      }
+    } catch {
+      setMessage({ text: "Failed to delete profile photo.", error: true });
+    }
+  };
+
   const handlePasswordInputChange = (event) => {
     const { name, value } = event.target;
 
@@ -496,10 +514,20 @@ function UserProfilePage() {
               <button
                 type="button"
                 onClick={handlePhotoClick}
-                className="mt-4 rounded-lg bg-[#b44d28] px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
+                className="mt-4  w-full rounded-lg bg-[#b44d28] px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
               >
                 📷 Upload Photo
               </button>
+
+              {user.profilePhoto && (
+                <button
+                  type="button"
+                  onClick={handlePhotoDelete}
+                  className="mt-2  w-full rounded-lg border border-[#b44d28] px-7 py-3 text-lg font-semibold text-[#b44d28] transition hover:bg-[#fbf7f1]"
+                >
+                  🗑 Delete Photo
+                </button>
+              )}
 
               <p className="mt-3 text-center text-sm leading-5 text-[#6d6d6d]">
                 JPG,JPEG, PNG or WEBP.
