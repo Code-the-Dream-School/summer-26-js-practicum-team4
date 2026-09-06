@@ -17,6 +17,7 @@ const ZOOM_LEVELS = [
   { label: "150%", cellSize: 24 },
 ];
 
+// somecomment
 function PatternResult({
   pattern,
   previewUrl,
