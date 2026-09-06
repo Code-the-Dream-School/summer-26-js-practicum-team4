@@ -14,7 +14,7 @@ function PatternNameComponent({
   // Helpful States
   const { state, dispatch } = useAuth();
   const [editingThisPattern, setEditingThisPattern] = useState(false);
-  const [localName, setLocalName] = useState("Would you like to set a name?");
+  const [localName, setLocalName] = useState("Pattern name?");
   const [currentLocalPatternName, setCurrentLocalPatternName] = useState(
     pattern?.patternName ? pattern.patternName : localName,
   );
@@ -138,11 +138,11 @@ function PatternNameComponent({
 
   function normalPageText() {
     return (
-      <div className="grid grid-cols-5 place-content-center">
-        <h2 className={textStyle} onClick={handleEdit}>
+      <div className="flex gap-5">
+        <h2 className={`${textStyle} justify-self-start`} onClick={handleEdit}>
           {pattern?.patternName ? pattern.patternName : currentLocalPatternName}
         </h2>
-        <button className="col-start-6" onClick={handleEdit}>
+        <button className="justify-self-start" onClick={handleEdit}>
           <img src="images/edit.png" className="hover:bg-gray-300 mb-5 w-10" />
         </button>
       </div>

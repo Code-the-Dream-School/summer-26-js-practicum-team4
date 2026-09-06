@@ -27,7 +27,8 @@ function PatternResult({
 }) {
   const [zoomIndex, setZoomIndex] = useState(2);
   const [imgBlob, setImgBlob] = useState(null);
-  const [currentPatternName, setCurrentPatternName] = useState("");
+  const [currentPatternName, setCurrentPatternName] =
+    useState("generatedPattern");
 
   // Zoom Controls
   const zoom = ZOOM_LEVELS[zoomIndex];
@@ -69,8 +70,8 @@ function PatternResult({
   return (
     <main className="min-h-screen bg-background px-4 py-8 lg:px-8">
       <div className="mx-auto max-w-[1600px] space-y-6">
-        <header className="flex flex-col gap-4 rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7 print:hidden">
-          <div>
+        <header className="grid grid-cols-[75%_25%] rounded-2xl border border-border bg-surface p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between md:p-7 print:hidden">
+          <div className="self-stretch">
             <p className="mb-1 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               Pattern ready
             </p>

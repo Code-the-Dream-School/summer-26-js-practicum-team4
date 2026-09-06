@@ -82,10 +82,6 @@ function MyPatternsPage() {
     }
   }
 
-  if (patternToPrint) {
-    console.log(patternToPrint);
-  }
-
   return (
     <>
       <DashContext value={{ dashState, dispatch, dashActions }}>
