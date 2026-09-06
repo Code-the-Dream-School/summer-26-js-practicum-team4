@@ -7,6 +7,8 @@ const {
   generatePattern: generatePatternPipeline,
 } = require("../services/pattern-pipeline.service");
 
+const { resizeStitchGrid } = require("../services/stitch-grid.service");
+
 // Error handler Imports
 const { BadRequestError, NotFoundError } = require("../errors");
 
@@ -36,6 +38,9 @@ async function createPattern(req, res, next) {
       data: {
         ...value,
         userId: req.user.userId,
+        ogStitchWidth: value.stitchWidth,
+        ogStitchHeight: value.stitchHeight,
+        originalGrid: value.grid,
       },
       select: {
         id: true,
@@ -77,7 +82,13 @@ async function createMultiplePatterns(req, res, next) {
         );
       }
 
-      allValidatedPatterns.push({ ...value, userId: req.user.userId });
+      allValidatedPatterns.push({ 
+        ...value, 
+        userId: req.user.userId,
+        ogStitchWidth: value.stitchWidth,
+        ogStitchHeight: value.stitchHeight,
+        originalGrid: value.grid, 
+      });
     }
 
     // create each pattern individually so that createdAt can reliably sort patterns
@@ -196,13 +207,50 @@ async function updatePattern(req, res, next) {
       throw new BadRequestError("This is an invalid pattern ID.");
     }
 
-    // Use Joi Validation schema to ensure patch request is properly formed
     const { error, value } = patternUpdateSchema.validate(req.body, {
       abortEarly: false,
     });
 
     if (error) {
       throw new BadRequestError("The input pattern data is malformed.");
+    }
+
+    const existingPattern = await prisma.pattern.findFirst({
+      where: {
+        id: patternId,
+        userId: req.user.userId,
+      },
+      select: {
+        id: true,
+        stitchWidth: true,
+        stitchHeight: true,
+        grid: true,
+        ogStitchWidth: true,
+        ogStitchHeight: true,
+        originalGrid: true,
+      },
+    });
+
+    if (!existingPattern) {
+      throw new NotFoundError("Pattern was not found.");
+    }
+
+    const dimensionsChanged =
+      value.stitchWidth !== undefined &&
+      value.stitchHeight !== undefined &&
+      (
+        value.stitchWidth !== existingPattern.stitchWidth ||
+        value.stitchHeight !== existingPattern.stitchHeight
+      );
+
+    if (dimensionsChanged) {
+      value.grid = resizeStitchGrid(
+        existingPattern.originalGrid,
+        existingPattern.ogStitchWidth,
+        existingPattern.ogStitchHeight,
+        value.stitchWidth,
+        value.stitchHeight,
+      );
     }
 
     const updatedPattern = await prisma.pattern.update({
@@ -215,8 +263,8 @@ async function updatePattern(req, res, next) {
         id: true,
         userId: true,
         patternName: true,
-        stitchHeight: true,
         stitchWidth: true,
+        stitchHeight: true,
         palette: true,
         grid: true,
         updatedAt: true,
@@ -227,13 +275,6 @@ async function updatePattern(req, res, next) {
       .status(StatusCodes.OK)
       .json({ data: { pattern: updatedPattern } });
   } catch (error) {
-    // Prisma record not found error
-    if (error.code === "P2025") {
-      const prismaError = new NotFoundError("Pattern was not found.");
-      next(prismaError);
-      return;
-    }
-
     next(error);
   }
 }
