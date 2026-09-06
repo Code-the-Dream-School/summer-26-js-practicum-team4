@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import LogoutBtn from "../components/features/auth/LogoutBtn";
 import { useAuth } from "../state/auth/useAuth";
 import { uploadPhoto, deletePhoto } from "../services/profileImageService";
+import Loader from "../components/Loader/Loader";
 
 function StitchAvatar() {
   const stitches = [
@@ -179,7 +180,7 @@ function UserProfilePage() {
   const [formData, setFormData] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState({ text: "", error: false });
-
+  const [isLoading, setIsLoading] = useState({profilePhoto: false, userData: false, passwordChange: false});
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -215,6 +216,7 @@ function UserProfilePage() {
 
   useEffect(() => {
     async function getUserData() {
+      setIsLoading((prev) => ({ ...prev, userData: true }));
       setMessage({ text: "", error: false });
       try {
         const userData = await getUser();
@@ -222,8 +224,10 @@ function UserProfilePage() {
         if (userData) {
           setUserProfileData(userData);
         }
+        setIsLoading((prev) => ({ ...prev, userData: false }));
       } catch {
         setMessage({ text: "Failed to fetch user data.", error: true });
+        setIsLoading((prev) => ({ ...prev, userData: false }));
       }
     }
     getUserData();
@@ -242,6 +246,7 @@ function UserProfilePage() {
       return false;
     }
   }
+
   const handleEditProfile = () => {
     setFormData(user);
     setIsEditing(true);
@@ -259,6 +264,7 @@ function UserProfilePage() {
   };
 
   const handleSaveProfile = async (event) => {
+    setIsLoading((prev) => ({ ...prev, userData: true }));
     setMessage({ text: "", error: false });
     event.preventDefault();
 
@@ -283,6 +289,7 @@ function UserProfilePage() {
         },
       });
       setIsEditing(false);
+      setIsLoading((prev) => ({ ...prev, userData: false }));
     }
   };
 
@@ -317,6 +324,7 @@ function UserProfilePage() {
     }
 
     try {
+      setIsLoading((prev) => ({ ...prev, profilePhoto: true }));
       const uploadedImageUrl = await uploadPhoto(selectedFile, user.email);
 
       const updateSuccess = await updateUserData({
@@ -331,6 +339,8 @@ function UserProfilePage() {
       }
     } catch {
       setMessage({ text: "Failed to update profile photo.", error: true });
+    } finally {
+      setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
     }
 
     if (fileInputRef.current) {
@@ -339,6 +349,7 @@ function UserProfilePage() {
   };
 
   const handlePhotoDelete = async () => {
+    setIsLoading((prev) => ({ ...prev, profilePhoto: true }));
     try {
       const updateSuccess = await updateUserData({
         userProfileImgUrl: null,
@@ -349,10 +360,12 @@ function UserProfilePage() {
         setMessage({
           text: "Profile photo deleted successfully.",
           error: false,
-        });
+        })
+        setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
       }
     } catch {
       setMessage({ text: "Failed to delete profile photo.", error: true });
+    setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
     }
   };
 
@@ -420,7 +433,7 @@ function UserProfilePage() {
       });
       return;
     }
-
+setIsLoading((prev) => ({ ...prev, passwordChange: true }));
     const isPasswordChanged = await updateUserData(
       user.hasPassword
         ? {
@@ -440,6 +453,7 @@ function UserProfilePage() {
         confirmPassword: "",
       });
     }
+    setIsLoading((prev) => ({ ...prev, passwordChange: false }));
   };
 
   async function handleDeleteAccount() {
@@ -466,6 +480,7 @@ function UserProfilePage() {
 
   return (
     <main className="min-h-screen bg-[#fbf7f1]">
+     {state.loading?<Loader />: (
       <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
         {/* Page Heading */}
         <header className="relative mb-8 overflow-hidden pb-2">
@@ -487,12 +502,14 @@ function UserProfilePage() {
         </header>
 
         {/* Profile Card */}
-        <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
-          <div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
+    <section className="mb-7 min-h-[400px] rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
+        {isLoading.userData?<Loader size={200} />:(<div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
             {/* Avatar */}
             <div className="flex flex-col items-center">
               <div className="h-44 w-44 overflow-hidden rounded-full">
-                {user.profilePhoto ? (
+                {isLoading.profilePhoto ? (
+                  <Loader size={100} />
+                ) : user.profilePhoto ? (
                   <img
                     src={user.profilePhoto}
                     alt={`${user.fullName}'s profile`}
@@ -637,7 +654,7 @@ function UserProfilePage() {
                 <span className="h-px w-12 bg-[#b44d28]" />
               </div>
             </div>
-          </div>
+          </div>)}
         </section>
 
         {/* Status Message */}
@@ -652,7 +669,7 @@ function UserProfilePage() {
 
         {/* Change Password Card */}
         <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
-          <div className="mb-7">
+         <div className="mb-7">
             <h2 className="font-heading text-3xl font-bold text-[#10263f]">
               {user.hasPassword ? "Change Password" : "Set Password"}
             </h2>
@@ -664,7 +681,7 @@ function UserProfilePage() {
             </div>
           </div>
 
-          <form
+         {isLoading.passwordChange ? <Loader size={100} />: ( <form
             onSubmit={handlePasswordSubmit}
             className="grid gap-8 lg:grid-cols-[1fr_340px]"
           >
@@ -743,7 +760,7 @@ function UserProfilePage() {
                 Update Password
               </button>
             </aside>
-          </form>
+          </form>)}
         </section>
 
         {/* Bottom Actions */}
@@ -796,7 +813,7 @@ function UserProfilePage() {
 
           <span className="hidden h-px w-40 bg-[#d6ad83] sm:block" />
         </div>
-      </div>
+      </div>)}
     </main>
   );
 }
