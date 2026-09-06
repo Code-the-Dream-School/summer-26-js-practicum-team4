@@ -43,4 +43,45 @@ function generateStitchGrid(dmcPattern) {
   };
 }
 
-module.exports = { generateStitchGrid };
+function resizeStitchGrid(
+  grid,
+  oldWidth,
+  oldHeight,
+  newWidth,
+  newHeight,
+) {
+  if (
+    !Array.isArray(grid) ||
+    grid.length !== oldWidth * oldHeight
+  ) {
+    throw new Error("A valid stitch grid is required.");
+  }
+
+  const resizedGrid = [];
+
+  for (let row = 0; row < newHeight; row += 1) {
+    const sourceRow = Math.min(
+      oldHeight - 1,
+      Math.floor((row * oldHeight) / newHeight),
+    );
+
+    for (let column = 0; column < newWidth; column += 1) {
+      const sourceColumn = Math.min(
+        oldWidth - 1,
+        Math.floor((column * oldWidth) / newWidth),
+      );
+
+      const sourceIndex = sourceRow * oldWidth + sourceColumn;
+
+      resizedGrid.push(grid[sourceIndex]);
+    }
+  }
+
+  return resizedGrid;
+}
+
+module.exports = {
+  generateStitchGrid,
+  resizeStitchGrid,
+};
+

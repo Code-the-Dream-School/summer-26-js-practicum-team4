@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import PublicNavbar from "./components/layout/PublicNavbar";
@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import GeneratePage from "./pages/GeneratePage";
 import MyPatternsPage from "./pages/MyPatternsPage";
+import EditPage from "./pages/EditPage";
 import GalleryPage from "./pages/GalleryPage";
 import PublicRoutes from "./routes/PublicRoutes";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
@@ -19,8 +20,12 @@ import NotFoundPage from "./pages/NotFound";
 import { useAuth } from "./state/auth/useAuth";
 
 function App() {
-  const { state } = useAuth();
+  const { state, dispatch } = useAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch({ type: "CLEAR_ERROR" });
+  }, [dispatch, location]);
 
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
@@ -53,6 +58,7 @@ function App() {
           <Route element={<ProtectedRoutes />}>
             <Route path="/generate" element={<GeneratePage />} />
             <Route path="/mypatterns" element={<MyPatternsPage />} />
+            <Route path="/edit/:patternId" element={<EditPage />} />
             <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/profile" element={<UserProfilePage />} />
           </Route>

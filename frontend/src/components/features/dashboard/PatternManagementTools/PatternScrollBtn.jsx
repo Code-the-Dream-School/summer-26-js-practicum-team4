@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
-import { DashGallContext } from "../../../../state/dashboardGallery/dashGallContext";
+import PropTypes from "prop-types";
+
+import { DashContext } from "../../../../state/dashboard/dashContext";
 
 function PatternScrollBtn({ imgSrc, direction }) {
-  const { dispatch, dashGallActions } = useContext(DashGallContext);
+  const { dispatch, dashActions } = useContext(DashContext);
 
   return (
     <button
@@ -10,7 +12,7 @@ function PatternScrollBtn({ imgSrc, direction }) {
       onClick={() =>
         dispatch({
           direction: direction,
-          type: dashGallActions.setScrollPatternIx,
+          type: dashActions.setScrollPatternIx,
         })
       }
     >
@@ -18,5 +20,10 @@ function PatternScrollBtn({ imgSrc, direction }) {
     </button>
   );
 }
+
+PatternScrollBtn.propTypes = {
+  imgSrc: PropTypes.string.isRequired,
+  direction: PropTypes.string.isRequired,
+};
 
 export default PatternScrollBtn;
