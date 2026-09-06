@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
 import PublicNavbar from "./components/layout/PublicNavbar";
@@ -19,8 +19,12 @@ import NotFoundPage from "./pages/NotFound";
 import { useAuth } from "./state/auth/useAuth";
 
 function App() {
-  const { state } = useAuth();
+  const { state, dispatch } = useAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch({ type: "CLEAR_ERROR" });
+  }, [dispatch, location]);
 
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";

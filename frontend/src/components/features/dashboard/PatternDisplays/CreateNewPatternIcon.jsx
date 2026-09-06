@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 function CreateNewPatternIcon({ patternDisplayScaling = "" }) {
@@ -21,5 +22,9 @@ function CreateNewPatternIcon({ patternDisplayScaling = "" }) {
     </>
   );
 }
+
+CreateNewPatternIcon.propTypes = {
+  patternDisplayScaling: PropTypes.string,
+};
 
 export default CreateNewPatternIcon;
