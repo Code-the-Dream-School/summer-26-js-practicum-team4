@@ -69,6 +69,8 @@ function PatternViewerAll({ pattern, page, setPatternToPrint, canvasRef }) {
         <PatternNameComponent
           pattern={pattern}
           textStyle={pageOrigin[page].textStyle}
+          setCurrentPatternName=""
+          showEditBtn={false}
         />
         <h3 className={pageOrigin[page].subTextStyle}>
           Created {getDate(pattern.createdAt)}

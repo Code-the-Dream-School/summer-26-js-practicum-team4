@@ -23,6 +23,7 @@ function PatternViewerScroll({ pattern, page, setPatternToPrint, canvasRef }) {
         <PatternNameComponent
           pattern={pattern}
           textStyle={pageOrigin[page].textStyle}
+          showEditBtn={false}
         />
         <div
           className={`pattern-interface container flex content-center justify-center mx-auto h-[60dvh] bg-white border rounded-2xl border-gray-400`}
