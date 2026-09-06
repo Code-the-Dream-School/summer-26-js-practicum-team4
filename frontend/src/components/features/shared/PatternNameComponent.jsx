@@ -12,6 +12,7 @@ function PatternNameComponent({
   textStyle,
   setCurrentPatternName = "",
   showEditBtn = true,
+  lockEdit = false,
 }) {
   // Helpful States
   const { state, dispatch } = useAuth();
@@ -36,7 +37,7 @@ function PatternNameComponent({
 
   // Helper functions
   function handleEdit() {
-    if (state.isEditing || editingThisPattern) {
+    if (state.isEditing || editingThisPattern || lockEdit) {
       return;
     }
 
@@ -145,7 +146,11 @@ function PatternNameComponent({
           {pattern?.patternName ? pattern.patternName : currentLocalPatternName}
         </h2>
         {showEditBtn ? (
-          <button className="justify-self-start" onClick={handleEdit}>
+          <button
+            className="justify-self-start disabled:opacity-60"
+            onClick={handleEdit}
+            disabled={lockEdit}
+          >
             <img
               src="images/edit.png"
               className="hover:bg-gray-300 mb-5 w-10"
