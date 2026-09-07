@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 
 import PatternCanvas from "../components/features/pattern/PatternCanvas";
 import PatternLegend from "../components/features/pattern/PatternLegend";
+import Loader from "../components/Loader/Loader";
 
 import { fetchPattern, updatePattern } from "../services/patternService";
 
@@ -130,7 +131,7 @@ function EditPage() {
         {errorMessage ? (
           <p className="text-text-secondary">{errorMessage}</p>
         ) : (
-          <p className="text-text-secondary">Loading...</p>
+          <Loader />
         )}
       </main>
     );
