@@ -76,6 +76,14 @@ function PatternNameComponent({
       dispatch({ type: "END_PATTERN_NAME_SAVING" });
     }
 
+    if (currentLocalPatternName.length > 30) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Pattern name exceeds 30 characters.",
+      });
+      return;
+    }
+
     // Pattern on generatePage saves name locally
     if (patternId === 99999) {
       setLocalName(currentLocalPatternName);
@@ -101,6 +109,7 @@ function PatternNameComponent({
     setEditingThisPattern(false);
     dispatch({ type: "END_PATTERN_NAME_EDITING" });
     dispatch({ type: "END_PATTERN_NAME_SAVING" });
+    dispatch({ type: "CLEAR_ERROR" });
   }
 
   // Component Definitions
