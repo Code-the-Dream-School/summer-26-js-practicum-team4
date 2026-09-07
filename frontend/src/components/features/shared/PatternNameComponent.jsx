@@ -10,6 +10,8 @@ function PatternNameComponent({
   pattern,
   textStyle,
   setCurrentPatternName = "",
+  showEditBtn = true,
+  lockEdit = false,
 }) {
   // Helpful States
   const { state, dispatch } = useAuth();
@@ -34,7 +36,7 @@ function PatternNameComponent({
 
   // Helper functions
   function handleEdit() {
-    if (state.isEditing || editingThisPattern) {
+    if (state.isEditing || editingThisPattern || lockEdit) {
       return;
     }
 
@@ -74,6 +76,14 @@ function PatternNameComponent({
       dispatch({ type: "END_PATTERN_NAME_SAVING" });
     }
 
+    if (currentLocalPatternName.length > 30) {
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Pattern name exceeds 30 characters.",
+      });
+      return;
+    }
+
     // Pattern on generatePage saves name locally
     if (patternId === 99999) {
       setLocalName(currentLocalPatternName);
@@ -99,6 +109,7 @@ function PatternNameComponent({
     setEditingThisPattern(false);
     dispatch({ type: "END_PATTERN_NAME_EDITING" });
     dispatch({ type: "END_PATTERN_NAME_SAVING" });
+    dispatch({ type: "CLEAR_ERROR" });
   }
 
   // Component Definitions
@@ -142,9 +153,20 @@ function PatternNameComponent({
         <h2 className={`${textStyle} justify-self-start`} onClick={handleEdit}>
           {pattern?.patternName ? pattern.patternName : currentLocalPatternName}
         </h2>
-        <button className="justify-self-start" onClick={handleEdit}>
-          <img src="images/edit.png" className="hover:bg-gray-300 mb-5 w-10" />
-        </button>
+        {showEditBtn ? (
+          <button
+            className="justify-self-start disabled:opacity-60"
+            onClick={handleEdit}
+            disabled={lockEdit}
+          >
+            <img
+              src="images/edit.png"
+              className="hover:bg-gray-300 mb-5 w-10"
+            />
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
     );
   }

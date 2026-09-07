@@ -73,7 +73,7 @@ async function saveNewPattern(patternObj) {
     }
 
     const { data } = await resp.json();
-    return data.pattern;
+    return { pattern: data.pattern, status: "ok" };
   } catch (error) {
     console.error(error.message);
     return { error: { message: error.message } };
