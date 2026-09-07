@@ -82,12 +82,12 @@ async function createMultiplePatterns(req, res, next) {
         );
       }
 
-      allValidatedPatterns.push({ 
-        ...value, 
+      allValidatedPatterns.push({
+        ...value,
         userId: req.user.userId,
         ogStitchWidth: value.stitchWidth,
         ogStitchHeight: value.stitchHeight,
-        originalGrid: value.grid, 
+        originalGrid: value.grid,
       });
     }
 
@@ -238,10 +238,8 @@ async function updatePattern(req, res, next) {
     const dimensionsChanged =
       value.stitchWidth !== undefined &&
       value.stitchHeight !== undefined &&
-      (
-        value.stitchWidth !== existingPattern.stitchWidth ||
-        value.stitchHeight !== existingPattern.stitchHeight
-      );
+      (value.stitchWidth !== existingPattern.stitchWidth ||
+        value.stitchHeight !== existingPattern.stitchHeight);
 
     if (dimensionsChanged) {
       value.grid = resizeStitchGrid(

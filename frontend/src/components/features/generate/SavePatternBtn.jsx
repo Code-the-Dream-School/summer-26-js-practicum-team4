@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { useAuth } from "../../../state/auth/useAuth";
 import { saveNewPattern } from "../../../services/patternService";
 
-function SavePatternBtn({ pattern, textStyle }) {
+function SavePatternBtn({ pattern, textStyle, lockEdit, setLockEdit }) {
   // States
   const { dispatch } = useAuth();
 
@@ -17,9 +17,18 @@ function SavePatternBtn({ pattern, textStyle }) {
         payload: savedPattern.error.message,
       });
     }
+
+    // Successfully saved pattern ==> lock edit button
+    if (savedPattern.pattern) {
+      setLockEdit(true);
+    }
   }
   return (
-    <button onClick={savePattern} className={textStyle}>
+    <button
+      onClick={savePattern}
+      disabled={lockEdit}
+      className={`${textStyle} disabled:opacity-60 `}
+    >
       Save Pattern
     </button>
   );

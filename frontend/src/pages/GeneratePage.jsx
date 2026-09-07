@@ -133,7 +133,7 @@ function GeneratePage() {
             />
 
             {selectedFile && (
-              <p className="text-sm text-text-secondary">
+              <p className="text-sm text-text-secondary break-words">
                 Selected: {selectedFile.name}
               </p>
             )}
