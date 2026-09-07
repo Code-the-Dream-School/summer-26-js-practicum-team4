@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 // Component Imports
 import DownloadPatternBtn from "../../shared/DownloadPatternBtn";
 import DeletePatternBtn from "../../shared/DeletePatternBtn";
+import DashEdit from "../PatternManagementTools/DashEdit";
+
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 import PatternNameComponent from "../../shared/PatternNameComponent";
 
@@ -20,11 +22,16 @@ function PatternViewerScroll({ pattern, page, setPatternToPrint, canvasRef }) {
   return (
     <>
       <div className="container">
-        <PatternNameComponent
-          pattern={pattern}
-          textStyle={pageOrigin[page].textStyle}
-          showEditBtn={false}
-        />
+        <div className="pattern-name-and-edit grid grid-cols-2">
+          <PatternNameComponent
+            pattern={pattern}
+            textStyle={pageOrigin[page].textStyle}
+            showEditBtn={false}
+          />
+          <div className="justify-self-end mb-2">
+            <DashEdit pattern={pattern} />
+          </div>
+        </div>
         <div
           className={`pattern-interface container flex content-center justify-center mx-auto h-[60dvh] bg-white border rounded-2xl border-gray-400`}
           tabIndex={0}
