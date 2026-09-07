@@ -10,6 +10,8 @@ function AllPatternView({ setPatternToPrint, canvasRef }) {
   return (
     <>
       <div className="all-pattern-view mx-20 mt-10 pb-20 grid grid-cols-3">
+        <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />
+
         {dashState.patterns.map((pattern) => (
           <PatternViewerAll
             key={pattern.id}
@@ -19,7 +21,6 @@ function AllPatternView({ setPatternToPrint, canvasRef }) {
             canvasRef={canvasRef}
           />
         ))}
-        <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />
       </div>
     </>
   );

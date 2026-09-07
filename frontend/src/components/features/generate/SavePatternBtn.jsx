@@ -50,7 +50,7 @@ SavePatternBtn.propTypes = {
   }).isRequired,
   textStyle: PropTypes.string,
   lockEdit: PropTypes.bool,
-  setLockEdit: PropTypes.func.isRequired
+  setLockEdit: PropTypes.func.isRequired,
 };
 
 export default SavePatternBtn;

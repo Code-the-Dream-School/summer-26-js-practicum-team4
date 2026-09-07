@@ -86,54 +86,47 @@ function MyPatternsPage() {
 
   return (
     <>
-      <DashContext value={{ dashState, dispatch, dashActions }}>
-        <div className="bg-background">
-          <div className={"hidden print:flex"}>
-            {patternToPrint ? (
-              <PatternResult
-                pattern={patternToPrint}
-                fileName={"generated_pattern"}
-                canvasRef={canvasRef}
+      {dashState.isFetching ? (
+        <Loader />
+      ) : (
+        <DashContext value={{ dashState, dispatch, dashActions }}>
+          <div className="bg-background">
+            <div className={"hidden print:flex"}>
+              {patternToPrint ? (
+                <PatternResult
+                  pattern={patternToPrint}
+                  fileName={"generated_pattern"}
+                  canvasRef={canvasRef}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="flex flex-row-reverse mx-auto content-end print:hidden">
+              {" "}
+              <DisplayToggle
+                onClick={() => dispatch({ type: dashActions.setScrollView })}
+                displayImagePath={"images/scroll-view-toggle.png"}
               />
-            ) : (
-              <></>
-            )}
+              <DisplayToggle
+                onClick={() => dispatch({ type: dashActions.setAllView })}
+                displayImagePath={"images/all-pattern-view-toggle.png"}
+              />
+            </div>
+            <h1 className="text-5xl font-heading ml-19 print:hidden">
+              Dashboard
+            </h1>
+            <div className="relative print:hidden">
+              {userChosenView(dashState.patterns)}
+              {state.error && (
+                <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+                  {state.error}
+                </p>
+              )}
+            </div>
           </div>
-          <div className="flex flex-row-reverse mx-auto content-end print:hidden">
-            {" "}
-            <DisplayToggle
-              onClick={() => dispatch({ type: dashActions.setScrollView })}
-              displayImagePath={"images/scroll-view-toggle.png"}
-            />
-            <DisplayToggle
-              onClick={() => dispatch({ type: dashActions.setAllView })}
-              displayImagePath={"images/all-pattern-view-toggle.png"}
-            />
-          </div>
-          <h1 className="text-5xl font-heading ml-19 print:hidden">
-            Dashboard
-          </h1>
-          <div className="relative print:hidden">
-            {dashState.isFetching ? (
-              <>
-                {" "}
-                <div className=" absolute h-full w-full bg-gray-300 opacity-70"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <Loader size="300" />
-                </div>
-              </>
-            ) : (
-              <div></div>
-            )}
-            {userChosenView(dashState.patterns)}
-            {state.error && (
-              <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
-                {state.error}
-              </p>
-            )}
-          </div>
-        </div>
-      </DashContext>
+        </DashContext>
+      )}
     </>
   );
 }

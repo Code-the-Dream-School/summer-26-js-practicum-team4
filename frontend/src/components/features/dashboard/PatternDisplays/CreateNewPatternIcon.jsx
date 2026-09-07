@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 function CreateNewPatternIcon({ patternDisplayScaling = "" }) {
   return (
     <>
-      <div>
+      <div className="m-2">
         <div
-          className={`container grid place-content-center m-2 bg-white border rounded-2xl border-gray-400 ${patternDisplayScaling}`}
+          className={`container grid place-content-center bg-white border rounded-2xl border-gray-400 ${patternDisplayScaling}`}
         >
           <Link to="/generate">
             <img

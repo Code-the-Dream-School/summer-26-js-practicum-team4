@@ -19,13 +19,7 @@ const ZOOM_LEVELS = [
   { label: "150%", cellSize: 24 },
 ];
 
-function PatternResult({
-  pattern,
-  previewUrl,
-  fileName,
-  canvasRef,
-  onBack,
-}) {
+function PatternResult({ pattern, previewUrl, fileName, canvasRef, onBack }) {
   const { state } = useAuth();
 
   const [zoomIndex, setZoomIndex] = useState(2);
