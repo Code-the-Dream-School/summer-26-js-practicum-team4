@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 
 import {
   validateNewPatternName,
@@ -157,12 +156,7 @@ function PatternNameComponent({
             />
           </button>
         ) : (
-          <Link to={`/edit/${pattern.id}`}>
-            <img
-              src="images/edit.png"
-              className="hover:bg-gray-300 mb-5 w-10"
-            />
-          </Link>
+          <></>
         )}
       </div>
     );

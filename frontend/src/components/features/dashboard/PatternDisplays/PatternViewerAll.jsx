@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 
 import DownloadPatternBtn from "../../shared/DownloadPatternBtn";
 import DeletePatternBtn from "../../shared/DeletePatternBtn";
+import DashEdit from "../PatternManagementTools/DashEdit";
+
 import PatternNameComponent from "../../shared/PatternNameComponent";
 import PatternCanvasPreview from "../../pattern/PatternCanvasPreview";
 
@@ -13,8 +15,8 @@ const pageOrigin = {
     textStyle: "text-2xl ml-5",
     subTextStyle: "ml-5",
     patternInterface: "m-2 h-[45dvh]",
-    downloadAndDelete:
-      "absolute top-0 right-0 text-right mr-2 mt-2 object-contain grid grid-cols-[25%_15%_25%]",
+    downloadAndEdit:
+      "absolute top-0 left-0 text-right ml-4 object-contain grid grid-cols-6",
     image: "mx-auto p-5 h-[70%] object-contain",
   },
 };
@@ -56,14 +58,17 @@ function PatternViewerAll({ pattern, page, setPatternToPrint, canvasRef }) {
             cellSize={16}
             styling="absolute top-0 left-0 w-full h-full"
           />
-          <div className={pageOrigin[page].downloadAndDelete}>
-            <DeletePatternBtn origin="dashAll" pattern={pattern} /> : <></>
+          <div className={pageOrigin[page].downloadAndEdit}>
+            <DashEdit pattern={pattern} />
             <DownloadPatternBtn
               origin="dashAll"
               pattern={pattern}
               canvasRef={canvasRef}
               setPatternToPrint={setPatternToPrint}
             />
+          </div>
+          <div className="absolute top-0 right-0 text-right mr-4 mt-1 object-contain">
+            <DeletePatternBtn origin="dashAll" pattern={pattern} />
           </div>
         </div>
         <PatternNameComponent
