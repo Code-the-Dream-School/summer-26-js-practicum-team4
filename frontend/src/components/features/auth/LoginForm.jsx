@@ -25,7 +25,7 @@ function LoginForm() {
       type: "CLEAR_ERROR",
     });
     try {
-      dispatch({type:"SET_LOADING"});
+      dispatch({ type: "SET_LOADING" });
       const response = await login(email, password);
       dispatch({
         type: "LOGIN_SUCCESS",

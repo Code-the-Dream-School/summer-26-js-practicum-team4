@@ -180,7 +180,11 @@ function UserProfilePage() {
   const [formData, setFormData] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState({ text: "", error: false });
-  const [isLoading, setIsLoading] = useState({profilePhoto: false, userData: false, passwordChange: false});
+  const [isLoading, setIsLoading] = useState({
+    profilePhoto: false,
+    userData: false,
+    passwordChange: false,
+  });
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -279,16 +283,23 @@ function UserProfilePage() {
       return;
     }
 
-    const updateSuccess = await updateUserData({ userName: formData.fullName });
-    if (updateSuccess) {
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: {
-          ...state.user,
-          userName: formData.fullName,
-        },
+    try {
+      const updateSuccess = await updateUserData({
+        userName: formData.fullName,
       });
-      setIsEditing(false);
+      if (updateSuccess) {
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: {
+            ...state.user,
+            userName: formData.fullName,
+          },
+        });
+        setIsEditing(false);
+      }
+    } catch {
+      setMessage({ text: "Failed to update user data.", error: true });
+    } finally {
       setIsLoading((prev) => ({ ...prev, userData: false }));
     }
   };
@@ -360,12 +371,12 @@ function UserProfilePage() {
         setMessage({
           text: "Profile photo deleted successfully.",
           error: false,
-        })
+        });
         setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
       }
     } catch {
       setMessage({ text: "Failed to delete profile photo.", error: true });
-    setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
+      setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
     }
   };
 
@@ -433,7 +444,7 @@ function UserProfilePage() {
       });
       return;
     }
-setIsLoading((prev) => ({ ...prev, passwordChange: true }));
+    setIsLoading((prev) => ({ ...prev, passwordChange: true }));
     const isPasswordChanged = await updateUserData(
       user.hasPassword
         ? {
@@ -480,341 +491,353 @@ setIsLoading((prev) => ({ ...prev, passwordChange: true }));
 
   return (
     <main className="min-h-screen bg-[#fbf7f1]">
-     {state.loading?<Loader />: (
-      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
-        {/* Page Heading */}
-        <header className="relative mb-8 overflow-hidden pb-2">
-          <DecorativeStitches />
+      {state.loading ? (
+        <Loader />
+      ) : (
+        <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
+          {/* Page Heading */}
+          <header className="relative mb-8 overflow-hidden pb-2">
+            <DecorativeStitches />
 
-          <h1 className="relative z-10 font-heading text-5xl font-bold text-[#10263f]">
-            User Profile
-          </h1>
+            <h1 className="relative z-10 font-heading text-5xl font-bold text-[#10263f]">
+              User Profile
+            </h1>
 
-          <div className="relative z-10 mt-4 flex items-center gap-3 text-[#b44d28]">
-            <span className="h-px w-24 bg-[#b44d28]" />
-            <span className="font-bold">×</span>
-            <span className="h-px w-24 bg-[#b44d28]" />
-          </div>
-
-          <p className="relative z-10 mt-4 text-lg text-[#666]">
-            Manage your account and update your profile.
-          </p>
-        </header>
-
-        {/* Profile Card */}
-    <section className="mb-7 min-h-[400px] rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
-        {isLoading.userData?<Loader size={200} />:
-        (<div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
-            {/* Avatar */}
-            <div className="flex flex-col items-center">
-              <div className="h-44 w-44 overflow-hidden rounded-full">
-                {isLoading.profilePhoto ? (
-                  <Loader size={100} />
-                ) : user.profilePhoto ? (
-                  <img
-                    src={user.profilePhoto}
-                    alt={`${user.fullName}'s profile`}
-                    className="h-full w-full rounded-full object-cover"
-                  />
-                ) : (
-                  <StitchAvatar />
-                )}
-              </div>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/webp,image/jpg"
-                className="hidden"
-                onChange={handlePhotoChange}
-              />
-
-              <button
-                type="button"
-                onClick={handlePhotoClick}
-                className="mt-4  w-full rounded-lg bg-[#b44d28] px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
-              >
-                📷 Upload Photo
-              </button>
-
-              {user.profilePhoto && (
-                <button
-                  type="button"
-                  onClick={handlePhotoDelete}
-                  className="mt-2  w-full rounded-lg border border-[#b44d28] px-7 py-3 text-lg font-semibold text-[#b44d28] transition hover:bg-[#fbf7f1]"
-                >
-                  🗑 Delete Photo
-                </button>
-              )}
-
-              <p className="mt-3 text-center text-sm leading-5 text-[#6d6d6d]">
-                JPG,JPEG, PNG or WEBP.
-                <br />
-                Maximum 2 MB.
-              </p>
+            <div className="relative z-10 mt-4 flex items-center gap-3 text-[#b44d28]">
+              <span className="h-px w-24 bg-[#b44d28]" />
+              <span className="font-bold">×</span>
+              <span className="h-px w-24 bg-[#b44d28]" />
             </div>
 
-            {/* User Details */}
-            <form onSubmit={handleSaveProfile}>
-              <div className="space-y-6">
-                <div>
-                  <p className="mb-2 text-sm font-semibold text-[#676767]">
-                    Full Name
-                  </p>
+            <p className="relative z-10 mt-4 text-lg text-[#666]">
+              Manage your account and update your profile.
+            </p>
+          </header>
 
-                  <div className="flex items-center gap-4">
-                    {isEditing ? (
-                      <input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        value={formData.fullName ? formData.fullName : ""}
-                        onChange={handleInputChange}
-                        className="w-full rounded-xl border border-[#decdbb] bg-[#fffdf9] px-4 py-3 text-lg outline-none focus:border-[#b44d28]"
-                        required
+          {/* Profile Card */}
+          <section className="mb-7 min-h-[400px] rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
+            {isLoading.userData ? (
+              <Loader size={300} />
+            ) : (
+              <div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
+                {/* Avatar */}
+                <div className="flex flex-col items-center">
+                  <div className="h-44 w-44 overflow-hidden rounded-full">
+                    {isLoading.profilePhoto ? (
+                      <Loader size={100} />
+                    ) : user.profilePhoto ? (
+                      <img
+                        src={user.profilePhoto}
+                        alt={`${user.fullName}'s profile`}
+                        className="h-full w-full rounded-full object-cover"
                       />
                     ) : (
-                      <p className="font-heading text-4xl font-semibold text-[#10263f]">
-                        {user.fullName}
-                      </p>
-                    )}
-
-                    {!isEditing && (
-                      <button
-                        type="button"
-                        onClick={handleEditProfile}
-                        aria-label="Edit name"
-                        className="rounded-xl border border-[#b44d28] px-4 py-3 text-xl text-[#b44d28] transition hover:bg-[#fbf7f1]"
-                      >
-                        ✎
-                      </button>
+                      <StitchAvatar />
                     )}
                   </div>
-                </div>
 
-                {/* Email */}
-                <div>
-                  <p className="mb-2 text-sm font-semibold text-[#676767]">
-                    Email Address
-                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/jpg"
+                    className="hidden"
+                    onChange={handlePhotoChange}
+                  />
 
-                  <p className="text-lg text-[#1a1a1a]">{user.email}</p>
+                  <button
+                    type="button"
+                    onClick={handlePhotoClick}
+                    className="mt-4  w-full rounded-lg bg-[#b44d28] px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
+                  >
+                    📷 Upload Photo
+                  </button>
 
-                  <p className="mt-2 text-sm text-[#777]">
-                    🔒 Email cannot be changed
-                  </p>
-                </div>
-
-                {/* Member Since */}
-                <div>
-                  <p className="mb-2 text-sm font-semibold text-[#676767]">
-                    Member Since
-                  </p>
-
-                  <p className="text-lg text-[#1a1a1a]">
-                    📅 {user.memberSince}
-                  </p>
-                </div>
-
-                {isEditing && (
-                  <div className="flex gap-3 pt-1">
-                    <button
-                      type="submit"
-                      className="rounded-lg bg-[#10263f] px-6 py-3 font-semibold text-white"
-                    >
-                      Save Name
-                    </button>
-
+                  {user.profilePhoto && (
                     <button
                       type="button"
-                      onClick={handleCancelEdit}
-                      className="rounded-lg border border-[#decdbb] px-6 py-3 font-semibold text-[#10263f]"
+                      onClick={handlePhotoDelete}
+                      className="mt-2  w-full rounded-lg border border-[#b44d28] px-7 py-3 text-lg font-semibold text-[#b44d28] transition hover:bg-[#fbf7f1]"
                     >
-                      Cancel
+                      🗑 Delete Photo
                     </button>
+                  )}
+
+                  <p className="mt-3 text-center text-sm leading-5 text-[#6d6d6d]">
+                    JPG,JPEG, PNG or WEBP.
+                    <br />
+                    Maximum 2 MB.
+                  </p>
+                </div>
+
+                {/* User Details */}
+                <form onSubmit={handleSaveProfile}>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#676767]">
+                        Full Name
+                      </p>
+
+                      <div className="flex items-center gap-4">
+                        {isEditing ? (
+                          <input
+                            id="fullName"
+                            name="fullName"
+                            type="text"
+                            value={formData.fullName ? formData.fullName : ""}
+                            onChange={handleInputChange}
+                            className="w-full rounded-xl border border-[#decdbb] bg-[#fffdf9] px-4 py-3 text-lg outline-none focus:border-[#b44d28]"
+                            required
+                          />
+                        ) : (
+                          <p className="font-heading text-4xl font-semibold text-[#10263f]">
+                            {user.fullName}
+                          </p>
+                        )}
+
+                        {!isEditing && (
+                          <button
+                            type="button"
+                            onClick={handleEditProfile}
+                            aria-label="Edit name"
+                            className="rounded-xl border border-[#b44d28] px-4 py-3 text-xl text-[#b44d28] transition hover:bg-[#fbf7f1]"
+                          >
+                            ✎
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#676767]">
+                        Email Address
+                      </p>
+
+                      <p className="text-lg text-[#1a1a1a]">{user.email}</p>
+
+                      <p className="mt-2 text-sm text-[#777]">
+                        🔒 Email cannot be changed
+                      </p>
+                    </div>
+
+                    {/* Member Since */}
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-[#676767]">
+                        Member Since
+                      </p>
+
+                      <p className="text-lg text-[#1a1a1a]">
+                        📅 {user.memberSince}
+                      </p>
+                    </div>
+
+                    {isEditing && (
+                      <div className="flex gap-3 pt-1">
+                        <button
+                          type="submit"
+                          className="rounded-lg bg-[#10263f] px-6 py-3 font-semibold text-white"
+                        >
+                          Save Name
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleCancelEdit}
+                          className="rounded-lg border border-[#decdbb] px-6 py-3 font-semibold text-[#10263f]"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
+                </form>
+
+                {/* Patterns Generated */}
+                <div className="flex min-h-[245px] flex-col items-center justify-center border-t border-[#e7d9ca] pt-7 lg:border-l lg:border-t-0 lg:pl-9 lg:pt-0">
+                  <PatternGeneratedIcon />
+
+                  <p className="mt-1 font-heading text-7xl font-bold leading-none text-[#b44d28]">
+                    {user.patternsGenerated}
+                  </p>
+
+                  <p className="mt-2 text-center text-xl font-semibold text-[#10263f]">
+                    Patterns Generated
+                  </p>
+
+                  <div className="mt-4 flex items-center gap-3 text-[#b44d28]">
+                    <span className="h-px w-12 bg-[#b44d28]" />
+                    <span>×</span>
+                    <span className="h-px w-12 bg-[#b44d28]" />
+                  </div>
+                </div>
               </div>
-            </form>
+            )}
+          </section>
 
-            {/* Patterns Generated */}
-            <div className="flex min-h-[245px] flex-col items-center justify-center border-t border-[#e7d9ca] pt-7 lg:border-l lg:border-t-0 lg:pl-9 lg:pt-0">
-              <PatternGeneratedIcon />
+          {/* Status Message */}
+          {message.text && (
+            <div
+              role="status"
+              className={`mb-5 rounded-xl border ${message.error ? "border-[#b44d28] text-red-700" : "border-[#decdbb] text-[#10263f]"} bg-white px-5 py-3 text-center font-medium shadow-sm`}
+            >
+              {message.text}
+            </div>
+          )}
 
-              <p className="mt-1 font-heading text-7xl font-bold leading-none text-[#b44d28]">
-                {user.patternsGenerated}
-              </p>
+          {/* Change Password Card */}
+          <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
+            <div className="mb-7">
+              <h2 className="font-heading text-3xl font-bold text-[#10263f]">
+                {user.hasPassword ? "Change Password" : "Set Password"}
+              </h2>
 
-              <p className="mt-2 text-center text-xl font-semibold text-[#10263f]">
-                Patterns Generated
-              </p>
-
-              <div className="mt-4 flex items-center gap-3 text-[#b44d28]">
+              <div className="mt-3 flex items-center gap-3 text-[#b44d28]">
                 <span className="h-px w-12 bg-[#b44d28]" />
                 <span>×</span>
                 <span className="h-px w-12 bg-[#b44d28]" />
               </div>
             </div>
-          </div>)}
-        </section>
 
-        {/* Status Message */}
-        {message.text && (
-          <div
-            role="status"
-            className={`mb-5 rounded-xl border ${message.error ? "border-[#b44d28] text-red-700" : "border-[#decdbb] text-[#10263f]"} bg-white px-5 py-3 text-center font-medium shadow-sm`}
-          >
-            {message.text}
-          </div>
-        )}
-
-        {/* Change Password Card */}
-        <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
-         <div className="mb-7">
-            <h2 className="font-heading text-3xl font-bold text-[#10263f]">
-              {user.hasPassword ? "Change Password" : "Set Password"}
-            </h2>
-
-            <div className="mt-3 flex items-center gap-3 text-[#b44d28]">
-              <span className="h-px w-12 bg-[#b44d28]" />
-              <span>×</span>
-              <span className="h-px w-12 bg-[#b44d28]" />
-            </div>
-          </div>
-
-         {isLoading.passwordChange ? <Loader size={100} />: ( <form
-            onSubmit={handlePasswordSubmit}
-            className="grid gap-8 lg:grid-cols-[1fr_340px]"
-          >
-            {/* Password Fields */}
-            <div className="space-y-4">
-              {user.hasPassword && (
-                <PasswordField
-                  id="currentPassword"
-                  name="currentPassword"
-                  placeholder="Current Password"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordInputChange}
-                  visible={visiblePasswords.currentPassword}
-                  onToggle={() => togglePasswordVisibility("currentPassword")}
-                  autoComplete="current-password"
-                />
-              )}
-
-              <PasswordField
-                id="newPassword"
-                name="newPassword"
-                placeholder="New Password"
-                value={passwordData.newPassword}
-                onChange={handlePasswordInputChange}
-                visible={visiblePasswords.newPassword}
-                onToggle={() => togglePasswordVisibility("newPassword")}
-                autoComplete="new-password"
-              />
-
-              <PasswordField
-                id="confirmPassword"
-                name="confirmPassword"
-                placeholder="Enter New Password Again"
-                value={passwordData.confirmPassword}
-                onChange={handlePasswordInputChange}
-                visible={visiblePasswords.confirmPassword}
-                onToggle={() => togglePasswordVisibility("confirmPassword")}
-                autoComplete="new-password"
-              />
-            </div>
-
-            {/* Password Requirements */}
-            <aside className="self-start">
-              <div className="rounded-2xl bg-[#f7f0e8] p-6">
-                <h3 className="mb-5 font-heading text-xl font-bold text-[#b44d28]">
-                  Password must:
-                </h3>
-
-                <div className="space-y-3 text-[#555]">
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
-                    Be at least 8 characters
-                  </p>
-
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
-                    Include a number
-                  </p>
-
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
-                    Include an uppercase letter
-                  </p>
-
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
-                    Include a special character
-                  </p>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="mt-4 w-full rounded-xl bg-[#b44d28] px-6 py-4 text-xl font-semibold text-white transition hover:opacity-90"
+            {isLoading.passwordChange ? (
+              <Loader size={100} />
+            ) : (
+              <form
+                onSubmit={handlePasswordSubmit}
+                className="grid gap-8 lg:grid-cols-[1fr_340px]"
               >
-                Update Password
+                {/* Password Fields */}
+                <div className="space-y-4">
+                  {user.hasPassword && (
+                    <PasswordField
+                      id="currentPassword"
+                      name="currentPassword"
+                      placeholder="Current Password"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordInputChange}
+                      visible={visiblePasswords.currentPassword}
+                      onToggle={() =>
+                        togglePasswordVisibility("currentPassword")
+                      }
+                      autoComplete="current-password"
+                    />
+                  )}
+
+                  <PasswordField
+                    id="newPassword"
+                    name="newPassword"
+                    placeholder="New Password"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordInputChange}
+                    visible={visiblePasswords.newPassword}
+                    onToggle={() => togglePasswordVisibility("newPassword")}
+                    autoComplete="new-password"
+                  />
+
+                  <PasswordField
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Enter New Password Again"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordInputChange}
+                    visible={visiblePasswords.confirmPassword}
+                    onToggle={() => togglePasswordVisibility("confirmPassword")}
+                    autoComplete="new-password"
+                  />
+                </div>
+
+                {/* Password Requirements */}
+                <aside className="self-start">
+                  <div className="rounded-2xl bg-[#f7f0e8] p-6">
+                    <h3 className="mb-5 font-heading text-xl font-bold text-[#b44d28]">
+                      Password must:
+                    </h3>
+
+                    <div className="space-y-3 text-[#555]">
+                      <p>
+                        <span className="mr-3 text-[#b44d28]">◉</span>
+                        Be at least 8 characters
+                      </p>
+
+                      <p>
+                        <span className="mr-3 text-[#b44d28]">◉</span>
+                        Include a number
+                      </p>
+
+                      <p>
+                        <span className="mr-3 text-[#b44d28]">◉</span>
+                        Include an uppercase letter
+                      </p>
+
+                      <p>
+                        <span className="mr-3 text-[#b44d28]">◉</span>
+                        Include a special character
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="mt-4 w-full rounded-xl bg-[#b44d28] px-6 py-4 text-xl font-semibold text-white transition hover:opacity-90"
+                  >
+                    Update Password
+                  </button>
+                </aside>
+              </form>
+            )}
+          </section>
+
+          {/* Bottom Actions */}
+          <section className="rounded-[22px] border border-[#eadfd3] bg-white px-5 py-5 shadow-[0_8px_24px_rgba(54,38,25,0.08)]">
+            <div className="grid gap-5 md:grid-cols-[1fr_320px] md:items-stretch">
+              {/* Delete Account */}
+              <button
+                type="button"
+                disabled={state.loading}
+                onClick={handleDeleteAccount}
+                className="flex items-center justify-between px-5 py-4 text-left md:border-r md:border-[#eadfd3]"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#f4eadc] text-2xl text-[#b44d28]">
+                    🗑️
+                  </div>
+
+                  <div>
+                    <p className="font-heading text-lg font-semibold text-[#10263f]">
+                      Delete Account
+                    </p>
+
+                    <p className="mt-1 text-sm leading-5 text-[#666]">
+                      Permanently delete your account and all your data.
+                    </p>
+                  </div>
+                </div>
+
+                <span className="text-2xl text-[#10263f]">›</span>
               </button>
-            </aside>
-          </form>)}
-        </section>
 
-        {/* Bottom Actions */}
-        <section className="rounded-[22px] border border-[#eadfd3] bg-white px-5 py-5 shadow-[0_8px_24px_rgba(54,38,25,0.08)]">
-          <div className="grid gap-5 md:grid-cols-[1fr_320px] md:items-stretch">
-            {/* Delete Account */}
-            <button
-              type="button"
-              disabled={state.loading}
-              onClick={handleDeleteAccount}
-              className="flex items-center justify-between px-5 py-4 text-left md:border-r md:border-[#eadfd3]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#f4eadc] text-2xl text-[#b44d28]">
-                  🗑️
-                </div>
-
-                <div>
-                  <p className="font-heading text-lg font-semibold text-[#10263f]">
-                    Delete Account
-                  </p>
-
-                  <p className="mt-1 text-sm leading-5 text-[#666]">
-                    Permanently delete your account and all your data.
-                  </p>
-                </div>
+              {/* Logout */}
+              <div className="flex items-center justify-center px-5 py-3">
+                <LogoutBtn className="w-full rounded-xl bg-[#10263f] px-8 py-5 text-lg font-semibold text-white transition hover:opacity-90" />
               </div>
-
-              <span className="text-2xl text-[#10263f]">›</span>
-            </button>
-
-            {/* Logout */}
-            <div className="flex items-center justify-center px-5 py-3">
-              <LogoutBtn className="w-full rounded-xl bg-[#10263f] px-8 py-5 text-lg font-semibold text-white transition hover:opacity-90" />
             </div>
+          </section>
+
+          {/* Tagline */}
+          <div className="mt-9 flex items-center justify-center gap-4 pb-3 text-sm tracking-[0.3em] text-[#10263f]">
+            <span className="hidden h-px w-40 bg-[#d6ad83] sm:block" />
+
+            <span className="text-[#b44d28]">×</span>
+
+            <span>
+              STITCH. <span className="text-[#b44d28]">CREATE.</span> SHARE.
+            </span>
+
+            <span className="text-[#b44d28]">×</span>
+
+            <span className="hidden h-px w-40 bg-[#d6ad83] sm:block" />
           </div>
-        </section>
-
-        {/* Tagline */}
-        <div className="mt-9 flex items-center justify-center gap-4 pb-3 text-sm tracking-[0.3em] text-[#10263f]">
-          <span className="hidden h-px w-40 bg-[#d6ad83] sm:block" />
-
-          <span className="text-[#b44d28]">×</span>
-
-          <span>
-            STITCH. <span className="text-[#b44d28]">CREATE.</span> SHARE.
-          </span>
-
-          <span className="text-[#b44d28]">×</span>
-
-          <span className="hidden h-px w-40 bg-[#d6ad83] sm:block" />
         </div>
-      </div>)}
+      )}
     </main>
   );
 }

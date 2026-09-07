@@ -4,9 +4,8 @@ import { useAuth } from "../state/auth/useAuth";
 import Loader from "../components/Loader/Loader";
 function PublicRoutes() {
   const { state } = useAuth();
-
   if (state.loading) {
-    return <Loader size={200}/>
+    return <Loader size={200} />;
   }
   return state.isAuthenticated ? <Navigate to="/" /> : <Outlet />;
 }
