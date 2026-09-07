@@ -6,7 +6,7 @@ import PatternCanvas from "../components/features/pattern/PatternCanvas";
 import PatternLegend from "../components/features/pattern/PatternLegend";
 
 import { fetchPattern, updatePattern } from "../services/patternService";
-
+import Loader from "../components/Loader/Loader";
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
   { label: "75%", cellSize: 12 },
@@ -37,6 +37,7 @@ function EditPage() {
   useEffect(() => {
     async function loadPattern() {
       try {
+        setIsSaving(true);
         const fetchedPattern = await fetchPattern(patternId);
 
         setPattern(fetchedPattern);
@@ -45,6 +46,8 @@ function EditPage() {
         setHeightDraft(String(fetchedPattern.stitchHeight));
       } catch {
         setErrorMessage("Unable to load pattern.");
+      } finally {
+        setIsSaving(false);
       }
     }
 
@@ -217,7 +220,7 @@ function EditPage() {
         </header>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
-          <section className="min-w-0 rounded-2xl border border-border bg-surface p-4 shadow-sm md:p-6">
+          <section className="min-h-[600px] min-w-0 rounded-2xl border border-border bg-surface p-4 shadow-sm md:p-6">
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h2 className="text-2xl font-semibold text-secondary">
@@ -234,11 +237,15 @@ function EditPage() {
               </p>
             </div>
 
-            <PatternCanvas
-              pattern={patternForCanvas}
-              cellSize={zoom.cellSize}
-              canvasRef={canvasRef}
-            />
+            {isSaving ? (
+              <Loader size={200} />
+            ) : (
+              <PatternCanvas
+                pattern={patternForCanvas}
+                cellSize={zoom.cellSize}
+                canvasRef={canvasRef}
+              />
+            )}
           </section>
 
           <aside className="space-y-5">
