@@ -195,7 +195,7 @@ function GeneratePage() {
             <p className="mt-4 mb-4 text-center text-secondary" role="status">
               Creating your cross-stitch pattern…
             </p>
-            <Loader size={150} />
+            <Loader size={100} />
           </>
         )}
 

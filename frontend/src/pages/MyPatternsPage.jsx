@@ -87,7 +87,7 @@ function MyPatternsPage() {
   return (
     <>
       {dashState.isFetching ? (
-        <Loader />
+        <Loader size={200} />
       ) : (
         <DashContext value={{ dashState, dispatch, dashActions }}>
           <div className="bg-background">
