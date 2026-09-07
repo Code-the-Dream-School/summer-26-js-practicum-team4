@@ -80,6 +80,11 @@ function EditPage() {
       return;
     }
 
+    if (name.length > 30) {
+      setErrorMessage("Pattern name exceeds 30 characters.");
+      return;
+    }
+
     if (
       !Number.isInteger(width) ||
       !Number.isInteger(height) ||
@@ -213,11 +218,13 @@ function EditPage() {
               )}
             </div>
           </div>
-
-          {errorMessage && (
-            <p className="mt-4 text-sm text-red-600">{errorMessage}</p>
-          )}
         </header>
+
+        {errorMessage && (
+          <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+            {errorMessage}
+          </p>
+        )}
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
           <section className="min-h-[600px] min-w-0 rounded-2xl border border-border bg-surface p-4 shadow-sm md:p-6">
