@@ -1,11 +1,8 @@
 import React, { useEffect, useReducer } from "react";
 
 // Component Imports
-import DisplayToggle from "../components/features/dashboard/DisplayToggle";
 
-import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextView";
 import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
-import CreateNewPatternIcon from "../components/features/dashboard/PatternDisplays/CreateNewPatternIcon";
 
 // Context
 import { DashContext } from "../state/dashboard/dashContext";

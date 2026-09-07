@@ -25,7 +25,6 @@ function PatternResult({
   fileName,
   canvasRef,
   onBack,
-  onUploadNew,
 }) {
   const { state } = useAuth();
 

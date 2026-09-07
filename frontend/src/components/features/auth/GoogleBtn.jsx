@@ -18,7 +18,6 @@ function GoogleBtn() {
       });
       navigate("/generate");
     } catch (error) {
-      console.error("Error during Google authentication:", error);
       dispatch({ type: "SET_ERROR", payload: error.message });
     }
   }

@@ -49,6 +49,8 @@ SavePatternBtn.propTypes = {
     grid: PropTypes.arrayOf(PropTypes.number).isRequired,
   }).isRequired,
   textStyle: PropTypes.string,
+  lockEdit: PropTypes.bool,
+  setLockEdit: PropTypes.func.isRequired
 };
 
 export default SavePatternBtn;
