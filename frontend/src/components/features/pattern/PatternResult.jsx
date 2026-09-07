@@ -31,7 +31,8 @@ function PatternResult({
 
   const [zoomIndex, setZoomIndex] = useState(2);
   const [imgBlob, setImgBlob] = useState(null);
-  const [currentPatternName, setCurrentPatternName] = useState("Untitled Pattern");
+  const [currentPatternName, setCurrentPatternName] =
+    useState("Untitled Pattern");
   const [lockEdit, setLockEdit] = useState(false);
 
   // Zoom Controls

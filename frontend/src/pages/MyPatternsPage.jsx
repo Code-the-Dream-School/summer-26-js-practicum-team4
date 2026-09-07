@@ -56,20 +56,20 @@ function MyPatternsPage() {
   // Function that processes user's view choice into rendered component
   function userChosenView(patterns) {
     if (patterns.length === 0) {
-  return (
-    <div className="min-h-screen w-full">
-      <div className="relative z-10 ml-25 my-5 flex items-center gap-3 text-primary">
-        <span className="h-px w-24 bg-primary" />
-        <span className="font-bold">×</span>
-        <span className="h-px w-24 bg-primary" />
-      </div>
+      return (
+        <div className="min-h-screen w-full">
+          <div className="relative z-10 ml-25 my-5 flex items-center gap-3 text-primary">
+            <span className="h-px w-24 bg-primary" />
+            <span className="font-bold">×</span>
+            <span className="h-px w-24 bg-primary" />
+          </div>
 
-      <div className="w-[90%] mx-auto">
-        <CreateNewPatternIcon isEmpty={true}/>
-      </div>
-    </div>
-  );
-}
+          <div className="w-[90%] mx-auto">
+            <CreateNewPatternIcon isEmpty={true} />
+          </div>
+        </div>
+      );
+    }
     if (dashState.view === "scroll") {
       return (
         <PrevNextView
@@ -87,37 +87,37 @@ function MyPatternsPage() {
     }
   }
 
-function GridIcon({ active }) {
-  return (
-    <div className="grid grid-cols-2 gap-1">
-      {[0, 1, 2, 3].map((i) => (
+  function GridIcon({ active }) {
+    return (
+      <div className="grid grid-cols-2 gap-1">
+        {[0, 1, 2, 3].map((i) => (
+          <span
+            key={i}
+            className={`h-4 w-4 rounded-md ${
+              active ? "bg-primary" : "bg-primary/20"
+            }`}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  function SingleIcon({ active }) {
+    const arrowColor = active ? "border-primary" : "border-primary/20";
+    const squareColor = active ? "bg-primary" : "bg-primary/20";
+
+    return (
+      <div className="flex items-center gap-1.5">
         <span
-          key={i}
-          className={`h-4 w-4 rounded-md ${
-            active ? "bg-primary" : "bg-primary/20"
-          }`}
+          className={`h-2 w-2 -rotate-45 border-t-2 border-l-2 ${arrowColor}`}
         />
-      ))}
-    </div>
-  );
-}
-
-function SingleIcon({ active }) {
-  const arrowColor = active ? "border-primary" : "border-primary/20";
-  const squareColor = active ? "bg-primary" : "bg-primary/20";
-
-  return (
-    <div className="flex items-center gap-1.5">
-      <span
-        className={`h-2 w-2 -rotate-45 border-t-2 border-l-2 ${arrowColor}`}
-      />
-      <span className={`block h-8 w-8 rounded-md ${squareColor}`} />
-      <span
-        className={`h-2 w-2 rotate-45 border-t-2 border-r-2 ${arrowColor}`}
-      />
-    </div>
-  );
-}
+        <span className={`block h-8 w-8 rounded-md ${squareColor}`} />
+        <span
+          className={`h-2 w-2 rotate-45 border-t-2 border-r-2 ${arrowColor}`}
+        />
+      </div>
+    );
+  }
   return (
     <>
       <DashContext value={{ dashState, dispatch, dashActions }}>
@@ -133,7 +133,7 @@ function SingleIcon({ active }) {
               <></>
             )}
           </div>
-         <div className="relative z-10 ml-auto flex w-fit items-center gap-2 mr-25 -mt-16 print:hidden">
+          <div className="relative z-10 ml-auto flex w-fit items-center gap-2 mr-25 -mt-16 print:hidden">
             <button
               type="button"
               onClick={() => dispatch({ type: dashActions.setScrollView })}

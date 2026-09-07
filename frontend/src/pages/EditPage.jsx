@@ -159,7 +159,7 @@ function EditPage() {
               </p>
 
               {isEditing ? (
-               <input
+                <input
                   type="text"
                   value={nameDraft}
                   onChange={(event) => setNameDraft(event.target.value)}

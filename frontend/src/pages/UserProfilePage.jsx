@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import {
   Lock,
   Eye,
-  EyeOff, 
+  EyeOff,
   Camera,
   Trash2,
   Pencil,
@@ -480,8 +480,8 @@ function UserProfilePage() {
   }
 
   return (
-   <main className="w-full bg-background">
-    <div className="mx-auto w-[90%] px-4 py-8 md:px-8">
+    <main className="w-full bg-background">
+      <div className="mx-auto w-[90%] px-4 py-8 md:px-8">
         {/* Page Heading */}
         <header className="relative mb-8 overflow-hidden pb-2">
           <DecorativeStitches />
@@ -495,11 +495,10 @@ function UserProfilePage() {
             <span className="font-bold">×</span>
             <span className="h-px w-24 bg-primary" />
           </div>
-        
         </header>
 
         {/* Profile Card */}
-       <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
+        <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
           <div className="grid gap-16 lg:grid-cols-[280px_1fr_380px] lg:items-center">
             {/* Avatar */}
             <div className="flex w-full flex-col items-center">
@@ -593,7 +592,6 @@ function UserProfilePage() {
                   </p>
 
                   <p className="text-lg text-text">{user.email}</p>
-
                 </div>
 
                 {/* Member Since */}
@@ -674,7 +672,7 @@ function UserProfilePage() {
 
           <form
             onSubmit={handlePasswordSubmit}
-           className="grid gap-8 lg:grid-cols-[1fr_380px]"
+            className="grid gap-8 lg:grid-cols-[1fr_380px]"
           >
             {/* Password Fields */}
             <div className="space-y-6">
@@ -777,7 +775,6 @@ function UserProfilePage() {
         {/* Bottom Actions */}
         <section className="rounded-[22px] border border-border bg-surface px-5 py-5 shadow-[0_8px_24px_rgba(54,38,25,0.08)]">
           <div className="grid gap-5 md:grid-cols-[1fr_320px] md:items-stretch">
-
             {/* Delete Account Info */}
             <div className="flex items-center px-5 py-4 md:border-r md:border-border">
               <div className="flex items-center gap-4">
@@ -808,7 +805,6 @@ function UserProfilePage() {
                 Delete Account
               </button>
             </div>
-
           </div>
         </section>
 

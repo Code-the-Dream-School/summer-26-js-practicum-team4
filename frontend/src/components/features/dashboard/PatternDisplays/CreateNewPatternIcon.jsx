@@ -18,10 +18,8 @@ function CreateNewPatternIcon({ isEmpty = false }) {
           {isEmpty ? (
             <>
               You don't have any patterns yet —{" "}
-              <span className="font-medium text-primary">
-                click here
-              </span>
-              {" "}to create your first one.
+              <span className="font-medium text-primary">click here</span> to
+              create your first one.
             </>
           ) : (
             <>
