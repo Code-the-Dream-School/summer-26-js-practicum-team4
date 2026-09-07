@@ -1,7 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
+import {
+  Lock,
+  Eye,
+  EyeOff, 
+  Camera,
+  Trash2,
+  Pencil,
+  Calendar,
+  Circle,
+} from "lucide-react";
 import { getUser, updateUser, deleteUser } from "../services/userService";
 import PropTypes from "prop-types";
-import LogoutBtn from "../components/features/auth/LogoutBtn";
 import { useAuth } from "../state/auth/useAuth";
 import { uploadPhoto, deletePhoto } from "../services/profileImageService";
 
@@ -87,22 +96,6 @@ function PatternGeneratedIcon() {
   );
 }
 
-function EyeIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-5 w-5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
-      <circle cx="12" cy="12" r="2.5" />
-    </svg>
-  );
-}
-
 function PasswordField({
   id,
   name,
@@ -115,8 +108,8 @@ function PasswordField({
 }) {
   return (
     <div className="relative">
-      <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-base text-[#7b7b7b]">
-        🔒
+      <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-text-secondary">
+        <Lock size={18} aria-hidden="true" />
       </span>
 
       <input
@@ -127,17 +120,21 @@ function PasswordField({
         value={value}
         onChange={onChange}
         autoComplete={autoComplete}
-        className="w-full rounded-xl border border-[#dfcdbd] bg-[#fffdf9] px-14 py-4 pr-14 text-base text-[#1a1a1a] outline-none transition focus:border-[#b44d28] focus:ring-2 focus:ring-[#b44d28]/10"
+        className="w-full rounded-xl border border-border bg-input-form px-14 py-4 pr-14 text-base text-text outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
         required
       />
 
       <button
         type="button"
         onClick={onToggle}
-        className="absolute right-5 top-1/2 -translate-y-1/2 text-[#7b7b7b] transition hover:text-[#10263f]"
+        className="absolute right-5 top-1/2 -translate-y-1/2 text-text-secondary transition hover:text-secondary"
         aria-label={visible ? "Hide password" : "Show password"}
       >
-        <EyeIcon />
+        {visible ? (
+          <EyeOff size={20} aria-hidden="true" />
+        ) : (
+          <Eye size={20} aria-hidden="true" />
+        )}
       </button>
     </div>
   );
@@ -226,22 +223,27 @@ function UserProfilePage() {
         setMessage({ text: "Failed to fetch user data.", error: true });
       }
     }
+
     getUserData();
   }, []);
 
   async function updateUserData(userData) {
     setMessage({ text: "", error: false });
+
     try {
       const updatedData = await updateUser(userData);
+
       if (updatedData) {
         setUserProfileData(updatedData);
       }
+
       return true;
     } catch {
       setMessage({ text: "Failed to update user data.", error: true });
       return false;
     }
   }
+
   const handleEditProfile = () => {
     setFormData(user);
     setIsEditing(true);
@@ -273,7 +275,10 @@ function UserProfilePage() {
       return;
     }
 
-    const updateSuccess = await updateUserData({ userName: formData.fullName });
+    const updateSuccess = await updateUserData({
+      userName: formData.fullName,
+    });
+
     if (updateSuccess) {
       dispatch({
         type: "LOGIN_SUCCESS",
@@ -282,6 +287,7 @@ function UserProfilePage() {
           userName: formData.fullName,
         },
       });
+
       setIsEditing(false);
     }
   };
@@ -346,6 +352,7 @@ function UserProfilePage() {
 
       if (updateSuccess) {
         await deletePhoto(user.email);
+
         setMessage({
           text: "Profile photo deleted successfully.",
           error: false,
@@ -433,7 +440,11 @@ function UserProfilePage() {
     );
 
     if (isPasswordChanged) {
-      setMessage({ text: "Password updated successfully.", error: false });
+      setMessage({
+        text: "Password updated successfully.",
+        error: false,
+      });
+
       setPasswordData({
         currentPassword: "",
         newPassword: "",
@@ -460,38 +471,39 @@ function UserProfilePage() {
         type: "SET_ERROR",
         payload: error.message,
       });
-      setMessage({ text: "Failed to delete account.", error: true });
+
+      setMessage({
+        text: "Failed to delete account.",
+        error: true,
+      });
     }
   }
 
   return (
-    <main className="min-h-screen bg-[#fbf7f1]">
-      <div className="mx-auto max-w-7xl px-4 py-8 md:px-8">
+   <main className="w-full bg-background">
+    <div className="mx-auto w-[90%] px-4 py-8 md:px-8">
         {/* Page Heading */}
         <header className="relative mb-8 overflow-hidden pb-2">
           <DecorativeStitches />
 
-          <h1 className="relative z-10 font-heading text-5xl font-bold text-[#10263f]">
+          <h1 className="relative z-10 font-heading text-5xl font-bold text-secondary">
             User Profile
           </h1>
 
-          <div className="relative z-10 mt-4 flex items-center gap-3 text-[#b44d28]">
-            <span className="h-px w-24 bg-[#b44d28]" />
+          <div className="relative z-10 mt-4 flex items-center gap-3 text-primary">
+            <span className="h-px w-24 bg-primary" />
             <span className="font-bold">×</span>
-            <span className="h-px w-24 bg-[#b44d28]" />
+            <span className="h-px w-24 bg-primary" />
           </div>
-
-          <p className="relative z-10 mt-4 text-lg text-[#666]">
-            Manage your account and update your profile.
-          </p>
+        
         </header>
 
         {/* Profile Card */}
-        <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
-          <div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
+       <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
+          <div className="grid gap-16 lg:grid-cols-[280px_1fr_380px] lg:items-center">
             {/* Avatar */}
-            <div className="flex flex-col items-center">
-              <div className="h-44 w-44 overflow-hidden rounded-full">
+            <div className="flex w-full flex-col items-center">
+              <div className="h-48 w-48 overflow-hidden rounded-full">
                 {user.profilePhoto ? (
                   <img
                     src={user.profilePhoto}
@@ -514,22 +526,22 @@ function UserProfilePage() {
               <button
                 type="button"
                 onClick={handlePhotoClick}
-                className="mt-4  w-full rounded-lg bg-[#b44d28] px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
               >
-                📷 Upload Photo
+                Upload Photo
               </button>
 
               {user.profilePhoto && (
                 <button
                   type="button"
                   onClick={handlePhotoDelete}
-                  className="mt-2  w-full rounded-lg border border-[#b44d28] px-7 py-3 text-lg font-semibold text-[#b44d28] transition hover:bg-[#fbf7f1]"
+                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-primary px-7 py-3 text-lg font-semibold text-primary transition hover:bg-background"
                 >
-                  🗑 Delete Photo
+                  Delete Photo
                 </button>
               )}
 
-              <p className="mt-3 text-center text-sm leading-5 text-[#6d6d6d]">
+              <p className="mt-3 text-center text-sm leading-5 text-text-secondary">
                 JPG,JPEG, PNG or WEBP.
                 <br />
                 Maximum 2 MB.
@@ -540,11 +552,11 @@ function UserProfilePage() {
             <form onSubmit={handleSaveProfile}>
               <div className="space-y-6">
                 <div>
-                  <p className="mb-2 text-sm font-semibold text-[#676767]">
+                  <p className="mb-2 text-sm font-semibold text-text-secondary">
                     Full Name
                   </p>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     {isEditing ? (
                       <input
                         id="fullName"
@@ -552,11 +564,11 @@ function UserProfilePage() {
                         type="text"
                         value={formData.fullName ? formData.fullName : ""}
                         onChange={handleInputChange}
-                        className="w-full rounded-xl border border-[#decdbb] bg-[#fffdf9] px-4 py-3 text-lg outline-none focus:border-[#b44d28]"
+                        className="w-full rounded-xl border border-border bg-input-form px-4 py-3 text-lg outline-none focus:border-primary"
                         required
                       />
                     ) : (
-                      <p className="font-heading text-4xl font-semibold text-[#10263f]">
+                      <p className="font-heading text-4xl font-semibold text-secondary">
                         {user.fullName}
                       </p>
                     )}
@@ -566,9 +578,9 @@ function UserProfilePage() {
                         type="button"
                         onClick={handleEditProfile}
                         aria-label="Edit name"
-                        className="rounded-xl border border-[#b44d28] px-4 py-3 text-xl text-[#b44d28] transition hover:bg-[#fbf7f1]"
+                        className=" px-4 py-3 text-primary transition hover:text-secondary"
                       >
-                        ✎
+                        <Pencil size={20} aria-hidden="true" />
                       </button>
                     )}
                   </div>
@@ -576,25 +588,23 @@ function UserProfilePage() {
 
                 {/* Email */}
                 <div>
-                  <p className="mb-2 text-sm font-semibold text-[#676767]">
+                  <p className="mb-2 text-sm font-semibold text-text-secondary">
                     Email Address
                   </p>
 
-                  <p className="text-lg text-[#1a1a1a]">{user.email}</p>
+                  <p className="text-lg text-text">{user.email}</p>
 
-                  <p className="mt-2 text-sm text-[#777]">
-                    🔒 Email cannot be changed
-                  </p>
                 </div>
 
                 {/* Member Since */}
                 <div>
-                  <p className="mb-2 text-sm font-semibold text-[#676767]">
+                  <p className="mb-2 text-sm font-semibold text-text-secondary">
                     Member Since
                   </p>
 
-                  <p className="text-lg text-[#1a1a1a]">
-                    📅 {user.memberSince}
+                  <p className="flex items-center gap-2 text-lg text-text">
+                    <Calendar size={18} aria-hidden="true" />
+                    {user.memberSince}
                   </p>
                 </div>
 
@@ -602,7 +612,7 @@ function UserProfilePage() {
                   <div className="flex gap-3 pt-1">
                     <button
                       type="submit"
-                      className="rounded-lg bg-[#10263f] px-6 py-3 font-semibold text-white"
+                      className="rounded-lg bg-secondary px-6 py-3 font-semibold text-white"
                     >
                       Save Name
                     </button>
@@ -610,7 +620,7 @@ function UserProfilePage() {
                     <button
                       type="button"
                       onClick={handleCancelEdit}
-                      className="rounded-lg border border-[#decdbb] px-6 py-3 font-semibold text-[#10263f]"
+                      className="rounded-lg border border-border px-6 py-3 font-semibold text-secondary"
                     >
                       Cancel
                     </button>
@@ -620,21 +630,21 @@ function UserProfilePage() {
             </form>
 
             {/* Patterns Generated */}
-            <div className="flex min-h-[245px] flex-col items-center justify-center border-t border-[#e7d9ca] pt-7 lg:border-l lg:border-t-0 lg:pl-9 lg:pt-0">
+            <div className="flex min-h-[245px] flex-col items-center justify-center border-t border-border pt-7 lg:border-l lg:border-t-0 lg:pl-9 lg:pt-0">
               <PatternGeneratedIcon />
 
-              <p className="mt-1 font-heading text-7xl font-bold leading-none text-[#b44d28]">
+              <p className="mt-1 font-heading text-7xl font-bold leading-none text-primary">
                 {user.patternsGenerated}
               </p>
 
-              <p className="mt-2 text-center text-xl font-semibold text-[#10263f]">
+              <p className="mt-2 text-center text-xl font-semibold text-secondary">
                 Patterns Generated
               </p>
 
-              <div className="mt-4 flex items-center gap-3 text-[#b44d28]">
-                <span className="h-px w-12 bg-[#b44d28]" />
+              <div className="mt-4 flex items-center gap-3 text-primary">
+                <span className="h-px w-12 bg-primary" />
                 <span>×</span>
-                <span className="h-px w-12 bg-[#b44d28]" />
+                <span className="h-px w-12 bg-primary" />
               </div>
             </div>
           </div>
@@ -644,32 +654,36 @@ function UserProfilePage() {
         {message.text && (
           <div
             role="status"
-            className={`mb-5 rounded-xl border ${message.error ? "border-[#b44d28] text-red-700" : "border-[#decdbb] text-[#10263f]"} bg-white px-5 py-3 text-center font-medium shadow-sm`}
+            className={`mb-5 rounded-xl border ${
+              message.error
+                ? "border-primary text-red-700"
+                : "border-border text-secondary"
+            } bg-surface px-5 py-3 text-center font-medium shadow-sm`}
           >
             {message.text}
           </div>
         )}
 
         {/* Change Password Card */}
-        <section className="mb-7 rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
+        <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
           <div className="mb-7">
-            <h2 className="font-heading text-3xl font-bold text-[#10263f]">
+            <h2 className="font-heading text-3xl font-bold text-secondary">
               {user.hasPassword ? "Change Password" : "Set Password"}
             </h2>
 
-            <div className="mt-3 flex items-center gap-3 text-[#b44d28]">
-              <span className="h-px w-12 bg-[#b44d28]" />
+            <div className="mt-3 flex items-center gap-3 text-primary">
+              <span className="h-px w-12 bg-primary" />
               <span>×</span>
-              <span className="h-px w-12 bg-[#b44d28]" />
+              <span className="h-px w-12 bg-primary" />
             </div>
           </div>
 
           <form
             onSubmit={handlePasswordSubmit}
-            className="grid gap-8 lg:grid-cols-[1fr_340px]"
+            className="grid gap-12 lg:grid-cols-[1fr_450px]"
           >
             {/* Password Fields */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               {user.hasPassword && (
                 <PasswordField
                   id="currentPassword"
@@ -708,29 +722,49 @@ function UserProfilePage() {
 
             {/* Password Requirements */}
             <aside className="self-start">
-              <div className="rounded-2xl bg-[#f7f0e8] p-6">
-                <h3 className="mb-5 font-heading text-xl font-bold text-[#b44d28]">
+              <div className="rounded-2xl bg-[#f7f0e8] p-8">
+                <h3 className="mb-5 font-heading text-xl font-bold text-primary">
                   Password must:
                 </h3>
 
-                <div className="space-y-3 text-[#555]">
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
+                <div className="space-y-3 text-text-secondary">
+                  <p className="flex items-center">
+                    <Circle
+                      size={10}
+                      fill="currentColor"
+                      className="mr-3 text-primary"
+                      aria-hidden="true"
+                    />
                     Be at least 8 characters
                   </p>
 
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
+                  <p className="flex items-center">
+                    <Circle
+                      size={10}
+                      fill="currentColor"
+                      className="mr-3 text-primary"
+                      aria-hidden="true"
+                    />
                     Include a number
                   </p>
 
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
+                  <p className="flex items-center">
+                    <Circle
+                      size={10}
+                      fill="currentColor"
+                      className="mr-3 text-primary"
+                      aria-hidden="true"
+                    />
                     Include an uppercase letter
                   </p>
 
-                  <p>
-                    <span className="mr-3 text-[#b44d28]">◉</span>
+                  <p className="flex items-center">
+                    <Circle
+                      size={10}
+                      fill="currentColor"
+                      className="mr-3 text-primary"
+                      aria-hidden="true"
+                    />
                     Include a special character
                   </p>
                 </div>
@@ -738,7 +772,7 @@ function UserProfilePage() {
 
               <button
                 type="submit"
-                className="mt-4 w-full rounded-xl bg-[#b44d28] px-6 py-4 text-xl font-semibold text-white transition hover:opacity-90"
+                className="mt-4 w-full rounded-xl bg-primary px-6 py-4 text-xl font-semibold text-white transition hover:opacity-90"
               >
                 Update Password
               </button>
@@ -747,55 +781,57 @@ function UserProfilePage() {
         </section>
 
         {/* Bottom Actions */}
-        <section className="rounded-[22px] border border-[#eadfd3] bg-white px-5 py-5 shadow-[0_8px_24px_rgba(54,38,25,0.08)]">
+        <section className="rounded-[22px] border border-border bg-surface px-5 py-5 shadow-[0_8px_24px_rgba(54,38,25,0.08)]">
           <div className="grid gap-5 md:grid-cols-[1fr_320px] md:items-stretch">
-            {/* Delete Account */}
-            <button
-              type="button"
-              disabled={state.loading}
-              onClick={handleDeleteAccount}
-              className="flex items-center justify-between px-5 py-4 text-left md:border-r md:border-[#eadfd3]"
-            >
+
+            {/* Delete Account Info */}
+            <div className="flex items-center px-5 py-4 md:border-r md:border-border">
               <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#f4eadc] text-2xl text-[#b44d28]">
-                  🗑️
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#f4eadc] text-primary">
+                  <Trash2 size={24} aria-hidden="true" />
                 </div>
 
                 <div>
-                  <p className="font-heading text-lg font-semibold text-[#10263f]">
+                  <p className="font-heading text-lg font-semibold text-secondary">
                     Delete Account
                   </p>
 
-                  <p className="mt-1 text-sm leading-5 text-[#666]">
+                  <p className="mt-1 text-sm leading-5 text-text-secondary">
                     Permanently delete your account and all your data.
                   </p>
                 </div>
               </div>
-
-              <span className="text-2xl text-[#10263f]">›</span>
-            </button>
-
-            {/* Logout */}
-            <div className="flex items-center justify-center px-5 py-3">
-              <LogoutBtn className="w-full rounded-xl bg-[#10263f] px-8 py-5 text-lg font-semibold text-white transition hover:opacity-90" />
             </div>
+
+            {/* Delete Account Button */}
+            <div className="flex items-center justify-center px-5 py-3 ">
+              <button
+                type="button"
+                disabled={state.loading}
+                onClick={handleDeleteAccount}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-8 py-5 text-lg font-semibold text-white transition hover:opacity-90"
+              >
+                Delete Account
+              </button>
+            </div>
+
           </div>
         </section>
 
-        {/* Tagline */}
-        <div className="mt-9 flex items-center justify-center gap-4 pb-3 text-sm tracking-[0.3em] text-[#10263f]">
-          <span className="hidden h-px w-40 bg-[#d6ad83] sm:block" />
+        {/* Tagline
+        <div className="mt-9 flex items-center justify-center gap-4 pb-3 text-sm tracking-[0.3em] text-secondary">
+          <span className="hidden h-px w-40 bg-accent sm:block" />
 
-          <span className="text-[#b44d28]">×</span>
+          <span className="text-primary">×</span>
 
           <span>
-            STITCH. <span className="text-[#b44d28]">CREATE.</span> SHARE.
+            STITCH. <span className="text-primary">CREATE.</span> SHARE.
           </span>
 
-          <span className="text-[#b44d28]">×</span>
+          <span className="text-primary">×</span>
 
-          <span className="hidden h-px w-40 bg-[#d6ad83] sm:block" />
-        </div>
+          <span className="hidden h-px w-40 bg-accent sm:block" />
+        </div> */}
       </div>
     </main>
   );
