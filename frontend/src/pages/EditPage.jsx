@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 import PatternCanvas from "../components/features/pattern/PatternCanvas";
@@ -30,6 +30,8 @@ function EditPage() {
 
   const [zoomIndex, setZoomIndex] = useState(2);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const canvasRef = useRef(null);
 
   const zoom = ZOOM_LEVELS[zoomIndex];
 
@@ -236,6 +238,7 @@ function EditPage() {
             <PatternCanvas
               pattern={patternForCanvas}
               cellSize={zoom.cellSize}
+              canvasRef={canvasRef}
             />
           </section>
 

@@ -9,6 +9,8 @@ import SavePatternBtn from "../generate/SavePatternBtn";
 import DownloadPatternBtn from "../shared/DownloadPatternBtn";
 import PatternNameComponent from "../shared/PatternNameComponent";
 
+import { useAuth } from "../../../state/auth/useAuth";
+
 const ZOOM_LEVELS = [
   { label: "50%", cellSize: 8 },
   { label: "75%", cellSize: 12 },
@@ -25,10 +27,13 @@ function PatternResult({
   onBack,
   onUploadNew,
 }) {
+  const { state } = useAuth();
+
   const [zoomIndex, setZoomIndex] = useState(2);
   const [imgBlob, setImgBlob] = useState(null);
   const [currentPatternName, setCurrentPatternName] =
     useState("generatedPattern");
+  const [lockEdit, setLockEdit] = useState(false);
 
   // Zoom Controls
   const zoom = ZOOM_LEVELS[zoomIndex];
@@ -79,6 +84,7 @@ function PatternResult({
               pattern={pattern}
               textStyle={"text-3xl font-bold text-secondary md:text-4xl"}
               setCurrentPatternName={setCurrentPatternName}
+              lockEdit={lockEdit}
             />
             <p className="mt-2 text-text-secondary">
               {pattern.width} × {pattern.height} stitches ·{" "}
@@ -106,9 +112,23 @@ function PatternResult({
               textStyle={
                 "rounded-lg border border-border bg-surface px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
               }
+              lockEdit={lockEdit}
+              setLockEdit={setLockEdit}
             />
           </div>
         </header>
+
+        {lockEdit && (
+          <p className="rounded-lg border border-border bg-green-100 px-4 py-3 text-sm text-black">
+            Pattern successfully saved.
+          </p>
+        )}
+
+        {state.error && (
+          <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+            {state.error}
+          </p>
+        )}
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
           <section className="canvas-object min-w-0 rounded-2xl border border-border bg-surface p-4 shadow-sm md:p-6">
