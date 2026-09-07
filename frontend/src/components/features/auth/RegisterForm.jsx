@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../../state/auth/useAuth";
 import ReCAPTCHA from "react-google-recaptcha";
 import GoogleBtn from "./GoogleBtn";
+import Loader from '../../Loader/Loader'
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -17,14 +18,17 @@ function RegisterForm() {
 
   const {
     dispatch,
-    state: { error },
+    state: { error, loading},
   } = useAuth();
+
   const navigate = useNavigate();
+  
   useEffect(() => {
     dispatch({
       type: "CLEAR_ERROR",
     });
   }, [dispatch]);
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -39,6 +43,7 @@ function RegisterForm() {
       });
       return;
     }
+
     if (!reCaptchaToken) {
       dispatch({
         type: "SET_ERROR",
@@ -47,7 +52,13 @@ function RegisterForm() {
       return;
     }
 
+  
+
     try {
+        dispatch({
+      type: "SET_LOADING",
+      payload: true,
+    });
       const response = await register(
         username,
         email,
@@ -68,7 +79,7 @@ function RegisterForm() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-12">
+  <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-12">
       <div className="mb-8 -translate-y-4 text-center">
         <Link to="/" className="text-2xl font-bold text-primary">
           <img
@@ -79,7 +90,7 @@ function RegisterForm() {
         </Link>
       </div>
 
-      <div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-3xl bg-white shadow-xl">
+     {loading? <Loader/>:(<div className="flex min-h-[600px] w-full max-w-6xl overflow-hidden rounded-3xl bg-white shadow-xl">
         <div className="flex w-[50%] flex-col justify-center px-16 py-16">
           <div className="mb-10 text-center">
             <h2 className="text-3xl font-bold">Create Account</h2>
@@ -252,7 +263,7 @@ function RegisterForm() {
             className="h-full w-full object-cover"
           />
         </div>
-      </div>
+      </div>)}
     </div>
   )
 }

@@ -503,7 +503,8 @@ setIsLoading((prev) => ({ ...prev, passwordChange: true }));
 
         {/* Profile Card */}
     <section className="mb-7 min-h-[400px] rounded-[22px] border border-[#eadfd3] bg-white px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
-        {isLoading.userData?<Loader size={200} />:(<div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
+        {isLoading.userData?<Loader size={200} />:
+        (<div className="grid gap-8 lg:grid-cols-[220px_1fr_270px] lg:items-center">
             {/* Avatar */}
             <div className="flex flex-col items-center">
               <div className="h-44 w-44 overflow-hidden rounded-full">
