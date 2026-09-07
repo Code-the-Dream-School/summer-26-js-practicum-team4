@@ -63,7 +63,7 @@ function DownloadPatternBtn({
       return (
         <button
           onClick={handleDownload}
-          className="rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
+          className="w-64 rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
         >
           Download Pattern
         </button>

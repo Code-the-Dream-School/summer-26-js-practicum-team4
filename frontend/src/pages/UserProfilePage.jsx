@@ -578,7 +578,7 @@ function UserProfilePage() {
                         type="button"
                         onClick={handleEditProfile}
                         aria-label="Edit name"
-                        className=" px-4 py-3 text-primary transition hover:text-secondary"
+                        className=" px-4 py-3 text-secondary transition hover:text-primary"
                       >
                         <Pencil size={20} aria-hidden="true" />
                       </button>
@@ -665,22 +665,16 @@ function UserProfilePage() {
         )}
 
         {/* Change Password Card */}
-        <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-8 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
+        <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
           <div className="mb-7">
             <h2 className="font-heading text-3xl font-bold text-secondary">
               {user.hasPassword ? "Change Password" : "Set Password"}
             </h2>
-
-            <div className="mt-3 flex items-center gap-3 text-primary">
-              <span className="h-px w-12 bg-primary" />
-              <span>×</span>
-              <span className="h-px w-12 bg-primary" />
-            </div>
           </div>
 
           <form
             onSubmit={handlePasswordSubmit}
-            className="grid gap-12 lg:grid-cols-[1fr_450px]"
+           className="grid gap-8 lg:grid-cols-[1fr_380px]"
           >
             {/* Password Fields */}
             <div className="space-y-6">

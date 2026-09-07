@@ -65,7 +65,7 @@ function MyPatternsPage() {
       </div>
 
       <div className="w-[90%] mx-auto">
-        <CreateNewPatternIcon />
+        <CreateNewPatternIcon isEmpty={true}/>
       </div>
     </div>
   );
@@ -154,7 +154,7 @@ function SingleIcon({ active }) {
               <GridIcon active={dashState.view === "all"} />
             </button>
           </div>
-          <h1 className="text-5xl font-bold text-secondary ml-25 m-5 print:hidden">
+          <h1 className="text-5xl font-bold text-secondary ml-25 m-8 print:hidden">
             Dashboard
           </h1>
           <div className="relative print:hidden">

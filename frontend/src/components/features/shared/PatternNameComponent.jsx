@@ -5,6 +5,7 @@ import {
   saveNewPatternName,
 } from "../../../services/patternService";
 import { useAuth } from "../../../state/auth/useAuth";
+import { Pencil } from "lucide-react";
 
 function PatternNameComponent({
   pattern,
@@ -74,6 +75,7 @@ function PatternNameComponent({
     if (!validateNewPatternName(currentLocalPatternName)) {
       // invalid pattern name, end saving
       dispatch({ type: "END_PATTERN_NAME_SAVING" });
+      return;
     }
 
     if (currentLocalPatternName.length > 30) {
@@ -117,7 +119,7 @@ function PatternNameComponent({
     return (
       <form onSubmit={handleSave}>
         <label htmlFor={patternId}></label>
-        <div className="grid grid-cols-5 place-content-center">
+        <div className="grid grid-cols-5 place-content-center gap-8">
           <input
             id={patternId}
             type="text"
@@ -126,17 +128,17 @@ function PatternNameComponent({
               setCurrentLocalPatternName(event.target.value);
             }}
             ref={editFocus}
-            className={`${textStyle} bg-white rounded-xl p-1 border mb-5 col-span-5`}
+            className={`${textStyle} bg-background rounded-md border border-gray-300 px-3 py-2 col-span-4 outline-none focus:border-gray-400`}
           ></input>
-          <div className="col-start-6 mt-1">
+          <div className="flex items-center gap-3">
             <button
-              className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto mr-1 ml-4 p-1"
+              className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white"
               onClick={handleSave}
             >
               Save
             </button>
             <button
-              className=" bg-primary hover:bg-accent text-white border border-black rounded-md m-auto p-1"
+              className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white"
               onClick={handleCancel}
             >
               Cancel
@@ -155,14 +157,12 @@ function PatternNameComponent({
         </h2>
         {showEditBtn ? (
           <button
-            className="justify-self-start disabled:opacity-60"
+            type="button"
+            className="px-2 py-3 text-secondary transition hover:text-primary"
             onClick={handleEdit}
             disabled={lockEdit}
           >
-            <img
-              src="images/edit.png"
-              className="hover:bg-gray-300 mb-5 w-10"
-            />
+            <Pencil size={20} />
           </button>
         ) : (
           <></>

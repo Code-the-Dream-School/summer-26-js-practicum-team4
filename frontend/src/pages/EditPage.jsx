@@ -152,19 +152,19 @@ function EditPage() {
     <main className="min-h-screen bg-background px-4 py-8 lg:px-8">
       <div className="mx-auto max-w-[1600px] space-y-6">
         <header className="rounded-2xl border border-border bg-surface p-5 shadow-sm md:p-7">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center justify-between gap-4">
             <div className="min-w-0 flex-1">
               <p className="mb-1 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
                 Edit Pattern
               </p>
 
               {isEditing ? (
-                <input
+               <input
                   type="text"
                   value={nameDraft}
                   onChange={(event) => setNameDraft(event.target.value)}
                   autoFocus
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-3xl font-bold text-secondary outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 md:text-4xl"
+                  className="w-full rounded-md border border-gray-300 bg-background px-3 py-2 text-3xl font-bold text-secondary outline-none focus:border-gray-400 md:text-4xl"
                 />
               ) : (
                 <h1 className="text-3xl font-bold text-secondary md:text-4xl">
@@ -188,7 +188,7 @@ function EditPage() {
                     disabled={isSaving}
                     className="rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {isSaving ? "Saving..." : "Save Changes"}
+                    {isSaving ? "Saving..." : "Save"}
                   </button>
 
                   <button
@@ -204,7 +204,7 @@ function EditPage() {
                 <button
                   type="button"
                   onClick={handleStartEdit}
-                  className="rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90"
+                  className="w-34 rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90"
                 >
                   Edit
                 </button>
