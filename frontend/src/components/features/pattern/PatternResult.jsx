@@ -19,14 +19,7 @@ const ZOOM_LEVELS = [
   { label: "150%", cellSize: 24 },
 ];
 
-function PatternResult({
-  pattern,
-  previewUrl,
-  fileName,
-  canvasRef,
-  onBack,
-  onUploadNew,
-}) {
+function PatternResult({ pattern, previewUrl, fileName, canvasRef, onBack }) {
   const { state } = useAuth();
 
   const [zoomIndex, setZoomIndex] = useState(2);
@@ -119,7 +112,7 @@ function PatternResult({
         </header>
 
         {lockEdit && (
-          <p className="rounded-lg border border-border bg-green-100 px-4 py-3 text-sm text-black">
+          <p className="rounded-lg border border-border bg-green-100 px-4 py-3 text-sm text-black print:hidden">
             Pattern successfully saved.
           </p>
         )}

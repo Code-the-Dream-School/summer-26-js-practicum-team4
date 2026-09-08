@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { generatePattern } from "../services/patternService";
 import PatternResult from "../components/features/pattern/PatternResult";
+import Loader from "../components/Loader/Loader";
 
 function GeneratePage() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -190,9 +191,12 @@ function GeneratePage() {
         </form>
 
         {isGenerating && (
-          <p className="mt-4 text-center text-secondary" role="status">
-            Creating your cross-stitch pattern…
-          </p>
+          <>
+            <p className="mt-4 mb-4 text-center text-secondary" role="status">
+              Creating your cross-stitch pattern…
+            </p>
+            <Loader size={100} />
+          </>
         )}
 
         {errorMessage && (

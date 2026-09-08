@@ -15,7 +15,6 @@ function LogoutBtn({ className }) {
       await logout();
       dispatch({ type: "LOGOUT" });
     } catch (error) {
-      console.error("Error during logout:", error);
       dispatch({ type: "SET_ERROR", payload: error.message });
     }
   }

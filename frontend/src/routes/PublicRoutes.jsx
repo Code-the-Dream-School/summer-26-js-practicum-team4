@@ -5,11 +5,10 @@ import Loader from "../components/Loader/Loader";
 
 function PublicRoutes() {
   const { state } = useAuth();
-
   if (state.loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader />
+        <Loader size={200} />
       </div>
     );
   }

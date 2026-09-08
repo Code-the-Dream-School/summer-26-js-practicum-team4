@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Shapes } from "lucide-react";
+import PropTypes from "prop-types";
 
 function CreateNewPatternIcon({ isEmpty = false }) {
   return (
@@ -17,7 +18,7 @@ function CreateNewPatternIcon({ isEmpty = false }) {
         <p className="max-w-sm text-lg text-text-secondary">
           {isEmpty ? (
             <>
-              You don't have any patterns yet —{" "}
+              You don&apos;t have any patterns yet —{" "}
               <span className="font-medium text-primary">click here</span> to
               create your first one.
             </>
@@ -33,5 +34,8 @@ function CreateNewPatternIcon({ isEmpty = false }) {
     </div>
   );
 }
+CreateNewPatternIcon.propTypes = {
+  isEmpty: PropTypes.bool,
+};
 
 export default CreateNewPatternIcon;

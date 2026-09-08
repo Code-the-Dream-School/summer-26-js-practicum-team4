@@ -3,7 +3,6 @@ import {
   Lock,
   Eye,
   EyeOff,
-  Camera,
   Trash2,
   Pencil,
   Calendar,
@@ -13,6 +12,7 @@ import { getUser, updateUser, deleteUser } from "../services/userService";
 import PropTypes from "prop-types";
 import { useAuth } from "../state/auth/useAuth";
 import { uploadPhoto, deletePhoto } from "../services/profileImageService";
+import Loader from "../components/Loader/Loader";
 
 function StitchAvatar() {
   const stitches = [
@@ -176,7 +176,11 @@ function UserProfilePage() {
   const [formData, setFormData] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState({ text: "", error: false });
-
+  const [isLoading, setIsLoading] = useState({
+    profilePhoto: false,
+    userData: false,
+    passwordChange: false,
+  });
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -212,6 +216,7 @@ function UserProfilePage() {
 
   useEffect(() => {
     async function getUserData() {
+      setIsLoading((prev) => ({ ...prev, userData: true }));
       setMessage({ text: "", error: false });
       try {
         const userData = await getUser();
@@ -219,8 +224,10 @@ function UserProfilePage() {
         if (userData) {
           setUserProfileData(userData);
         }
+        setIsLoading((prev) => ({ ...prev, userData: false }));
       } catch {
         setMessage({ text: "Failed to fetch user data.", error: true });
+        setIsLoading((prev) => ({ ...prev, userData: false }));
       }
     }
 
@@ -261,6 +268,7 @@ function UserProfilePage() {
   };
 
   const handleSaveProfile = async (event) => {
+    setIsLoading((prev) => ({ ...prev, userData: true }));
     setMessage({ text: "", error: false });
     event.preventDefault();
 
@@ -275,20 +283,24 @@ function UserProfilePage() {
       return;
     }
 
-    const updateSuccess = await updateUserData({
-      userName: formData.fullName,
-    });
-
-    if (updateSuccess) {
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: {
-          ...state.user,
-          userName: formData.fullName,
-        },
+    try {
+      const updateSuccess = await updateUserData({
+        userName: formData.fullName,
       });
-
-      setIsEditing(false);
+      if (updateSuccess) {
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: {
+            ...state.user,
+            userName: formData.fullName,
+          },
+        });
+        setIsEditing(false);
+      }
+    } catch {
+      setMessage({ text: "Failed to update user data.", error: true });
+    } finally {
+      setIsLoading((prev) => ({ ...prev, userData: false }));
     }
   };
 
@@ -323,6 +335,7 @@ function UserProfilePage() {
     }
 
     try {
+      setIsLoading((prev) => ({ ...prev, profilePhoto: true }));
       const uploadedImageUrl = await uploadPhoto(selectedFile, user.email);
 
       const updateSuccess = await updateUserData({
@@ -337,6 +350,8 @@ function UserProfilePage() {
       }
     } catch {
       setMessage({ text: "Failed to update profile photo.", error: true });
+    } finally {
+      setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
     }
 
     if (fileInputRef.current) {
@@ -345,6 +360,7 @@ function UserProfilePage() {
   };
 
   const handlePhotoDelete = async () => {
+    setIsLoading((prev) => ({ ...prev, profilePhoto: true }));
     try {
       const updateSuccess = await updateUserData({
         userProfileImgUrl: null,
@@ -357,9 +373,11 @@ function UserProfilePage() {
           text: "Profile photo deleted successfully.",
           error: false,
         });
+        setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
       }
     } catch {
       setMessage({ text: "Failed to delete profile photo.", error: true });
+      setIsLoading((prev) => ({ ...prev, profilePhoto: false }));
     }
   };
 
@@ -427,7 +445,7 @@ function UserProfilePage() {
       });
       return;
     }
-
+    setIsLoading((prev) => ({ ...prev, passwordChange: true }));
     const isPasswordChanged = await updateUserData(
       user.hasPassword
         ? {
@@ -451,6 +469,7 @@ function UserProfilePage() {
         confirmPassword: "",
       });
     }
+    setIsLoading((prev) => ({ ...prev, passwordChange: false }));
   };
 
   async function handleDeleteAccount() {
@@ -481,348 +500,352 @@ function UserProfilePage() {
 
   return (
     <main className="w-full bg-background">
-      <div className="mx-auto w-[90%] px-4 py-8 md:px-8">
-        {/* Page Heading */}
-        <header className="relative mb-8 overflow-hidden pb-2">
-          <DecorativeStitches />
+      {state.loading ? (
+        <Loader />
+      ) : (
+        <div className="mx-auto w-[90%] px-4 py-8 md:px-8">
+          {/* Page Heading */}
+          <header className="relative mb-8 overflow-hidden pb-2">
+            <DecorativeStitches />
 
-          <h1 className="relative z-10 font-heading text-5xl font-bold text-secondary">
-            User Profile
-          </h1>
+            <h1 className="relative z-10 font-heading text-5xl font-bold text-secondary">
+              {" "}
+              User Profile
+            </h1>
 
-          <div className="relative z-10 mt-4 flex items-center gap-3 text-primary">
-            <span className="h-px w-24 bg-primary" />
-            <span className="font-bold">×</span>
-            <span className="h-px w-24 bg-primary" />
-          </div>
-        </header>
-
-        {/* Profile Card */}
-        <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
-          <div className="grid gap-16 lg:grid-cols-[280px_1fr_380px] lg:items-center">
-            {/* Avatar */}
-            <div className="flex w-full flex-col items-center">
-              <div className="h-48 w-48 overflow-hidden rounded-full">
-                {user.profilePhoto ? (
-                  <img
-                    src={user.profilePhoto}
-                    alt={`${user.fullName}'s profile`}
-                    className="h-full w-full rounded-full object-cover"
-                  />
-                ) : (
-                  <StitchAvatar />
-                )}
-              </div>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/png,image/jpeg,image/webp,image/jpg"
-                className="hidden"
-                onChange={handlePhotoChange}
-              />
-
-              <button
-                type="button"
-                onClick={handlePhotoClick}
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
-              >
-                Upload Photo
-              </button>
-
-              {user.profilePhoto && (
-                <button
-                  type="button"
-                  onClick={handlePhotoDelete}
-                  className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-primary px-7 py-3 text-lg font-semibold text-primary transition hover:bg-background"
-                >
-                  Delete Photo
-                </button>
-              )}
-
-              <p className="mt-3 text-center text-sm leading-5 text-text-secondary">
-                JPG,JPEG, PNG or WEBP.
-                <br />
-                Maximum 2 MB.
-              </p>
+            <div className="relative z-10 mt-4 flex items-center gap-3 text-primary">
+              <span className="h-px w-24 bg-primary" />
+              <span className="font-bold">×</span>
+              <span className="h-px w-24 bg-primary" />
             </div>
+          </header>
 
-            {/* User Details */}
-            <form onSubmit={handleSaveProfile}>
-              <div className="space-y-6">
-                <div>
-                  <p className="mb-2 text-sm font-semibold text-text-secondary">
-                    Full Name
-                  </p>
-
-                  <div className="flex items-center gap-3">
-                    {isEditing ? (
-                      <input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        value={formData.fullName ? formData.fullName : ""}
-                        onChange={handleInputChange}
-                        className="w-full rounded-xl border border-border bg-input-form px-4 py-3 text-lg outline-none focus:border-primary"
-                        required
+          {/* Profile Card */}
+          <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-10">
+            {isLoading.userData ? (
+              <Loader size={200} />
+            ) : (
+              <div className="grid gap-16 lg:grid-cols-[280px_1fr_380px] lg:items-center">
+                {/* Avatar */}
+                <div className="flex w-full flex-col items-center">
+                  <div className="h-48 w-48 overflow-hidden rounded-full">
+                    {isLoading.profilePhoto ? (
+                      <Loader size={100} />
+                    ) : user.profilePhoto ? (
+                      <img
+                        src={user.profilePhoto}
+                        alt={`${user.fullName}'s profile`}
+                        className="h-full w-full rounded-full object-cover"
                       />
                     ) : (
-                      <p className="font-heading text-4xl font-semibold text-secondary">
-                        {user.fullName}
-                      </p>
-                    )}
-
-                    {!isEditing && (
-                      <button
-                        type="button"
-                        onClick={handleEditProfile}
-                        aria-label="Edit name"
-                        className=" px-4 py-3 text-secondary transition hover:text-primary"
-                      >
-                        <Pencil size={20} aria-hidden="true" />
-                      </button>
+                      <StitchAvatar />
                     )}
                   </div>
-                </div>
 
-                {/* Email */}
-                <div>
-                  <p className="mb-2 text-sm font-semibold text-text-secondary">
-                    Email Address
-                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/jpg"
+                    className="hidden"
+                    onChange={handlePhotoChange}
+                  />
 
-                  <p className="text-lg text-text">{user.email}</p>
-                </div>
+                  <button
+                    type="button"
+                    onClick={handlePhotoClick}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-7 py-3 text-lg font-semibold text-white shadow-sm transition hover:opacity-90"
+                  >
+                    {" "}
+                    📷 Upload Photo
+                  </button>
 
-                {/* Member Since */}
-                <div>
-                  <p className="mb-2 text-sm font-semibold text-text-secondary">
-                    Member Since
-                  </p>
-
-                  <p className="flex items-center gap-2 text-lg text-text">
-                    <Calendar size={18} aria-hidden="true" />
-                    {user.memberSince}
-                  </p>
-                </div>
-
-                {isEditing && (
-                  <div className="flex gap-3 pt-1">
-                    <button
-                      type="submit"
-                      className="rounded-lg bg-secondary px-6 py-3 font-semibold text-white"
-                    >
-                      Save Name
-                    </button>
-
+                  {user.profilePhoto && (
                     <button
                       type="button"
-                      onClick={handleCancelEdit}
-                      className="rounded-lg border border-border px-6 py-3 font-semibold text-secondary"
+                      onClick={handlePhotoDelete}
+                      className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border border-primary px-7 py-3 text-lg font-semibold text-primary transition hover:bg-background"
                     >
-                      Cancel
+                      🗑 Delete Photo
                     </button>
+                  )}
+
+                  <p className="mt-3 text-center text-sm leading-5 text-text-secondary">
+                    JPG,JPEG, PNG or WEBP.
+                    <br />
+                    Maximum 2 MB.
+                  </p>
+                </div>
+
+                {/* User Details */}
+                <form onSubmit={handleSaveProfile}>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-text-secondary">
+                        Full Name
+                      </p>
+
+                      <div className="flex items-center gap-3">
+                        {isEditing ? (
+                          <input
+                            id="fullName"
+                            name="fullName"
+                            type="text"
+                            value={formData.fullName ? formData.fullName : ""}
+                            onChange={handleInputChange}
+                            className="w-full rounded-xl border border-border bg-input-form px-4 py-3 text-lg outline-none focus:border-primary"
+                            required
+                          />
+                        ) : (
+                          <p className="font-heading text-4xl font-semibold text-secondary">
+                            {user.fullName}
+                          </p>
+                        )}
+
+                        {!isEditing && (
+                          <button
+                            type="button"
+                            onClick={handleEditProfile}
+                            aria-label="Edit name"
+                            className=" px-4 py-3 text-secondary transition hover:text-primary"
+                          >
+                            <Pencil size={20} aria-hidden="true" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-text-secondary">
+                        Email Address
+                      </p>
+
+                      <p className="text-lg text-text">{user.email}</p>
+                    </div>
+
+                    {/* Member Since */}
+                    <div>
+                      <p className="mb-2 text-sm font-semibold text-text-secondary">
+                        Member Since
+                      </p>
+
+                      <p className="flex items-center gap-2 text-lg text-text">
+                        <Calendar size={18} aria-hidden="true" />
+                        {user.memberSince}
+                      </p>
+                    </div>
+
+                    {isEditing && (
+                      <div className="flex gap-3 pt-1">
+                        <button
+                          type="submit"
+                          className="rounded-lg bg-secondary px-6 py-3 font-semibold text-white"
+                        >
+                          Save Name
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleCancelEdit}
+                          className="rounded-lg border border-border px-6 py-3 font-semibold text-secondary"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </form>
+                </form>
 
-            {/* Patterns Generated */}
-            <div className="flex min-h-[245px] flex-col items-center justify-center border-t border-border pt-7 lg:border-l lg:border-t-0 lg:pl-9 lg:pt-0">
-              <PatternGeneratedIcon />
+                {/* Patterns Generated */}
+                <div className="flex min-h-[245px] flex-col items-center justify-center border-t border-border pt-7 lg:border-l lg:border-t-0 lg:pl-9 lg:pt-0">
+                  <PatternGeneratedIcon />
 
-              <p className="mt-1 font-heading text-7xl font-bold leading-none text-primary">
-                {user.patternsGenerated}
-              </p>
-
-              <p className="mt-2 text-center text-xl font-semibold text-secondary">
-                Patterns Generated
-              </p>
-
-              <div className="mt-4 flex items-center gap-3 text-primary">
-                <span className="h-px w-12 bg-primary" />
-                <span>×</span>
-                <span className="h-px w-12 bg-primary" />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Status Message */}
-        {message.text && (
-          <div
-            role="status"
-            className={`mb-5 rounded-xl border ${
-              message.error
-                ? "border-primary text-red-700"
-                : "border-border text-secondary"
-            } bg-surface px-5 py-3 text-center font-medium shadow-sm`}
-          >
-            {message.text}
-          </div>
-        )}
-
-        {/* Change Password Card */}
-        <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
-          <div className="mb-7">
-            <h2 className="font-heading text-3xl font-bold text-secondary">
-              {user.hasPassword ? "Change Password" : "Set Password"}
-            </h2>
-          </div>
-
-          <form
-            onSubmit={handlePasswordSubmit}
-            className="grid gap-8 lg:grid-cols-[1fr_380px]"
-          >
-            {/* Password Fields */}
-            <div className="space-y-6">
-              {user.hasPassword && (
-                <PasswordField
-                  id="currentPassword"
-                  name="currentPassword"
-                  placeholder="Current Password"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordInputChange}
-                  visible={visiblePasswords.currentPassword}
-                  onToggle={() => togglePasswordVisibility("currentPassword")}
-                  autoComplete="current-password"
-                />
-              )}
-
-              <PasswordField
-                id="newPassword"
-                name="newPassword"
-                placeholder="New Password"
-                value={passwordData.newPassword}
-                onChange={handlePasswordInputChange}
-                visible={visiblePasswords.newPassword}
-                onToggle={() => togglePasswordVisibility("newPassword")}
-                autoComplete="new-password"
-              />
-
-              <PasswordField
-                id="confirmPassword"
-                name="confirmPassword"
-                placeholder="Enter New Password Again"
-                value={passwordData.confirmPassword}
-                onChange={handlePasswordInputChange}
-                visible={visiblePasswords.confirmPassword}
-                onToggle={() => togglePasswordVisibility("confirmPassword")}
-                autoComplete="new-password"
-              />
-            </div>
-
-            {/* Password Requirements */}
-            <aside className="self-start">
-              <div className="rounded-2xl bg-[#f7f0e8] p-8">
-                <h3 className="mb-5 font-heading text-xl font-bold text-primary">
-                  Password must:
-                </h3>
-
-                <div className="space-y-3 text-text-secondary">
-                  <p className="flex items-center">
-                    <Circle
-                      size={10}
-                      fill="currentColor"
-                      className="mr-3 text-primary"
-                      aria-hidden="true"
-                    />
-                    Be at least 8 characters
+                  <p className="mt-1 font-heading text-7xl font-bold leading-none text-primary">
+                    {user.patternsGenerated}
                   </p>
 
-                  <p className="flex items-center">
-                    <Circle
-                      size={10}
-                      fill="currentColor"
-                      className="mr-3 text-primary"
-                      aria-hidden="true"
-                    />
-                    Include a number
+                  <p className="mt-2 text-center text-xl font-semibold text-secondary">
+                    Patterns Generated
                   </p>
 
-                  <p className="flex items-center">
-                    <Circle
-                      size={10}
-                      fill="currentColor"
-                      className="mr-3 text-primary"
-                      aria-hidden="true"
-                    />
-                    Include an uppercase letter
-                  </p>
-
-                  <p className="flex items-center">
-                    <Circle
-                      size={10}
-                      fill="currentColor"
-                      className="mr-3 text-primary"
-                      aria-hidden="true"
-                    />
-                    Include a special character
-                  </p>
+                  <div className="mt-4 flex items-center gap-3 text-primary">
+                    <span className="h-px w-12 bg-primary" />
+                    <span>×</span>
+                    <span className="h-px w-12 bg-primary" />
+                  </div>
                 </div>
               </div>
+            )}
+          </section>
 
-              <button
-                type="submit"
-                className="mt-4 w-full rounded-xl bg-primary px-6 py-4 text-xl font-semibold text-white transition hover:opacity-90"
+          {/* Status Message */}
+          {message.text && (
+            <div
+              role="status"
+              className={`mb-5 rounded-xl border ${
+                message.error
+                  ? "border-primary text-red-700"
+                  : "border-border text-secondary"
+              } bg-surface px-5 py-3 text-center font-medium shadow-sm`}
+            >
+              {message.text}
+            </div>
+          )}
+
+          {/* Change Password Card */}
+          <section className="mb-7 rounded-[22px] border border-border bg-surface px-6 py-10 shadow-[0_8px_24px_rgba(54,38,25,0.08)] md:px-9">
+            <div className="mb-7">
+              <h2 className="font-heading text-3xl font-bold text-secondary">
+                {user.hasPassword ? "Change Password" : "Set Password"}
+              </h2>
+            </div>
+
+            {isLoading.passwordChange ? (
+              <Loader size={100} />
+            ) : (
+              <form
+                onSubmit={handlePasswordSubmit}
+                className="grid gap-8 lg:grid-cols-[1fr_380px]"
               >
-                Update Password
-              </button>
-            </aside>
-          </form>
-        </section>
+                {/* Password Fields */}
+                <div className="space-y-6">
+                  {user.hasPassword && (
+                    <PasswordField
+                      id="currentPassword"
+                      name="currentPassword"
+                      placeholder="Current Password"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordInputChange}
+                      visible={visiblePasswords.currentPassword}
+                      onToggle={() =>
+                        togglePasswordVisibility("currentPassword")
+                      }
+                      autoComplete="current-password"
+                    />
+                  )}
 
-        {/* Bottom Actions */}
-        <section className="rounded-[22px] border border-border bg-surface px-5 py-5 shadow-[0_8px_24px_rgba(54,38,25,0.08)]">
-          <div className="grid gap-5 md:grid-cols-[1fr_320px] md:items-stretch">
-            {/* Delete Account Info */}
-            <div className="flex items-center px-5 py-4 md:border-r md:border-border">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#f4eadc] text-primary">
-                  <Trash2 size={24} aria-hidden="true" />
+                  <PasswordField
+                    id="newPassword"
+                    name="newPassword"
+                    placeholder="New Password"
+                    value={passwordData.newPassword}
+                    onChange={handlePasswordInputChange}
+                    visible={visiblePasswords.newPassword}
+                    onToggle={() => togglePasswordVisibility("newPassword")}
+                    autoComplete="new-password"
+                  />
+
+                  <PasswordField
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Enter New Password Again"
+                    value={passwordData.confirmPassword}
+                    onChange={handlePasswordInputChange}
+                    visible={visiblePasswords.confirmPassword}
+                    onToggle={() => togglePasswordVisibility("confirmPassword")}
+                    autoComplete="new-password"
+                  />
                 </div>
 
-                <div>
-                  <p className="font-heading text-lg font-semibold text-secondary">
-                    Delete Account
-                  </p>
+                {/* Password Requirements */}
+                <aside className="self-start">
+                  <div className="rounded-2xl bg-[#f7f0e8] p-8">
+                    <h3 className="mb-5 font-heading text-xl font-bold text-primary">
+                      Password must:
+                    </h3>
 
-                  <p className="mt-1 text-sm leading-5 text-text-secondary">
-                    Permanently delete your account and all your data.
-                  </p>
+                    <div className="space-y-3 text-text-secondary">
+                      <p className="flex items-center">
+                        <Circle
+                          size={10}
+                          fill="currentColor"
+                          className="mr-3 text-primary"
+                          aria-hidden="true"
+                        />
+                        Be at least 8 characters
+                      </p>
+
+                      <p className="flex items-center">
+                        <Circle
+                          size={10}
+                          fill="currentColor"
+                          className="mr-3 text-primary"
+                          aria-hidden="true"
+                        />
+                        Include a number
+                      </p>
+
+                      <p className="flex items-center">
+                        <Circle
+                          size={10}
+                          fill="currentColor"
+                          className="mr-3 text-primary"
+                          aria-hidden="true"
+                        />
+                        Include an uppercase letter
+                      </p>
+
+                      <p className="flex items-center">
+                        <Circle
+                          size={10}
+                          fill="currentColor"
+                          className="mr-3 text-primary"
+                          aria-hidden="true"
+                        />
+                        Include a special character
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="mt-4 w-full rounded-xl bg-primary px-6 py-4 text-xl font-semibold text-white transition hover:opacity-90"
+                  >
+                    Update Password
+                  </button>
+                </aside>
+              </form>
+            )}
+          </section>
+
+          {/* Bottom Actions */}
+          {/* Bottom Actions */}
+          <section className="rounded-[22px] border border-border bg-surface px-5 py-5 shadow-[0_8px_24px_rgba(54,38,25,0.08)]">
+            <div className="grid gap-5 md:grid-cols-[1fr_320px] md:items-stretch">
+              {/* Delete Account Info */}
+              <div className="flex items-center px-5 py-4 md:border-r md:border-border">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#f4eadc] text-primary">
+                    <Trash2 size={24} aria-hidden="true" />
+                  </div>
+
+                  <div>
+                    <p className="font-heading text-lg font-semibold text-secondary">
+                      Delete Account
+                    </p>
+
+                    <p className="mt-1 text-sm leading-5 text-text-secondary">
+                      Permanently delete your account and all your data.
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              {/* Delete Account Button */}
+              <div className="flex items-center justify-center px-5 py-3 ">
+                <button
+                  type="button"
+                  disabled={state.loading}
+                  onClick={handleDeleteAccount}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-8 py-5 text-lg font-semibold text-white transition hover:opacity-90"
+                >
+                  Delete Account
+                </button>
+              </div>
             </div>
-
-            {/* Delete Account Button */}
-            <div className="flex items-center justify-center px-5 py-3 ">
-              <button
-                type="button"
-                disabled={state.loading}
-                onClick={handleDeleteAccount}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-8 py-5 text-lg font-semibold text-white transition hover:opacity-90"
-              >
-                Delete Account
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Tagline
-        <div className="mt-9 flex items-center justify-center gap-4 pb-3 text-sm tracking-[0.3em] text-secondary">
-          <span className="hidden h-px w-40 bg-accent sm:block" />
-
-          <span className="text-primary">×</span>
-
-          <span>
-            STITCH. <span className="text-primary">CREATE.</span> SHARE.
-          </span>
-
-          <span className="text-primary">×</span>
-
-          <span className="hidden h-px w-40 bg-accent sm:block" />
-        </div> */}
-      </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

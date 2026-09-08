@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useReducer, useState } from "react";
+import PropTypes from "prop-types";
 
 // Component Imports
-import DisplayToggle from "../components/features/dashboard/DisplayToggle";
+// import DisplayToggle from "../components/features/dashboard/DisplayToggle";
 
 import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextView";
 import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
@@ -25,6 +26,45 @@ import {
   dashReducer,
   dashActions,
 } from "../state/dashboard/dashReducer";
+
+function GridIcon({ active }) {
+  return (
+    <div className="grid grid-cols-2 gap-1">
+      {[0, 1, 2, 3].map((i) => (
+        <span
+          key={i}
+          className={`h-4 w-4 rounded-md ${
+            active ? "bg-primary" : "bg-primary/20"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+GridIcon.propTypes = {
+  active: PropTypes.bool.isRequired,
+};
+function SingleIcon({ active }) {
+  const arrowColor = active ? "border-primary" : "border-primary/20";
+  const squareColor = active ? "bg-primary" : "bg-primary/20";
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <span
+        className={`h-2 w-2 -rotate-45 border-t-2 border-l-2 ${arrowColor}`}
+      />
+      <span className={`block h-8 w-8 rounded-md ${squareColor}`} />
+      <span
+        className={`h-2 w-2 rotate-45 border-t-2 border-r-2 ${arrowColor}`}
+      />
+    </div>
+  );
+}
+
+SingleIcon.propTypes = {
+  active: PropTypes.bool.isRequired,
+};
 
 function MyPatternsPage() {
   const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
@@ -87,97 +127,60 @@ function MyPatternsPage() {
     }
   }
 
-  function GridIcon({ active }) {
-    return (
-      <div className="grid grid-cols-2 gap-1">
-        {[0, 1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className={`h-4 w-4 rounded-md ${
-              active ? "bg-primary" : "bg-primary/20"
-            }`}
-          />
-        ))}
-      </div>
-    );
-  }
-
-  function SingleIcon({ active }) {
-    const arrowColor = active ? "border-primary" : "border-primary/20";
-    const squareColor = active ? "bg-primary" : "bg-primary/20";
-
-    return (
-      <div className="flex items-center gap-1.5">
-        <span
-          className={`h-2 w-2 -rotate-45 border-t-2 border-l-2 ${arrowColor}`}
-        />
-        <span className={`block h-8 w-8 rounded-md ${squareColor}`} />
-        <span
-          className={`h-2 w-2 rotate-45 border-t-2 border-r-2 ${arrowColor}`}
-        />
-      </div>
-    );
-  }
   return (
     <>
-      <DashContext value={{ dashState, dispatch, dashActions }}>
-        <div className="bg-background">
-          <div className={"hidden print:flex"}>
-            {patternToPrint ? (
-              <PatternResult
-                pattern={patternToPrint}
-                fileName={"generated_pattern"}
-                canvasRef={canvasRef}
-              />
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className="relative z-10 ml-auto flex w-fit items-center gap-2 mr-25 -mt-16 print:hidden">
-            <button
-              type="button"
-              onClick={() => dispatch({ type: dashActions.setScrollView })}
-              aria-label="Single pattern view"
-              aria-pressed={dashState.view === "scroll"}
-              className="rounded-lg p-2"
-            >
-              <SingleIcon active={dashState.view === "scroll"} />
-            </button>
+      {dashState.isFetching ? (
+        <Loader size={200} />
+      ) : (
+        <DashContext value={{ dashState, dispatch, dashActions }}>
+          <div className="bg-background">
+            <div className={"hidden print:flex"}>
+              {patternToPrint ? (
+                <PatternResult
+                  pattern={patternToPrint}
+                  fileName={"generated_pattern"}
+                  canvasRef={canvasRef}
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="relative z-10 ml-auto flex w-fit items-center gap-2 mr-25 -mt-16 print:hidden">
+              <button
+                type="button"
+                onClick={() => dispatch({ type: dashActions.setScrollView })}
+                aria-label="Single pattern view"
+                aria-pressed={dashState.view === "scroll"}
+                className="rounded-lg p-2"
+              >
+                <SingleIcon active={dashState.view === "scroll"} />
+              </button>
 
-            <button
-              type="button"
-              onClick={() => dispatch({ type: dashActions.setAllView })}
-              aria-label="Grid pattern view"
-              aria-pressed={dashState.view === "all"}
-              className="rounded-lg p-2"
-            >
-              <GridIcon active={dashState.view === "all"} />
-            </button>
+              <button
+                type="button"
+                onClick={() => dispatch({ type: dashActions.setAllView })}
+                aria-label="Grid pattern view"
+                aria-pressed={dashState.view === "all"}
+                className="rounded-lg p-2"
+              >
+                <GridIcon active={dashState.view === "all"} />
+              </button>
+            </div>
+
+            <h1 className="text-5xl font-bold text-secondary ml-25 m-8 print:hidden">
+              Dashboard
+            </h1>
+            <div className="relative print:hidden">
+              {userChosenView(dashState.patterns)}
+              {state.error && (
+                <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+                  {state.error}
+                </p>
+              )}
+            </div>
           </div>
-          <h1 className="text-5xl font-bold text-secondary ml-25 m-8 print:hidden">
-            Dashboard
-          </h1>
-          <div className="relative print:hidden">
-            {dashState.isFetching ? (
-              <>
-                {" "}
-                <div className=" absolute h-full w-full"></div>
-                <div className="flex min-h-screen w-full items-center justify-center bg-background print:hidden">
-                  <Loader />
-                </div>
-              </>
-            ) : (
-              <div></div>
-            )}
-            {userChosenView(dashState.patterns)}
-            {state.error && (
-              <p className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
-                {state.error}
-              </p>
-            )}
-          </div>
-        </div>
-      </DashContext>
+        </DashContext>
+      )}
     </>
   );
 }

@@ -8,7 +8,7 @@ function Loader({
   thickness = 100,
   speed = 60,
   color = "#96472d",
-  secondaryColor = "#96472d",
+  secondaryColor = "#05152a",
 }) {
   return (
     <div className="loader">
