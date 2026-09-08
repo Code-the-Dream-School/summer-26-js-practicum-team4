@@ -112,7 +112,7 @@ function PatternResult({ pattern, previewUrl, fileName, canvasRef, onBack }) {
         </header>
 
         {lockEdit && (
-          <p className="rounded-lg border border-border bg-green-100 px-4 py-3 text-sm text-black">
+          <p className="rounded-lg border border-border bg-green-100 px-4 py-3 text-sm text-black print:hidden">
             Pattern successfully saved.
           </p>
         )}
