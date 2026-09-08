@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useReducer, useState } from "react";
+import PropTypes from "prop-types";
 
 // Component Imports
-import DisplayToggle from "../components/features/dashboard/DisplayToggle";
+// import DisplayToggle from "../components/features/dashboard/DisplayToggle";
 
 import PrevNextView from "../components/features/dashboard/ViewModes/PrevNextView";
 import AllPatternView from "../components/features/dashboard/ViewModes/AllPatternView";
@@ -25,6 +26,45 @@ import {
   dashReducer,
   dashActions,
 } from "../state/dashboard/dashReducer";
+
+function GridIcon({ active }) {
+  return (
+    <div className="grid grid-cols-2 gap-1">
+      {[0, 1, 2, 3].map((i) => (
+        <span
+          key={i}
+          className={`h-4 w-4 rounded-md ${
+            active ? "bg-primary" : "bg-primary/20"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+GridIcon.propTypes = {
+  active: PropTypes.bool.isRequired,
+};
+function SingleIcon({ active }) {
+  const arrowColor = active ? "border-primary" : "border-primary/20";
+  const squareColor = active ? "bg-primary" : "bg-primary/20";
+
+  return (
+    <div className="flex items-center gap-1.5">
+      <span
+        className={`h-2 w-2 -rotate-45 border-t-2 border-l-2 ${arrowColor}`}
+      />
+      <span className={`block h-8 w-8 rounded-md ${squareColor}`} />
+      <span
+        className={`h-2 w-2 rotate-45 border-t-2 border-r-2 ${arrowColor}`}
+      />
+    </div>
+  );
+}
+
+SingleIcon.propTypes = {
+  active: PropTypes.bool.isRequired,
+};
 
 function MyPatternsPage() {
   const [dashState, dispatch] = useReducer(dashReducer, dashInitState);
@@ -57,12 +97,15 @@ function MyPatternsPage() {
   function userChosenView(patterns) {
     if (patterns.length === 0) {
       return (
-        <div>
-          <h3 className="ml-20 my-5">
-            Welcome! Let us add your first pattern.{" "}
-          </h3>
-          <div className={"grid place-content-center"}>
-            <CreateNewPatternIcon patternDisplayScaling="w-400" />
+        <div className="min-h-screen w-full">
+          <div className="relative z-10 ml-25 my-5 flex items-center gap-3 text-primary">
+            <span className="h-px w-24 bg-primary" />
+            <span className="font-bold">×</span>
+            <span className="h-px w-24 bg-primary" />
+          </div>
+
+          <div className="w-[90%] mx-auto">
+            <CreateNewPatternIcon isEmpty={true} />
           </div>
         </div>
       );
@@ -102,18 +145,29 @@ function MyPatternsPage() {
                 <></>
               )}
             </div>
-            <div className="flex flex-row-reverse mx-auto content-end print:hidden">
-              {" "}
-              <DisplayToggle
+            <div className="relative z-10 ml-auto flex w-fit items-center gap-2 mr-25 -mt-16 print:hidden">
+              <button
+                type="button"
                 onClick={() => dispatch({ type: dashActions.setScrollView })}
-                displayImagePath={"images/scroll-view-toggle.png"}
-              />
-              <DisplayToggle
+                aria-label="Single pattern view"
+                aria-pressed={dashState.view === "scroll"}
+                className="rounded-lg p-2"
+              >
+                <SingleIcon active={dashState.view === "scroll"} />
+              </button>
+
+              <button
+                type="button"
                 onClick={() => dispatch({ type: dashActions.setAllView })}
-                displayImagePath={"images/all-pattern-view-toggle.png"}
-              />
+                aria-label="Grid pattern view"
+                aria-pressed={dashState.view === "all"}
+                className="rounded-lg p-2"
+              >
+                <GridIcon active={dashState.view === "all"} />
+              </button>
             </div>
-            <h1 className="text-5xl font-heading ml-19 print:hidden">
+
+            <h1 className="text-5xl font-bold text-secondary ml-25 m-8 print:hidden">
               Dashboard
             </h1>
             <div className="relative print:hidden">

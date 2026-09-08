@@ -9,9 +9,7 @@ function AllPatternView({ setPatternToPrint, canvasRef }) {
   const { dashState } = useContext(DashContext);
   return (
     <>
-      <div className="all-pattern-view mx-20 mt-10 pb-20 grid grid-cols-3">
-        <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />
-
+      <div className="all-pattern-view min-h-screen mx-25 mt-10 pb-20 grid grid-cols-3">
         {dashState.patterns.map((pattern) => (
           <PatternViewerAll
             key={pattern.id}
@@ -21,6 +19,7 @@ function AllPatternView({ setPatternToPrint, canvasRef }) {
             canvasRef={canvasRef}
           />
         ))}
+        <CreateNewPatternIcon patternDisplayScaling="h-[45dvh]" />
       </div>
     </>
   );

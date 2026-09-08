@@ -111,8 +111,8 @@ function GeneratePage() {
 
   return (
     <main className="min-h-screen bg-background px-4 py-10">
-      <section className="mx-auto max-w-3xl rounded-2xl border border-border bg-surface p-6 shadow-md md:p-10">
-        <h1 className="mb-8 text-center text-4xl font-bold text-secondary">
+      <section className="mx-auto max-w-5xl rounded-2xl border border-border bg-surface p-6 shadow-md md:p-10">
+        <h1 className="mb-8 text-center text-5xl font-bold text-secondary">
           Generate Pattern
         </h1>
 

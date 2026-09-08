@@ -78,7 +78,7 @@ function LoginForm() {
                   dispatch({ type: "CLEAR_ERROR" });
                 }}
                 required
-                className="w-full rounded-lg border border-gray-300 bg-[#F2F2F7] px-4 py-3 focus:border-gray-400 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 bg-input-form px-4 py-3 focus:border-gray-400 focus:outline-none"
               />
             </div>
 

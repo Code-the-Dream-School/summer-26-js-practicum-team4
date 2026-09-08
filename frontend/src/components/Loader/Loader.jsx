@@ -4,7 +4,7 @@ import "./Loader.css";
 import { SpinnerDiamond } from "spinners-react";
 
 function Loader({
-  size = 100,
+  size = 150,
   thickness = 100,
   speed = 60,
   color = "#96472d",
