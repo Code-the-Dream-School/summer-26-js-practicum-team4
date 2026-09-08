@@ -4,11 +4,11 @@ import "./Loader.css";
 import { SpinnerDiamond } from "spinners-react";
 
 function Loader({
-  size = 100,
+  size = 150,
   thickness = 100,
   speed = 60,
-  color = "black",
-  secondaryColor = "gray",
+  color = "#96472d",
+  secondaryColor = "#96472d",
 }) {
   return (
     <div className="loader">

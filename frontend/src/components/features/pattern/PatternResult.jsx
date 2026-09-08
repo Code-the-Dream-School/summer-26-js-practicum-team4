@@ -32,7 +32,7 @@ function PatternResult({
   const [zoomIndex, setZoomIndex] = useState(2);
   const [imgBlob, setImgBlob] = useState(null);
   const [currentPatternName, setCurrentPatternName] =
-    useState("generatedPattern");
+    useState("Untitled Pattern");
   const [lockEdit, setLockEdit] = useState(false);
 
   // Zoom Controls
@@ -97,7 +97,7 @@ function PatternResult({
             <button
               type="button"
               onClick={onBack}
-              className="rounded-lg bg-secondary px-5 py-2.5 font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
+              className="rounded-lg bg-secondary px-5 py-2.5 w-[60%] font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent"
             >
               Back to Generator
             </button>
@@ -110,7 +110,7 @@ function PatternResult({
                 palette: pattern.palette,
               }}
               textStyle={
-                "rounded-lg border border-border bg-surface px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
+                "rounded-lg border border-border bg-surface w-[60%] px-5 py-2.5 font-semibold text-secondary transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-accent"
               }
               lockEdit={lockEdit}
               setLockEdit={setLockEdit}
