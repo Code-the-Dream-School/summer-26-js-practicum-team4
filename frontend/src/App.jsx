@@ -34,7 +34,7 @@ function App() {
     <div className="min-h-screen flex flex-col">
       {!isAuthPage && (state.isAuthenticated ? <Navbar /> : <PublicNavbar />)}
 
-      <main className="main-content flex flex-1 flex-col bg-background ">
+      <main className="main-content flex flex-1 flex-col">
         <Routes>
           <Route
             path="/"
